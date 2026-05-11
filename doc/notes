@@ -1,0 +1,105 @@
+# Notes du projet — Plateforme de partage de builds Minecraft
+
+## 1. Authentification
+- Inscription
+- Connexion
+- Déconnexion
+- Gestion du profil utilisateur
+
+## 2. Publication d’un build
+Chaque utilisateur peut publier un build avec :
+- Titre
+- Description
+- Images de galerie
+- Tags
+- Taille / dimensions
+- Niveau de difficulté
+- Catégorie
+- Temps estimé de réalisation
+- Version du jeu
+- Mode de jeu utilisé  
+  > Exemple : Créatif / Survie  
+  > Certains blocs étant disponibles uniquement en créatif
+- Matériaux requis
+- Quantité pour chaque matériau
+
+## 3. Gestion des matériaux
+- Possibilité d’ajouter manuellement les blocs nécessaires
+- Possibilité d’indiquer une quantité pour chaque bloc
+- Ne pas imposer une liste complète de tous les blocs si c’est trop lourd à maintenir
+- Laisser l’utilisateur compléter lui-même les matériaux si besoin
+
+## 4. Page détail d’un build
+Chaque build doit avoir sa propre page avec :
+- Galerie d’images
+- Informations complètes
+- Liste des matériaux
+- Statistiques
+- Commentaires
+- Note moyenne
+- Créateur du build
+
+## 5. Interaction communautaire
+- Liker un build
+- Enregistrer / sauvegarder un build
+- Laisser un commentaire
+- Noter un build
+- Partager un build
+
+## 6. Système social
+- Suivre un créateur
+- Voir la liste des créateurs suivis
+- Voir les followers / following
+
+## 7. Statistiques
+Afficher plusieurs statistiques sur les builds :
+- Vues
+- Likes
+- Téléchargements
+- Sauvegardes / enregistrements
+
+## 8. Recherche et découverte
+- Barre de recherche
+- Filtres
+- Tri
+- Pagination sur la page d’accueil
+
+### Exemples de filtres
+- Catégorie
+- Difficulté
+- Version du jeu
+- Mode de jeu
+- Tags
+
+### Exemples de tri
+- Plus récents
+- Plus populaires
+- Mieux notés
+- Plus vus
+- Plus téléchargés
+
+## 9. Profils utilisateurs
+- Voir son propre profil
+- Voir le profil des autres utilisateurs
+- Voir les builds publiés par un créateur
+- Voir ses statistiques publiques
+- Voir ses abonnés / abonnements
+
+## 10. Page d’accueil
+- Affichage des builds récents ou populaires
+- Pagination
+- Mise en avant de certains builds ou créateurs
+
+## 11. Gestion de ses propres builds
+- Modifier un build
+- Supprimer un build
+- Ajouter / retirer des images
+- Mettre à jour les matériaux et informations
+
+## 12. Fonctionnalités complémentaires à prévoir
+- Responsive mobile / tablette / desktop
+- Système de signalement d’un build ou d’un commentaire
+- Modération / validation si nécessaire
+- Notifications  
+  > Exemple : nouveau follower, commentaire, like, note, etc.
+- Possibilité de télécharger un plan, un fichier ou des ressources associées au build si tu veux aller jusque-là
