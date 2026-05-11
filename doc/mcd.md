@@ -52,7 +52,6 @@ erDiagram
   CATEGORY {
     UUID id PK
     VARCHAR name UK
-    VARCHAR slug UK
     DATETIME created_at
     DATETIME updated_at
   }
@@ -101,10 +100,6 @@ erDiagram
     UUID build_id FK
     UUID author_id FK
     TEXT content
-    VARCHAR visibility
-    TEXT hidden_reason
-    UUID hidden_by FK
-    DATETIME hidden_at
     DATETIME created_at
     DATETIME updated_at
     DATETIME deleted_at
