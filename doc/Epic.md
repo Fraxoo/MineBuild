@@ -99,7 +99,7 @@
 
 ---
 
-# EPIC 3 — Publication d’un build (création + médias)
+# EPIC 3 — Publication d’un build (création + médias + matériaux)
 
 ## US3.1 — Accéder au formulaire de publication (P0)
 **En tant que** utilisateur, je veux accéder à un formulaire afin de publier un build.
@@ -117,9 +117,8 @@
 ---
 
 ## US3.2 — Publier un build (PUBLIC direct) (P0)
-**En tant que** utilisateur, je veux publier un build afin de partager ma construction.
-
-**Champs** : titre, description, images, tags, **catégories** (multi), dimensions, difficulté, temps estimé, version, mode (créatif/survie)
+**En tant que** utilisateur, je veux publier un build afin de partager ma construction.  
+**Champs** : titre, description, images, tags, **catégories** (multi), dimensions, difficulté, temps estimé, version, mode.
 
 ### Scénario 1 — Création réussie (PUBLIC)
 - **Given :** je suis connecté et sur le formulaire
@@ -127,11 +126,10 @@
 - **Then :** le build est créé avec la visibilité **PUBLIC**
 - **And :** il apparaît sur l’accueil (explorer intégré)
 
-### Scénario 2 — Champs obligatoires manquants
+### Scénario 2 — Création refusée (validation)
 - **Given :** je suis sur le formulaire
-- **When :** je valide avec un champ obligatoire vide
-- **Then :** le build n’est pas créé
-- **And :** une erreur s’affiche sur les champs concernés
+- **When :** je valide avec des données invalides (champs obligatoires manquants, valeurs incohérentes)
+- **Then :** le build n’est pas créé et les erreurs s’affichent
 
 ---
 
@@ -143,31 +141,29 @@
 - **When :** j’ajoute 1 à 5 images valides
 - **Then :** je vois un aperçu des images
 
-### Scénario 2 — Upload refusé
+### Scénario 2 — Upload refusé (règles fichiers)
 - **Given :** je suis sur le formulaire build
-- **When :** j’ajoute une 6e image ou un format non autorisé
-- **Then :** le fichier est refusé avec un message (limite / formats)
+- **When :** j’ajoute un fichier non conforme (trop d’images, format interdit, fichier trop lourd)
+- **Then :** le fichier est refusé et un message clair s’affiche
 
 ---
 
-# EPIC 4 — Matériaux requis (ajout libre + quantités + couleur)
-
-## US4.1 — Ajouter un matériau manuellement (P0)
+## US3.4 — Ajouter un matériau manuellement (P0)
 **En tant que** auteur, je veux ajouter des matériaux en texte libre afin de lister ce qu’il faut.
 
-### Scénario 1 — Ajout d’un matériau
+### Scénario 1 — Matériau ajouté
 - **Given :** je suis dans “Matériaux requis” sur le formulaire / édition
-- **When :** j’ajoute un matériau via texte (ex: “Stone Bricks”)
+- **When :** j’ajoute un matériau via texte
 - **Then :** il apparaît dans la liste
 
-### Scénario 2 — Nom invalide
+### Scénario 2 — Matériau refusé (validation)
 - **Given :** je suis dans “Matériaux requis”
-- **When :** j’ajoute un nom vide ou trop long
+- **When :** j’ajoute un nom vide, trop long, ou invalide
 - **Then :** une erreur s’affiche et la ligne n’est pas ajoutée
 
 ---
 
-## US4.2 — Associer une quantité à chaque matériau (P0)
+## US3.5 — Associer une quantité (P0)
 **En tant que** auteur, je veux indiquer la quantité afin d’être précis.
 
 ### Scénario 1 — Quantité valide
@@ -182,22 +178,22 @@
 
 ---
 
-## US4.3 — Ajouter une couleur au matériau (P1)
+## US3.6 — Couleur d’un matériau (P1)
 **En tant que** auteur, je veux définir une couleur pour un matériau afin de mieux organiser la liste.
 
-### Scénario 1 — Couleur renseignée
+### Scénario 1 — Couleur enregistrée
 - **Given :** un matériau existe dans la liste
-- **When :** je renseigne une couleur (ex: `#AABBCC` ou “gray”)
+- **When :** je renseigne une couleur valide
 - **Then :** la couleur est enregistrée et affichée
 
-### Scénario 2 — Couleur invalide
+### Scénario 2 — Couleur refusée
 - **Given :** un matériau existe
 - **When :** je renseigne une couleur invalide
 - **Then :** une erreur s’affiche et la couleur n’est pas enregistrée
 
 ---
 
-## US4.4 — Modifier / supprimer un matériau (P1)
+## US3.7 — Modifier / supprimer un matériau (P1)
 **En tant que** auteur, je veux modifier/supprimer des matériaux afin de corriger ma liste.
 
 ### Scénario 1 — Modification
@@ -212,7 +208,7 @@
 
 ---
 
-# EPIC 5 — Page détail d’un build (infos + stats + interactions)
+# EPIC 4 — Page détail d’un build (infos + stats + interactions)
 
 ## US5.1 — Accéder à la page détail (P0)
 **En tant que** visiteur, je veux une page dédiée à chaque build afin de voir toutes les infos.
@@ -281,7 +277,7 @@
 
 ---
 
-# EPIC 6 — Interactions communautaires
+# EPIC 5 — Interactions communautaires
 
 ## US6.1 — Liker / unliker un build (P0)
 **En tant que** utilisateur, je veux liker afin de soutenir un build.
@@ -364,7 +360,7 @@
 
 ---
 
-# EPIC 7 — Système social (follow)
+# EPIC 6 — Système social (follow)
 
 ## US7.1 — Suivre / se désabonner d’un créateur (P1)
 **En tant que** utilisateur, je veux suivre un créateur afin de voir ses nouveautés.
@@ -399,7 +395,7 @@
 
 ---
 
-# EPIC 8 — Recherche & Découverte (filtres, tri, pagination)
+# EPIC 7 — Recherche & Découverte (filtres, tri, pagination)
 
 ## US8.1 — Rechercher (P0)
 **En tant que** visiteur, je veux rechercher un build afin de le trouver rapidement.
@@ -463,7 +459,7 @@ Tri : récents, populaires, mieux notés, plus vus, plus téléchargés
 
 ---
 
-# EPIC 9 — Statistiques (vues, likes, saves, downloads)
+# EPIC 8 — Statistiques (vues, likes, saves, downloads)
 
 ## US9.1 — Compter les vues (P1)
 **En tant que** système, je veux compter les vues afin de mesurer l’intérêt.
@@ -496,7 +492,7 @@ Tri : récents, populaires, mieux notés, plus vus, plus téléchargés
 
 ---
 
-# EPIC 10 — Gestion de ses builds (édition)
+# EPIC 9 — Gestion de ses builds (édition)
 
 ## US10.1 — Modifier mon build (P0)
 **En tant que** auteur, je veux modifier mon build afin de corriger/mettre à jour.
@@ -548,7 +544,7 @@ Tri : récents, populaires, mieux notés, plus vus, plus téléchargés
 
 ---
 
-# EPIC 11 — Modération & Signalements (HIDDEN + motif)
+# EPIC 10 — Modération & Signalements (HIDDEN + motif)
 
 ## US11.1 — Signaler un build ou un commentaire (P1)
 **En tant que** utilisateur, je veux signaler un contenu afin d’aider la modération.
@@ -616,7 +612,7 @@ Tri : récents, populaires, mieux notés, plus vus, plus téléchargés
 
 ---
 
-# EPIC 12 — Notifications + Responsive + Téléchargements (bonus utiles RNCP)
+# EPIC 11 — Notifications + Responsive + Téléchargements
 
 ## US12.1 — Notifications (P2)
 **En tant que** utilisateur, je veux recevoir des notifications (follow/like/comment/note/modération) afin de suivre l’activité.
