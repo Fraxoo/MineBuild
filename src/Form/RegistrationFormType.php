@@ -20,7 +20,9 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('username', null, [
-                'label' => 'Nom d\'utilisateur',
+                'attr' => [
+                    'placeholder' => 'Nom d\'utilisateur',
+                ],
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrer un nom d\'utilisateur',
@@ -43,7 +45,9 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('email', EmailType::class, [
-                'label' => 'you@gmail.com',
+                'attr' => [
+                    'placeholder' => 'you@gmail.com',
+                ],
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrer une adresse email',
@@ -60,8 +64,8 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
-                'first_options' => ['label' => 'Mot de passe', 'attr' => ['autocomplete' => 'new-password']],
-                'second_options' => ['label' => 'Confirmer le mot de passe', 'attr' => ['autocomplete' => 'new-password']],
+                'first_options' => [ 'attr' => ['placeholder' => 'Mot de passe', 'autocomplete' => 'new-password']],
+                'second_options' => ['attr' => ['placeholder' => 'Confirmer le mot de passe', 'autocomplete' => 'new-password']],
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez entrer un mot de passe',
