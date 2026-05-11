@@ -24,6 +24,8 @@ class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
             
+            $userRole = $entityManager->getRepository('App\Entity\Role')->findOneBy(['code' => 'ROLE_USER']);
+            $user->setRole($userRole);
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
