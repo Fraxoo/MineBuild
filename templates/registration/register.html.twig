@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+<div class="middle-container-div">
+    <div class="middle-container items-center">
+        <div class="flex  flex-col items-center gap-8">
+            <twig:WebsiteTitle />
+            <div class="flex flex-col items-center gap-4">
+                <p class="text-xl text-(--third-color) font-bold">Créer un compte</p>
+                <p class="text-(--secondary-color)">Rejoignez la communauté et commencez à partager vos créations !</p>
+            </div>
+        </div>
+        {{ form_start(registrationForm , {
+        'attr': {'class': "form-div w-full"}
+        }) }}
+
+        <div class="input-div">
+            <p class="input-title">Username</p>
+            <div class="input-input">
+                <i class="fa-regular fa-user"></i>
+                {{ form_widget(registrationForm.username , {
+                'attr': {'class' : "input"}
+                }) }}
+            </div>
+        </div>
+        <div class="input-div">
+            <p class="input-title">Email</p>
+            <div class="input-input">
+                <i class="fa-regular fa-envelope"></i>
+                {{ form_widget(registrationForm.email , {
+                'attr': {'class' : "input"}
+                }) }}
+            </div>
+        </div>
+        <div class="input-div">
+            <p class="input-title">Mot de passe</p>
+            <div class="input-input">
+                <i class="fa-solid fa-lock"></i>
+                {{ form_widget(registrationForm.plainPassword , {
+                'attr': {'class' : "input"}
+                }) }}
+            </div>
+        </div>
+        <div class="input-div">
+            <p class="input-title">Confirmer le mot de passe</p>
+            <div class="input-input">
+                <i class="fa-solid fa-lock"></i>
+                {{ form_widget(registrationForm.confirmPassword , {
+                'attr': {'class' : "input"}
+                }) }}
+            </div>
+        </div>
+        <div class="flex items-center gap-2 text-(--third-color)">
+            {{ form_widget(registrationForm.agreeTerms) }}
+            <p>J'accepte les conditions d'utilisation</p>
+
+        </div>
+        <p></p>
+        {{ form_errors(registrationForm) }}
+        <button type="submit" class="btn  primary-button">Créer un compte</button>
+        {{ form_end(registrationForm) }}
+        <p class="text-(--secondary-color)">Ou continuer avec</p>
+        <div class="flex w-full gap-4">
+            <a class="container-button flex-1" href="">
+                <i class="fa-brands fa-google"></i>
+                <p>Google</p>
+            </a>
+            <a class="container-button flex-1" href="">
+                <i class="fa-brands fa-github"></i>
+                <p>GitHub</p>
+            </a>
+        </div>
+        <p class="text-(--secondary-color)">Déja un compte ? <a href="{{ path('app_login') }}"
+                class="text-(--primary-color) hover:underline">Se connecter</a></p>
+    </div>
+</div>
+{% endblock %}
