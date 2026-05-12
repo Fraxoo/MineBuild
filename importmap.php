@@ -25,4 +25,14 @@ return [
     '@hotwired/turbo' => [
         'version' => '8.0.23',
     ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
+    'daisyui' => [
+        'version' => '5.5.19',
+    ],
+    'daisyui/daisyui.min.css' => [
+        'version' => '5.5.19',
+        'type' => 'css',
+    ],
 ];

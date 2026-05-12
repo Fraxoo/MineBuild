@@ -1,4 +1,10 @@
 @import "tailwindcss";
+@plugin "../vendor/daisyui/daisyui.index.js" {
+  themes: false;
+}
+
+
+
 
 :root {
     --primary-color: #4ade80;
@@ -55,8 +61,16 @@ body {
     border-radius: 0.25rem;
     border: 1px solid var(--border-color);
     align-items: center;
-    color: var(--third-muted);
+    color: var(--third-color);
     background-color: var(--container-color-secondary);
+}
+
+.input-input i {
+    color: var(--third-muted);
+}
+
+.input-input::placeholder {
+    color: var(--third-muted);
 }
 
 .input-input--error {
@@ -123,6 +137,14 @@ body {
     font-size: 0.875rem;
 }
 
+.dropdown-content li {
+    transition: background-color 0.2s;
+}
+.dropdown-content li:active {
+    background-color: var(--container-color-secondary);
+}
+
+
 @media (max-width: 640px) {
     .middle-container-div {
         min-height: 100dvh;
@@ -135,4 +157,20 @@ body {
         width: 100%;
         padding: 1.25rem;
     }
+}
+
+/* --- DaisyUI: suppression de l'effet "granuleux" (noise) ---
+   DaisyUI peut injecter un SVG de bruit via la variable CSS --fx-noise
+   et l'utiliser dans des background-image (notamment sur .menu/.dropdown-content).
+   On neutralise la variable + on force background-image: none sur le dropdown. */
+@layer base {
+    :root,
+    [data-theme] {
+        --fx-noise: none !important;
+    }
+}
+
+.dropdown-content,
+.dropdown-content * {
+    background-image: none !important;
 }
