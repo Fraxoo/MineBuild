@@ -17,7 +17,7 @@
             <twig:WebsiteTitle />
             <div class="flex flex-col items-center gap-4">
                 <p class="text-xl text-(--third-color) font-bold">Créer un compte</p>
-                <p class="text-(--secondary-color)">Rejoignez la communauté et commencez à partager vos créations !</p>
+                <p class="text-(--secondary-color) text-center">Rejoignez la communauté et commencez à partager vos créations !</p>
             </div>
         </div>
         {{ form_start(registrationForm , {
@@ -84,7 +84,7 @@
         <button type="submit" class="btn  primary-button">Créer un compte</button>
         {{ form_end(registrationForm) }}
         <p class="text-(--secondary-color)">Ou continuer avec</p>
-        <div class="flex w-full gap-4">
+        <div class="flex w-full flex-wrap gap-4">
             <a class="container-button flex-1" href="">
                 <i class="fa-brands fa-google"></i>
                 <p>Google</p>
@@ -94,7 +94,7 @@
                 <p>GitHub</p>
             </a>
         </div>
-        <p class="text-(--secondary-color)">Déja un compte ? <a href="{{ path('app_login') }}"
+        <p class="text-(--secondary-color) text-center">Déja un compte ? <a href="{{ path('app_login') }}"
                 class="text-(--primary-color) hover:underline">Se connecter</a></p>
     </div>
 </div>
