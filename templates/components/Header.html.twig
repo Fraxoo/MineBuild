@@ -12,8 +12,14 @@
             <div tabindex="0" role="button" class=" cursor-pointer border-0 shadow-none bg-(--background-color)! m-1">
                 <i class="fa-regular text-xl fa-user"></i>
             </div>
-            <ul tabindex="-1" class="dropdown-content bg-(--container-color)! menu  rounded-box z-1 w-52 p-2 shadow-sm">
-                <li><a>Item 1</a></li>
+            <ul tabindex="-1" class="dropdown-content font-bold bg-(--container-color)! menu  rounded-box z-1 w-52 p-2 shadow-sm">
+                <li>
+                    <a class="flex gap-2 px-4 py-2  items-center" href="{{ path('app_user_show', {'id': app.user.id})}}">
+                        <i class="fa-regular fa-user"></i>
+                        <p>Mon Profil</p>
+                    </a>
+                
+                </li>
                 <li>
                     <a class="flex gap-2 px-4 py-2  items-center" href="{{ logout_path() }}">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
