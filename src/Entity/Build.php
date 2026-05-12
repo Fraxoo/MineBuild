@@ -9,6 +9,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
+
+
 #[ORM\Entity(repositoryClass: BuildRepository::class)]
 class Build
 {
@@ -196,7 +198,7 @@ class Build
 
         return $this;
     }
-
+    
     public function getDimensionsX(): ?int
     {
         return $this->dimensions_x;

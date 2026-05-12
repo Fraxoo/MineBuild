@@ -10,12 +10,12 @@ class BuildCategory
 {
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'buildCategories')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Build $build = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'buildCategories')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Category $category = null;
 
     #[ORM\Column]

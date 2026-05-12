@@ -5,17 +5,17 @@ namespace App\Entity;
 use App\Repository\BuildRatingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: BuildRatingRepository::class)]
+#[ORM\Entity(repositoryClass: BuildRatingRepository ::class)]
 class BuildRating
 {
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'ratings')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Build $build = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'buildRatings')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\Column]

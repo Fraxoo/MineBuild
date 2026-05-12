@@ -10,12 +10,12 @@ class UserFollow
 {
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'followingRelations')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $follower = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'followerRelations')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $following = null;
 
     #[ORM\Column]

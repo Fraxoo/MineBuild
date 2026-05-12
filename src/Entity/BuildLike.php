@@ -10,12 +10,12 @@ class BuildLike
 {
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'likes')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Build $build = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'buildLikes')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\Column]
