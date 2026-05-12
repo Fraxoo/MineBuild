@@ -100,6 +100,10 @@ body {
     border: none;
     font-weight: bold;
     cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
 }
 
 .secondary-button {
@@ -143,6 +147,32 @@ body {
 .dropdown-content li:active {
     background-color: var(--container-color-secondary);
 }
+
+.nav-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--secondary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.nav-title {
+    color: var(--secondary-color);
+    font-weight: bold;
+    padding: 0 1rem;
+}
+
+.nav-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+
 
 
 @media (max-width: 640px) {

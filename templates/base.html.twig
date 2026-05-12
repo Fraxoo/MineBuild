@@ -36,9 +36,20 @@
 	{% if app.request.pathInfo != '/login'
 	and app.request.pathInfo != '/register' %}
 	<twig:Header />
+
+	{% else %}
+
+
 	{% endif %}
 	{% endblock %}
-	{% block body %}{% endblock %}
+	<div class="flex">
+		<twig:NavBar />
+		<div class="flex flex-7">
+			{% block body %}
+			{% endblock %}
+		</div>
+
+	</div>
 </body>
 
 </html>
