@@ -10,12 +10,12 @@ class BuildSave
 {
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'saves')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Build $build = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'buildSaves')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\Column]

@@ -1,0 +1,33 @@
+<div{{ attributes }} class="flex items-center border-b border-(--border-color) justify-between p-4">
+    <twig:WebsiteTitle />
+    <div class="input-input w-1/3">
+        <button class="cursor-pointer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <input class="w-full" placeholder="Rechercher des builds, auteur..." type="search">
+    </div>
+    <div class="flex items-center text-(--third-color) text-xl gap-4">
+        <i class="fa-regular fa-bell"></i>
+        <div class="dropdown  dropdown-bottom bg-(--background-color) dropdown-end">
+            <div tabindex="0" role="button" class=" cursor-pointer border-0 shadow-none bg-(--background-color)! m-1">
+                <i class="fa-regular text-xl fa-user"></i>
+            </div>
+            <ul tabindex="-1" class="dropdown-content font-bold bg-(--container-color)! menu  rounded-box z-1 w-52 p-2 shadow-sm">
+                <li>
+                    <a class="flex gap-2 px-4 py-2  items-center" href="{{ path('app_user_show', {'id': app.user.id})}}">
+                        <i class="fa-regular fa-user"></i>
+                        <p>Mon Profil</p>
+                    </a>
+                
+                </li>
+                <li>
+                    <a class="flex gap-2 px-4 py-2  items-center" href="{{ logout_path() }}">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <p class="text-red-600">Déconnexion</p>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    </div>

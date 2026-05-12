@@ -10,12 +10,12 @@ class BuildTag
 {
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'buildTags')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Build $build = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'buildTags')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Tag $tag = null;
 
     #[ORM\Column]
