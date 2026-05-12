@@ -79,8 +79,9 @@
             <p>J'accepte les conditions d'utilisation</p>
 
         </div>
-        <p></p>
-        {{ form_errors(registrationForm) }}
+        <div class="error-message">
+            {{ form_errors(registrationForm) }}
+        </div>
         <button type="submit" class="btn  primary-button">Créer un compte</button>
         {{ form_end(registrationForm) }}
         <p class="text-(--secondary-color)">Ou continuer avec</p>

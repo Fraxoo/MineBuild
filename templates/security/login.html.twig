@@ -15,9 +15,6 @@
             </div>
         </div>
         <form method="post" class="form-div w-full">
-            {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-            {% endif %}
 
             {# {% if app.user %}
             <div class="mb-3">
@@ -29,29 +26,33 @@
 
             <div class="input-div">
                 <label class="input-title" for="email">Email</label>
-                <input class="input-input form-control" type="email" value="{{ last_username }}" name="_email"
-                    id="email" autocomplete="email" required autofocus>
+                <div class="input-input {{ error ? 'input-input--error' : '' }}">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input class="input form-control" type="email" value="{{ last_username }}" name="_email" id="email"
+                        autocomplete="email" required autofocus>
+                </div>
             </div>
             <div class="input-div">
                 <label class="input-title" for="password">Mot de passe</label>
-                <div class="input-input">
+                <div class="input-input {{ error ? 'input-input--error' : '' }}">
+                    <i class="fa-solid fa-lock"></i>
                     <input type="password" name="_password" id="password" class="input form-control"
                         autocomplete="current-password" required>
                 </div>
             </div>
+            {% if error %}
+            <div class="alert error-message alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
             <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
                 value="{{ csrf_token('authenticate') }}">
 
-            {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me
-            functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
+
 
             <div class="checkbox mb-3">
                 <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
+                <label class="text-(--third-color)" for="_remember_me">Se souvenir de moi</label>
             </div>
-            #}
+
 
             <button class="btn btn-lg btn-primary primary-button" type="submit">
                 Se connecter
