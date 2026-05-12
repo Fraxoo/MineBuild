@@ -22,11 +22,12 @@ body {
 }
 
 .middle-container-div {
-    height: 100vh;
+    height: 100dvh;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
 }
 
 .middle-container {
@@ -35,18 +36,19 @@ body {
     border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
+    width: 30rem;
     gap: 1rem;
     border: 1px solid var(--border-color);
 }
 
-.input-div{
+.input-div {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  
+
 }
 
-.input-input{
+.input-input {
     display: flex;
     gap: 1rem;
     padding: 0.5rem;
@@ -57,11 +59,11 @@ body {
     background-color: var(--container-color-secondary);
 }
 
-.input-input--error{
+.input-input--error {
     border-color: red;
 }
 
-.input-title{
+.input-title {
     color: var(--third-color);
     font-weight: bold;
 }
@@ -96,7 +98,7 @@ body {
     cursor: pointer;
 }
 
-.container-button{
+.container-button {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -110,13 +112,27 @@ body {
     justify-content: center;
 }
 
-.form-div{
+.form-div {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.error-message{
+.error-message {
     color: red;
     font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+    .middle-container-div {
+        min-height: 100dvh;
+        height: auto;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .middle-container {
+        width: 100%;
+        padding: 1.25rem;
+    }
 }

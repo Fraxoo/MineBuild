@@ -1,38 +1,77 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Log in!
+{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+<div class="middle-container-div">
+    <div class="middle-container items-center">
+        <div class="flex  flex-col items-center gap-8">
+            <twig:WebsiteTitle />
+            <div class="flex flex-col items-center gap-4">
+                <p class="text-xl text-(--third-color) font-bold">Content de vous revoir</p>
+                <p class="text-(--secondary-color)">Connectez-vous pour continuer</p>
             </div>
-        {% endif %}
+        </div>
+        <form method="post" class="form-div w-full">
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Username</label>
-        <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="username" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+            {# {% if app.user %}
+            <div class="mb-3">
+                You are logged in as
+                {{ app.user.userIdentifier }},
+                <a href="{{ logout_path() }}">Logout</a>
+            </div>
+            {% endif %} #}
 
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
+            <div class="input-div">
+                <label class="input-title" for="email">Email</label>
+                <div class="input-input {{ error ? 'input-input--error' : '' }}">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input class="input form-control" type="email" value="{{ last_username }}" name="_email" id="email"
+                        autocomplete="email" required autofocus>
+                </div>
+            </div>
+            <div class="input-div">
+                <label class="input-title" for="password">Mot de passe</label>
+                <div class="input-input {{ error ? 'input-input--error' : '' }}">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="_password" id="password" class="input form-control"
+                        autocomplete="current-password" required>
+                </div>
+            </div>
+            {% if error %}
+            <div class="alert error-message alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+            <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
+                value="{{ csrf_token('authenticate') }}">
+
+
 
             <div class="checkbox mb-3">
                 <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
+                <label class="text-(--third-color)" for="_remember_me">Se souvenir de moi</label>
             </div>
-        #}
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+
+            <button class="btn btn-lg btn-primary primary-button" type="submit">
+                Se connecter
+            </button>
+        </form>
+        <p class="text-(--secondary-color)">Ou continuer avec</p>
+        <div class="flex w-full flex-wrap gap-4">
+            <a class="container-button flex-1" href="">
+                <i class="fa-brands fa-google"></i>
+                <p>Google</p>
+            </a>
+            <a class="container-button flex-1" href="">
+                <i class="fa-brands fa-github"></i>
+                <p>GitHub</p>
+            </a>
+        </div>
+        <p class="text-(--secondary-color) text-center">Vous n'avez pas de compte ?
+            <a href="{{ path('app_register') }}" class="text-(--primary-color) hover:underline">S'inscrire</a>
+        </p>
+    </div>
+</div>
 {% endblock %}
