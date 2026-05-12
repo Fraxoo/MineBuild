@@ -9,7 +9,7 @@
 :root {
     --primary-color: #4ade80;
     --secondary-color: #9b9b9b;
-    --third-color: white;
+    --title-color: white;
     --third-muted: oklch(0.556 0 0);
     --fourth-color: black;
     --background-color: #1a1a1a;
@@ -61,7 +61,7 @@ body {
     border-radius: 0.25rem;
     border: 1px solid var(--border-color);
     align-items: center;
-    color: var(--third-color);
+    color: var(--title-color);
     background-color: var(--container-color-secondary);
 }
 
@@ -78,7 +78,7 @@ body {
 }
 
 .input-title {
-    color: var(--third-color);
+    color: var(--title-color);
     font-weight: bold;
 }
 
@@ -121,7 +121,7 @@ body {
     align-items: center;
     gap: 1rem;
     background-color: var(--container-color-secondary);
-    color: var(--third-color);
+    color: var(--title-color);
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     border: 1px solid var(--border-color);

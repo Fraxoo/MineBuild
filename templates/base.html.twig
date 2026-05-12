@@ -45,8 +45,10 @@
 	<div class="flex">
 		<twig:NavBar />
 		<div class="flex flex-7">
-			{% block body %}
-			{% endblock %}
+			<div class="w-full flex gap-4 flex-col h-screen overflow-scroll p-6 ">
+				{% block body %}
+				{% endblock %}
+			</div>
 		</div>
 
 	</div>

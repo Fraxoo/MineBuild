@@ -3,52 +3,38 @@
 {% block title %}User{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+<twig:GoBack />
+<div class="flex gap-4 justify-between w-full bg-(--container-color) p-4 rounded">
+    <div class="flex gap-4 items-center">
+        <p>Avatar</p>
+        <div class="flex flex-col justify-between">
+            <div class="flex gap-2">
+                <h2 class="font-bold text-2xl text-(--title-color)">{{user.username}}</h2>
+                {% if app.user and app.user.id == user.id %}
+                <a class="flex text-(--title-color) font-bold gap-2 px-2 py-1 text-xs rounded items-center border border-(--border-color)"
+                    href="{{ path('app_user_edit', {id: user.id}) }}">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    <p>Modifier mon profil</p>
+                </a>
+                {% endif %}
+            </div>
+            <p class="text-(--secondary-color)">{{ user.bio ? user.bio : 'Aucune bio pour le moment' }}</p>
+            <div class="text-(--secondary-color)">
+                <div class="flex items-center gap-2">
+                    <i class="fa-regular fa-calendar"></i>
+                    <p>Inscrit depuis le {{ user.createdAt|date('d/m/Y') }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-table-cells"></i>
+                    <p>{{ user.builds|length }} {{ user.builds|length > 1 ? 'builds' : 'build' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>{{ user.username }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Avatar_url</th>
-                <td>{{ user.avatarUrl }}</td>
-            </tr>
-            <tr>
-                <th>Bio</th>
-                <td>{{ user.bio }}</td>
-            </tr>
-            <tr>
-                <th>Is_active</th>
-                <td>{{ user.isActive ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-
-    {{ include('user/_delete_form.html.twig') }}
 {% endblock %}
