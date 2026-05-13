@@ -73,24 +73,24 @@
     </div>
 </div>
 <div class="flex items-center gap-2 rounded  bg-(--container-color) w-fit">
-    <a href="" class="user-filter">
+    <a href="{{ path('app_user_show', {id: user.id}) }}" class="user-filter {{ app.request.attributes.get('_route') === 'app_user_show' ? 'user-selected-filter' : '' }}">
         <i class="fa-solid   fa-table-cells"></i>
         {# <p>Builds ({{ user.builds|length }})</p> #}
-        <p>Builds ({{ user.builds|length }})</p>
+        <p>Builds</p>
     </a>
-    <a href="" class="user-filter">
+    <a href="{{ path('app_user_favorites', {id: user.id}) }}" class="user-filter {{ app.request.attributes.get('_route') === 'app_user_favorites' ? 'user-selected-filter' : '' }}">
         <i class="fa-solid   fa-heart"></i>
         {# <p>Favoris ({{ user.buildSaves|length }})</p> #}
         <p>Favoris</p>
 
     </a>
-    <a href="" class="user-filter">
+    <a href="{{ path('app_user_followers', {id: user.id}) }}" class="user-filter {{ app.request.attributes.get('_route') === 'app_user_followers' ? 'user-selected-filter' : '' }}">
         <i class="fa-solid   fa-users"></i>
         {# <p>Followers ({{ user.followerRelations|length }})</p> #}
         <p>Followers</p>
 
     </a>
-    <a href="" class="user-filter">
+    <a href="{{ path('app_user_following', {id: user.id}) }}" class="user-filter {{ app.request.attributes.get('_route') === 'app_user_following' ? 'user-selected-filter' : '' }}">
         <i class="fa-solid fa-user-plus"></i>
         {# <p>Following ({{ user.followingRelations|length }})</p> #}
         <p>Following</p>

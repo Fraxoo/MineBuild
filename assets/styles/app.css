@@ -204,6 +204,12 @@ body {
     
 }
 
+.user-selected-filter {
+    background-color: var(--primary-color);
+    color: var(--fourth-color);
+    border-radius: 0.25rem;
+}
+
 
 
 

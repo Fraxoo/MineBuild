@@ -45,9 +45,9 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    #[Route('{id}/favorites', name: 'app_user_favorites', methods: ['GET'])]
-    #[Route('{id}/following', name: 'app_user_following', methods: ['GET'])]
-    #[Route('{id}/followers', name: 'app_user_followers', methods: ['GET'])]
+    #[Route('/{id}/favorites', name: 'app_user_favorites', methods: ['GET'])]
+    #[Route('/{id}/following', name: 'app_user_following', methods: ['GET'])]
+    #[Route('/{id}/followers', name: 'app_user_followers', methods: ['GET'])]
     public function show(User $user,?string $favorites = null, ?string $following = null, ?string $followers = null, BuildRepository $buildRepository): Response
     {
 
