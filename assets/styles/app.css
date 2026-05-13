@@ -9,14 +9,14 @@
 :root {
     --primary-color: #4ade80;
     --secondary-color: #9b9b9b;
-    --third-color: white;
+    --title-color: white;
     --third-muted: oklch(0.556 0 0);
     --fourth-color: black;
     --background-color: #1a1a1a;
     --background-color-secondary: #1e1e1e;
     --container-color: #242424;
     --container-color-secondary: #2c2c2c;
-    --border-color: rgb(155, 155, 155, 0.2);
+    --border-color: rgb(155, 155, 155, 0.1);
 }
 
 * {
@@ -61,7 +61,7 @@ body {
     border-radius: 0.25rem;
     border: 1px solid var(--border-color);
     align-items: center;
-    color: var(--third-color);
+    color: var(--title-color);
     background-color: var(--container-color-secondary);
 }
 
@@ -78,7 +78,7 @@ body {
 }
 
 .input-title {
-    color: var(--third-color);
+    color: var(--title-color);
     font-weight: bold;
 }
 
@@ -100,6 +100,10 @@ body {
     border: none;
     font-weight: bold;
     cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
 }
 
 .secondary-button {
@@ -117,7 +121,7 @@ body {
     align-items: center;
     gap: 1rem;
     background-color: var(--container-color-secondary);
-    color: var(--third-color);
+    color: var(--title-color);
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     border: 1px solid var(--border-color);
@@ -143,6 +147,70 @@ body {
 .dropdown-content li:active {
     background-color: var(--container-color-secondary);
 }
+
+.nav-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--secondary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.nav-title {
+    color: var(--secondary-color);
+    font-weight: bold;
+    padding: 0 1rem;
+}
+
+.nav-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.user-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--container-color);
+    color: var(--title-color);
+}
+
+.user-box i {
+    padding: 0.75rem 1.75rem;
+    font-size: 1.5rem;
+    display: inline-flex;
+    justify-content: center;
+    align-self: center;
+    border-radius: 0.25rem;
+}
+
+.user-filter{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--secondary-color);
+    padding: 0.25rem 0.5rem;
+}
+
+.user-filter:hover{
+    
+}
+
+.user-selected-filter {
+    background-color: var(--primary-color);
+    color: var(--fourth-color);
+    border-radius: 0.25rem;
+}
+
+
 
 
 @media (max-width: 640px) {
