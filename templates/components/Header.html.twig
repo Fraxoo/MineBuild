@@ -13,7 +13,6 @@
 				{% if app.user and app.user.avatarUrl %}
 					<img class="w-8 h-8 rounded-full object-cover" src="{{ asset('uploads/avatars/' ~ app.user.avatarUrl) }}" alt="Avatar de {{ app.user.username }}">
 				{% else %}
-
 					<i class="fa-regular text-xl fa-user"></i>
 				{% endif %}
 			</div>
