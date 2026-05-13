@@ -1,136 +1,133 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}User
+{% endblock %}
 
 {% block body %}
-<div class="flex flex-col gap-4">
+	<div class="flex flex-col gap-4">
 
-    <twig:GoBack />
-    <div class="flex gap-4 flex-wrap items-center justify-between w-full bg-(--container-color) p-8 rounded">
-        <div class="flex flex-wrap gap-4 items-center">
-            <p>Avatar</p>
-            <div class="flex flex-wrap flex-col gap-4 justify-between">
-                <div class="flex gap-2">
-                    <h2 class="font-bold text-2xl text-(--title-color)">{{user.username}}</h2>
-                    {% if app.user and app.user.id == user.id %}
-                    <a class="flex text-(--title-color) font-bold gap-2 px-2 py-1 text-xs rounded items-center border border-(--border-color)"
-                        href="{{ path('app_user_edit', {id: user.id}) }}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                        <p>Modifier mon profil</p>
-                    </a>
-                    {% endif %}
-                </div>
-                <p class="text-(--secondary-color)">{{ user.bio ? user.bio : 'Aucune bio pour le moment' }}</p>
-                <div class="flex items-center gap-4 text-(--secondary-color)">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-regular fa-calendar"></i>
-                        <p>Inscrit depuis le {{ user.createdAt|date('d/m/Y') }}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-table-cells"></i>
-                        <p>{{ user.builds|length }} {{ user.builds|length > 1 ? 'builds' : 'build' }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="flex gap-4 items-center">
-            <div class="flex flex-col gap-2 items-center">
-                <p class="text-(--title-color) font-bold">{{ user.followerRelations|length }}</p>
-                <p class="text-(--secondary-color)">Followers</p>
-            </div>
-            <div class="flex flex-col gap-2 items-center">
-                <p class="text-(--title-color) font-bold">{{ user.followingRelations|length }}</p>
-                <p class="text-(--secondary-color)">Following</p>
-            </div>
-        </div>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <div class="user-box">
-            <i class="fa-solid  bg-[#28372d]  text-[#4ae583] fa-table-cells"></i>
-            <div>
-                <p class="text-(--title-color) font-bold">{{ user.builds|length }}</p>
-                <p class="text-(--secondary-color)">Total builds</p>
-            </div>
-        </div>
-        <div class="user-box">
-            <i class="fa-solid  bg-[#242d3a]  text-[#2a85fd] fa-users"></i>
-            <div>
-                <p class="text-(--title-color) font-bold">{{ totalViews|length }}</p>
-                <p class="text-(--secondary-color)">Total vues</p>
-            </div>
-        </div>
-        <div class="user-box">
-            <i class="fa-solid  bg-[#3a2426]  text-[#ff2b36] fa-heart"></i>
-            <div>
-                <p class="text-(--title-color) font-bold">{{ totalLikes|length }}</p>
-                <p class="text-(--secondary-color)">Total Likes</p>
-            </div>
-        </div>
-        <div class="user-box">
-            <i class="fa-solid  bg-[#203428]  text-[#00c84e] fa-star"></i>
-            <div>
-                <p class="text-(--title-color) font-bold">{{ totalSaves|length }}</p>
-                <p class="text-(--secondary-color)">Total saves</p>
-            </div>
-        </div>
-    </div>
-    <div class="user-filter-container">
-        <a href="{{ path('app_user_show', {id: user.id}) }}"
-            class="user-filter {{ app.request.attributes.get('_route') === 'app_user_show' ? 'user-selected-filter' : '' }}">
-            <i class="fa-solid   fa-table-cells"></i>
-            {# <p>Builds ({{ user.builds|length }})</p> #}
-            <p>Builds</p>
-        </a>
-        <a href="{{ path('app_user_favorites', {id: user.id}) }}"
-            class="user-filter {{ app.request.attributes.get('_route') === 'app_user_favorites' ? 'user-selected-filter' : '' }}">
-            <i class="fa-solid   fa-heart"></i>
-            {# <p>Favoris ({{ user.buildSaves|length }})</p> #}
-            <p>Favoris</p>
+		<twig:GoBack/>
+		<div class="flex gap-4 flex-wrap items-center justify-between w-full bg-(--container-color) p-8 rounded">
+			<div class="flex flex-wrap gap-4 items-center">
+				<img class="w-24 h-24 rounded-full border-4 border-(--border-color-secondary) object-cover" data-avatar-preview-target="image" src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.svg') }}" alt="Avatar de {{ user.username }}">
+				<div class="flex flex-wrap flex-col gap-4 justify-between">
+					<div class="flex gap-2">
+						<h2 class="font-bold text-2xl text-(--title-color)">{{user.username}}</h2>
+						{% if app.user and app.user.id == user.id %}
+							<a class="flex text-(--title-color) font-bold gap-2 px-2 py-1 text-xs rounded items-center border border-(--border-color)" href="{{ path('app_user_edit', {id: user.id}) }}">
+								<i class="fa-regular fa-pen-to-square"></i>
+								<p>Modifier mon profil</p>
+							</a>
+						{% endif %}
+					</div>
+					<p class="text-(--secondary-color)">{{ user.bio ? user.bio : 'Aucune bio pour le moment' }}</p>
+					<div class="flex items-center gap-4 text-(--secondary-color)">
+						<div class="flex items-center gap-2">
+							<i class="fa-regular fa-calendar"></i>
+							<p>Inscrit depuis le
+								{{ user.createdAt|date('d/m/Y') }}</p>
+						</div>
+						<div class="flex items-center gap-2">
+							<i class="fa-solid fa-table-cells"></i>
+							<p>{{ user.builds|length }}
+								{{ user.builds|length > 1 ? 'builds' : 'build' }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="flex gap-4 items-center">
+				<div class="flex flex-col gap-2 items-center">
+					<p class="text-(--title-color) font-bold">{{ user.followerRelations|length }}</p>
+					<p class="text-(--secondary-color)">Followers</p>
+				</div>
+				<div class="flex flex-col gap-2 items-center">
+					<p class="text-(--title-color) font-bold">{{ user.followingRelations|length }}</p>
+					<p class="text-(--secondary-color)">Following</p>
+				</div>
+			</div>
+		</div>
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+			<div class="user-box">
+				<i class="fa-solid  bg-[#28372d]  text-[#4ae583] fa-table-cells"></i>
+				<div>
+					<p class="text-(--title-color) font-bold">{{ user.builds|length }}</p>
+					<p class="text-(--secondary-color)">Total builds</p>
+				</div>
+			</div>
+			<div class="user-box">
+				<i class="fa-solid  bg-[#242d3a]  text-[#2a85fd] fa-users"></i>
+				<div>
+					<p class="text-(--title-color) font-bold">{{ totalViews|length }}</p>
+					<p class="text-(--secondary-color)">Total vues</p>
+				</div>
+			</div>
+			<div class="user-box">
+				<i class="fa-solid  bg-[#3a2426]  text-[#ff2b36] fa-heart"></i>
+				<div>
+					<p class="text-(--title-color) font-bold">{{ totalLikes|length }}</p>
+					<p class="text-(--secondary-color)">Total Likes</p>
+				</div>
+			</div>
+			<div class="user-box">
+				<i class="fa-solid  bg-[#203428]  text-[#00c84e] fa-star"></i>
+				<div>
+					<p class="text-(--title-color) font-bold">{{ totalSaves|length }}</p>
+					<p class="text-(--secondary-color)">Total saves</p>
+				</div>
+			</div>
+		</div>
+		<div class="user-filter-container">
+			<a href="{{ path('app_user_show', {id: user.id}) }}" class="user-filter {{ app.request.attributes.get('_route') === 'app_user_show' ? 'user-selected-filter' : '' }}">
+				<i class="fa-solid   fa-table-cells"></i>
+				{# <p>Builds ({{ user.builds|length }})</p> #}
+				<p>Builds</p>
+			</a>
+			<a href="{{ path('app_user_favorites', {id: user.id}) }}" class="user-filter {{ app.request.attributes.get('_route') === 'app_user_favorites' ? 'user-selected-filter' : '' }}">
+				<i class="fa-solid   fa-heart"></i>
+				{# <p>Favoris ({{ user.buildSaves|length }})</p> #}
+				<p>Favoris</p>
 
-        </a>
-        <a href="{{ path('app_user_followers', {id: user.id}) }}"
-            class="user-filter {{ app.request.attributes.get('_route') === 'app_user_followers' ? 'user-selected-filter' : '' }}">
-            <i class="fa-solid   fa-users"></i>
-            {# <p>Followers ({{ user.followerRelations|length }})</p> #}
-            <p>Followers</p>
+			</a>
+			<a href="{{ path('app_user_followers', {id: user.id}) }}" class="user-filter {{ app.request.attributes.get('_route') === 'app_user_followers' ? 'user-selected-filter' : '' }}">
+				<i class="fa-solid   fa-users"></i>
+				{# <p>Followers ({{ user.followerRelations|length }})</p> #}
+				<p>Followers</p>
 
-        </a>
-        <a href="{{ path('app_user_following', {id: user.id}) }}"
-            class="user-filter {{ app.request.attributes.get('_route') === 'app_user_following' ? 'user-selected-filter' : '' }}">
-            <i class="fa-solid fa-user-plus"></i>
-            {# <p>Following ({{ user.followingRelations|length }})</p> #}
-            <p>Following</p>
-        </a>
-    </div>
-    <div>
-        {% if contents|length < 0 %} {% if app.request.attributes.get('_route')==='app_user_show' or
-            app.request.attributes.get('_route')==='app_user_favorites' %} {% for build in contents %} <div
-            class="build-card">
-            <h3>{{ build.title }}</h3>
-            <p>{{ build.description }}</p>
-    </div>
-    {% endfor %}
-    {% else %}
-    {% for relation in contents %}
-    <div class="flex items-center gap-4 p-4 rounded bg-(--container-color)">
-        <img class="w-12 h-12 rounded-full"
-            src="{{ relation.followed.avatar ? asset('uploads/avatars/' ~ relation.followed.avatar) : asset('images/default-avatar.svg') }}"
-            alt="Avatar de {{ relation.followed.username }}">
-        <div>
-            <p class="text-(--title-color) font-bold">{{ relation.followed.username }}</p>
-            <p class="text-(--secondary-color) text-sm">Inscrit depuis le {{ relation.followed.createdAt|date('d/m/Y')
+			</a>
+			<a href="{{ path('app_user_following', {id: user.id}) }}" class="user-filter {{ app.request.attributes.get('_route') === 'app_user_following' ? 'user-selected-filter' : '' }}">
+				<i class="fa-solid fa-user-plus"></i>
+				{# <p>Following ({{ user.followingRelations|length }})</p> #}
+				<p>Following</p>
+			</a>
+		</div>
+		<div>
+			{% if contents|length < 0 %}
+				{% if app.request.attributes.get('_route')==='app_user_show' or
+            app.request.attributes.get('_route')==='app_user_favorites' %}
+					{% for build in contents %}
+						<div class="build-card">
+							<h3>{{ build.title }}</h3>
+							<p>{{ build.description }}</p>
+						</div>
+					{% endfor %}
+				{% else %}
+					{% for relation in contents %}
+						<div class="flex items-center gap-4 p-4 rounded bg-(--container-color)">
+							<img class="w-12 h-12 rounded-full" src="{{ relation.followed.avatar ? asset('uploads/avatars/' ~ relation.followed.avatar) : asset('images/default-avatar.svg') }}" alt="Avatar de {{ relation.followed.username }}">
+							<div>
+								<p class="text-(--title-color) font-bold">{{ relation.followed.username }}</p>
+								<p class="text-(--secondary-color) text-sm">Inscrit depuis le
+									{{ relation.followed.createdAt|date('d/m/Y')
                 }}</p>
-        </div>
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% else %}
-    <p class="text-(--secondary-color)">Aucun contenu à afficher.</p>
-    {% endif %}
-</div>
-</div>
-
-
+							</div>
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% else %}
+				<p class="text-(--secondary-color)">Aucun contenu à afficher.</p>
+			{% endif %}
+		</div>
+	</div>
 
 
 {% endblock %}
