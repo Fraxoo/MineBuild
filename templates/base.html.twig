@@ -31,27 +31,27 @@
 	{% endif %}
 </head>
 
-<body>
-	{% block content %}
-	{% if app.request.pathInfo != '/login'
-	and app.request.pathInfo != '/register' %}
-	<twig:Header />
+<body class="h-screen overflow-hidden flex flex-col">
 
-	{% else %}
+    {% set isAuthPage = app.request.pathInfo == '/login' or app.request.pathInfo == '/register' %}
 
+    {% if not isAuthPage %}
+        <twig:Header />
+    {% endif %}
 
-	{% endif %}
-	{% endblock %}
-	<div class="flex">
-		<twig:NavBar />
-		<div class="flex flex-7">
-			<div class="w-full flex gap-4 flex-col h-screen overflow-scroll p-6 ">
-				{% block body %}
-				{% endblock %}
-			</div>
-		</div>
+    <div class="flex flex-1 min-h-0">
+        {% if not isAuthPage %}
+            <twig:NavBar />
+        {% endif %}
 
-	</div>
+        <main class="flex-7 min-w-0 min-h-0">
+            <div class="h-full overflow-y-scroll p-6 flex flex-col gap-4">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
 </body>
 
 </html>

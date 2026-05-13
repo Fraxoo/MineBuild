@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Build;
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\BuildRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,10 +45,31 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    #[Route('{id}/favorites', name: 'app_user_favorites', methods: ['GET'])]
+    #[Route('{id}/following', name: 'app_user_following', methods: ['GET'])]
+    #[Route('{id}/followers', name: 'app_user_followers', methods: ['GET'])]
+    public function show(User $user,?string $favorites = null, ?string $following = null, ?string $followers = null, BuildRepository $buildRepository): Response
     {
+
+        $contents = null;
+
+        if ($favorites) {
+            $contents = $user->getBuildSaves();
+        } elseif ($following) {
+            $contents = $user->getFollowingRelations();
+        } elseif ($followers) {
+            $contents = $user->getFollowerRelations();
+        } else {
+            $contents = $user->getBuilds();
+        }
+
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
+            'totalLikes' => $buildRepository->getAllLikeForAllBuildsByUser($user),
+            'totalViews' => $buildRepository->getTotalViewForAllBuildsByUser($user),
+            'totalSaves' => $buildRepository->getTotalSaveForAllBuildsByUser($user),
+            'contents' => $contents
         ]);
     }
 
@@ -71,7 +94,7 @@ final class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }
