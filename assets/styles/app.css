@@ -15,8 +15,15 @@
     --background-color: #1a1a1a;
     --background-color-secondary: #1e1e1e;
     --container-color: #242424;
+    --container-color-third: #282828;
     --container-color-secondary: #2c2c2c;
     --border-color: rgb(155, 155, 155, 0.1);
+    --border-color-secondary : rgb(155, 155, 155, 0.2);
+}
+
+input {
+    height: fit-content;
+    font-size: 1rem;
 }
 
 * {
@@ -57,12 +64,13 @@ body {
 .input-input {
     display: flex;
     gap: 1rem;
-    padding: 0.5rem;
+    padding:  0.5rem;
     border-radius: 0.25rem;
     border: 1px solid var(--border-color);
     align-items: center;
     color: var(--title-color);
     background-color: var(--container-color-secondary);
+    
 }
 
 .input-input i {
@@ -104,6 +112,21 @@ body {
     gap: 0.5rem;
     align-items: center;
     justify-content: center;
+}
+
+.container-color-button {
+        background-color: var(--container-color);
+    color: var(--title-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
 }
 
 .secondary-button {
@@ -192,22 +215,48 @@ body {
     border-radius: 0.25rem;
 }
 
+.user-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--container-color);
+    width: fit-content;
+    flex-wrap: wrap;
+}
+
 .user-filter{
     display: flex;
     align-items: center;
     gap: 0.5rem;
     color: var(--secondary-color);
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 1rem;
+    justify-content: center;
 }
 
 .user-filter:hover{
     
 }
 
+
 .user-selected-filter {
-    background-color: var(--primary-color);
-    color: var(--fourth-color);
+    background-color: var(--container-color-third);
+    color: var(--title-color);
     border-radius: 0.25rem;
+    border: 1px solid var(--border-color);
+    
+}
+
+.user-edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--container-color);
 }
 
 
