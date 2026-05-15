@@ -1,5 +1,5 @@
 <div{{attributes}} class="flex items-center border-b border-(--border-color) justify-between p-4">
-	<twig:WebsiteTitle/>
+	<twig:WebsiteTitle />
 	<div class="input-input w-1/3">
 		<button class="cursor-pointer">
 			<i class="fa-solid fa-magnifying-glass"></i>
@@ -11,14 +11,18 @@
 		<div class="dropdown  dropdown-bottom bg-(--background-color) dropdown-end">
 			<div tabindex="0" role="button" class=" cursor-pointer border-0 shadow-none bg-(--background-color)! m-1">
 				{% if app.user and app.user.avatarUrl %}
-					<img class="w-8 h-8 rounded-full object-cover" src="{{ asset('uploads/avatars/' ~ app.user.avatarUrl) }}" alt="Avatar de {{ app.user.username }}">
+				<img class="w-8 h-8 rounded-full object-cover"
+					src="{{ asset('uploads/avatars/' ~ app.user.avatarUrl) }}" alt="Avatar de {{ app.user.username }}">
 				{% else %}
-					<i class="fa-regular text-xl fa-user"></i>
+				<i class="fa-regular text-xl fa-user"></i>
 				{% endif %}
 			</div>
-			<ul tabindex="-1" class="dropdown-content font-bold bg-(--container-color)! menu  rounded-box z-1 w-52 p-2 shadow-sm">
+			<ul tabindex="-1"
+				class="dropdown-content font-bold bg-(--container-color)! menu  rounded-box z-1 w-52 p-2 shadow-sm">
+				{% if app.user %}
 				<li>
-					<a class="flex gap-2 px-4 py-2  items-center" href="{{ path('app_user_show', {'id': app.user.id})}}">
+					<a class="flex gap-2 px-4 py-2  items-center"
+						href="{{ path('app_user_show', {'id': app.user.id})}}">
 						<i class="fa-regular fa-user"></i>
 						<p>Mon Profil</p>
 					</a>
@@ -30,8 +34,15 @@
 						<p class="text-red-600">Déconnexion</p>
 					</a>
 				</li>
-
+				{% else %}
+				<li>
+					<a href="{{ path( 'app_login')}}">Se connecter</a>
+				</li>
+				<li>
+					<a href="{{ path( 'app_register' )}}">S'inscrire</a>
+				</li>
+				{% endif %}
 			</ul>
 		</div>
 	</div>
-</div>
+	</div>
