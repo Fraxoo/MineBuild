@@ -61,11 +61,6 @@
 - **When :** j’ouvre “Mon profil”
 - **Then :** je vois mes infos + la liste de mes builds + mes stats publiques
 
-### Scénario 2 — Non connecté
-- **Given :** je ne suis pas connecté
-- **When :** j’ouvre “Mon profil”
-- **Then :** je suis redirigé vers “Connexion”
-
 ---
 
 ## US2.2 — Modifier mon profil (P1)

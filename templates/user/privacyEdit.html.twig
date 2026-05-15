@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+<div class="flex flex-col mx-auto w-full max-w-4xl px-4  gap-4 ">
+    <twig:UserEditNav :user="user" />
+</div>
+
+
+
+
+{# {{ include('user/_delete_form.html.twig') }} #}
+{% endblock %}

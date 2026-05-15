@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Build;
 use App\Entity\User;
+use App\Form\UserPasswordForm;
 use App\Form\UserType;
 use App\Repository\BuildRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -48,9 +50,10 @@ final class UserController extends AbstractController
     #[Route('/{id}/favorites', name: 'app_user_favorites', methods: ['GET'])]
     #[Route('/{id}/following', name: 'app_user_following', methods: ['GET'])]
     #[Route('/{id}/followers', name: 'app_user_followers', methods: ['GET'])]
-    public function show(User $user,?string $favorites = null, ?string $following = null, ?string $followers = null, BuildRepository $buildRepository): Response
+    public function show(User $user, ?string $favorites = null, ?string $following = null, ?string $followers = null, BuildRepository $buildRepository): Response
     {
 
+        
         $contents = null;
 
         if ($favorites) {
@@ -76,10 +79,32 @@ final class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
+
+
+        if ($user !== $this->getUser()) {
+            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('avatar_url')->getData();
+            if ($file) {
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $file->guessExtension();
+
+                try {
+                    $file->move(
+                        $this->getParameter('avatars_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Handle exception if something happens during file upload
+                }
+
+                $user->setAvatarUrl($newFilename);
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
@@ -88,6 +113,54 @@ final class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}/edit/password', name: 'app_user_edit_password', methods: ['GET', 'POST'])]
+    public function editPassword(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+
+
+        if ($user !== $this->getUser()) {
+            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        $form = $this->createForm(UserPasswordForm::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('user/passwordEdit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}/edit/privacy', name: 'app_user_edit_privacy', methods: ['GET', 'POST'])]
+    public function editPrivacy(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+
+
+        if ($user !== $this->getUser()) {
+            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+            // $form = $this->createForm(UserPasswordForm::class, $user);
+            // $form->handleRequest($request);
+
+            // if ($form->isSubmitted() && $form->isValid()) {
+            //     $entityManager->flush();
+
+            //     return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            // }
+
+        return $this->render('user/privacyEdit.html.twig', [
+            'user' => $user,
+            // 'form' => $form,
         ]);
     }
 

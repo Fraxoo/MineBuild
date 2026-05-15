@@ -3,11 +3,82 @@
 {% block title %}Edit User{% endblock %}
 
 {% block body %}
-    <h1>Edit User</h1>
+<div class="flex flex-col mx-auto w-full max-w-4xl px-4  gap-4 ">
+    <twig:UserEditNav :user="user" />
+    {{ form_start(form , {
+    'attr' : {'class' : 'user-edit-container'}}
+    ) }}
+    <div class="flex flex-col gap-1">
+        <h3 class="text-(--title-color)">Informations personnelles</h3>
+        <p class="text-(--secondary-color)">Modifier vos informations personnelles visibles aux autres</p>
+    </div>
+    <div class="flex gap-2 items-center" data-controller="avatar-preview">
+        <img class="w-24 h-24 rounded-full border-4 border-(--border-color-secondary) object-cover"
+            data-avatar-preview-target="image"
+            src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.svg') }}"
+            alt="Avatar de {{ user.username }}">
+        <div class="flex gap-2 flex-col">
+            <p class="input-title">Photo de profil</p>
+            <p class="text-[0.75rem] text-(--secondary-color)">JPG,PNG ou WEBP Taille maximale : 2Mo</p>
+            <div>
+                <label for="user_avatar_url"
+                    class="flex gap-2 w-fit text-[0.75rem] items-center font-bold text-(--title-color) border border-(--border-color) rounded cursor-pointer px-2 py-1">
+                    <i class="fa-solid fa-upload"></i>
+                    <span>Choisir une image</span>
+                </label>
+                {{ form_widget(form.avatar_url , {
+                'attr' : {
+                'class' : 'input input-input hidden! cursor-pointer',
+                'data-avatar-preview-target': 'input',
+                'data-action': 'change->avatar-preview#preview'
+                }
+                }) }}
+            </div>
+        </div>
+        <div class="error-message">
+            {{ form_errors(form.avatar_url) }}
+        </div>
+    </div>
+    <div>
+        <p class="input-title">Nom d'utilisateur</p>
+        {{ form_widget(form.username , {
+        'attr' : {'class' : 'input input-input'}}
+        ) }}
+        {{ form_errors(form.username , {
+        'attr' : {'class' : 'error-message'}}
+        ) }}
+    </div>
+    <div>
+        <p class="input-title">Email</p>
+        {{ form_widget(form.email , {
+        'attr' : {'class' : 'input input-input'}}
+        ) }}
+        {{ form_errors(form.email , {
+        'attr' : {'class' : 'error-message'}}
+        ) }}
+    </div>
+    <div>
+        <p class="input-title">Bio</p>
+        {{ form_widget(form.bio , {
+        'attr' : {'class' : 'input input-input h-32'}}
+        ) }}
+        {{ form_errors(form.bio , {
+        'attr' : {'class' : 'error-message'}}
+        ) }}
+    </div>
+    <div class="error-message">
+        {{ form_errors(form) }}
+    </div>
+    <div class="flex gap-4 justify-end">
+        <a class="container-color-button" href="{{ path('app_home')}}">Annuler</a>
+        <button class="btn btn-primary primary-button" type="submit">Sauvegarder</button>
+    </div>
+    {{ form_end(form) }}
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+</div>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
 
-    {{ include('user/_delete_form.html.twig') }}
+
+
+{# {{ include('user/_delete_form.html.twig') }} #}
 {% endblock %}

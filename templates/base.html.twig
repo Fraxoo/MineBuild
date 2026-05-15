@@ -40,12 +40,12 @@
     {% endif %}
 
     <div class="flex flex-1 min-h-0">
-        {% if not isAuthPage %}
+        {% if not isAuthPage  %}
             <twig:NavBar />
         {% endif %}
 
         <main class="flex-7 min-w-0 min-h-0">
-            <div class="h-full overflow-y-scroll p-6 flex flex-col gap-4">
+            <div class="h-full overflow-y-scroll p-6 ">
                 {% block body %}
                 {% endblock %}
             </div>
