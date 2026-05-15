@@ -53,7 +53,7 @@ final class UserController extends AbstractController
     public function show(User $user, ?string $favorites = null, ?string $following = null, ?string $followers = null, BuildRepository $buildRepository): Response
     {
 
-
+        
         $contents = null;
 
         if ($favorites) {

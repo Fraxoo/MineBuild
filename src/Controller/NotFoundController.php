@@ -6,13 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class 404Controller extends AbstractController
+final class NotFoundController extends AbstractController
 {
-    #[Route('/404', name: 'app_404')]
+    #[Route('404', name: 'app_not_found')]
     public function index(): Response
     {
-        return $this->render('404/index.html.twig', [
-            'controller_name' => '404Controller',
+        return $this->render('not_found/index.html.twig', [
+            'controller_name' => 'NotFoundController',
         ]);
     }
 }
