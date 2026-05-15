@@ -1,6 +1,7 @@
 @import "tailwindcss";
+
 @plugin "../vendor/daisyui/daisyui.index.js" {
-  themes: false;
+    themes: false;
 }
 
 
@@ -18,7 +19,9 @@
     --container-color-third: #282828;
     --container-color-secondary: #2c2c2c;
     --border-color: rgb(155, 155, 155, 0.1);
-    --border-color-secondary : rgb(155, 155, 155, 0.2);
+    --border-color-secondary: rgb(155, 155, 155, 0.2);
+    --red-border: rgb(255, 0, 0, 0.7);
+    --red-background: #2e2626;
 }
 
 input {
@@ -64,13 +67,13 @@ body {
 .input-input {
     display: flex;
     gap: 1rem;
-    padding:  0.5rem;
+    padding: 0.5rem;
     border-radius: 0.25rem;
     border: 1px solid var(--border-color);
     align-items: center;
     color: var(--title-color);
     background-color: var(--container-color-secondary);
-    
+
 }
 
 .input-input i {
@@ -100,6 +103,8 @@ body {
     border-color: var(--primary-color);
 }
 
+
+
 .primary-button {
     background-color: var(--primary-color);
     color: var(--fourth-color);
@@ -115,7 +120,7 @@ body {
 }
 
 .container-color-button {
-        background-color: var(--container-color);
+    background-color: var(--container-color);
     color: var(--title-color);
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
@@ -167,6 +172,7 @@ body {
 .dropdown-content li {
     transition: background-color 0.2s;
 }
+
 .dropdown-content li:active {
     background-color: var(--container-color-secondary);
 }
@@ -227,7 +233,7 @@ body {
     flex-wrap: wrap;
 }
 
-.user-filter{
+.user-filter {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -236,9 +242,7 @@ body {
     justify-content: center;
 }
 
-.user-filter:hover{
-    
-}
+.user-filter:hover {}
 
 
 .user-selected-filter {
@@ -246,7 +250,7 @@ body {
     color: var(--title-color);
     border-radius: 0.25rem;
     border: 1px solid var(--border-color);
-    
+
 }
 
 .user-edit-container {
@@ -254,7 +258,7 @@ body {
     flex-direction: column;
     gap: 1rem;
     padding: 2rem;
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     border: 1px solid var(--border-color);
     background-color: var(--container-color);
 }
@@ -281,6 +285,7 @@ body {
    et l'utiliser dans des background-image (notamment sur .menu/.dropdown-content).
    On neutralise la variable + on force background-image: none sur le dropdown. */
 @layer base {
+
     :root,
     [data-theme] {
         --fx-noise: none !important;

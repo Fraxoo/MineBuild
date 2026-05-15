@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Form\FormError;
+
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -53,7 +56,7 @@ final class UserController extends AbstractController
     public function show(User $user, ?string $favorites = null, ?string $following = null, ?string $followers = null, BuildRepository $buildRepository): Response
     {
 
-        
+
         $contents = null;
 
         if ($favorites) {
@@ -107,7 +110,7 @@ final class UserController extends AbstractController
             }
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -117,9 +120,8 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit/password', name: 'app_user_edit_password', methods: ['GET', 'POST'])]
-    public function editPassword(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function editPassword(Request $request, UserPasswordHasherInterface $passwordHasher, User $user, EntityManagerInterface $entityManager): Response
     {
-
 
         if ($user !== $this->getUser()) {
             return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
@@ -129,9 +131,20 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $currentPassword = $form->get('currentPassword')->getData();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            if (!$passwordHasher->isPasswordValid($user, $currentPassword)) {
+                $form->get('currentPassword')->addError(new FormError('Mot de passe actuel incorrect.'));
+            } else {
+                $newPassword = $form->get('plainPassword')->getData();
+                $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
+                $entityManager->flush();
+
+                return $this->render('user/passwordEdit.html.twig', [
+                    'user' => $user,
+                    'form' => $form,
+                ]);
+            }
         }
 
         return $this->render('user/passwordEdit.html.twig', [
@@ -149,14 +162,14 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
-            // $form = $this->createForm(UserPasswordForm::class, $user);
-            // $form->handleRequest($request);
+        // $form = $this->createForm(UserPasswordForm::class, $user);
+        // $form->handleRequest($request);
 
-            // if ($form->isSubmitted() && $form->isValid()) {
-            //     $entityManager->flush();
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $entityManager->flush();
 
-            //     return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-            // }
+        //     return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        // }
 
         return $this->render('user/privacyEdit.html.twig', [
             'user' => $user,
@@ -172,6 +185,6 @@ final class UserController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 }
