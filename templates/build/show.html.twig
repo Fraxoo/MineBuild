@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Build{% endblock %}
+
+{% block body %}
+    <h1>Build</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ build.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ build.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ build.description }}</td>
+            </tr>
+            <tr>
+                <th>Dimensions_x</th>
+                <td>{{ build.dimensionsX }}</td>
+            </tr>
+            <tr>
+                <th>Dimensions_y</th>
+                <td>{{ build.dimensionsY }}</td>
+            </tr>
+            <tr>
+                <th>Dimensions_z</th>
+                <td>{{ build.dimensionsZ }}</td>
+            </tr>
+            <tr>
+                <th>Difficulty</th>
+                <td>{{ build.difficulty }}</td>
+            </tr>
+            <tr>
+                <th>Time_estimated_min</th>
+                <td>{{ build.timeEstimatedMin }}</td>
+            </tr>
+            <tr>
+                <th>Game_version</th>
+                <td>{{ build.gameVersion }}</td>
+            </tr>
+            <tr>
+                <th>Game_mode</th>
+                <td>{{ build.gameMode }}</td>
+            </tr>
+            <tr>
+                <th>Visibility</th>
+                <td>{{ build.visibility }}</td>
+            </tr>
+            <tr>
+                <th>Hidden_reason</th>
+                <td>{{ build.hiddenReason }}</td>
+            </tr>
+            <tr>
+                <th>Hidden_at</th>
+                <td>{{ build.hiddenAt ? build.hiddenAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Views_count</th>
+                <td>{{ build.viewsCount }}</td>
+            </tr>
+            <tr>
+                <th>Likes_count</th>
+                <td>{{ build.likesCount }}</td>
+            </tr>
+            <tr>
+                <th>Saves_count</th>
+                <td>{{ build.savesCount }}</td>
+            </tr>
+            <tr>
+                <th>Downloads_count</th>
+                <td>{{ build.downloadsCount }}</td>
+            </tr>
+            <tr>
+                <th>Ratings_count</th>
+                <td>{{ build.ratingsCount }}</td>
+            </tr>
+            <tr>
+                <th>Rating_avg</th>
+                <td>{{ build.ratingAvg }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ build.createdAt ? build.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ build.updatedAt ? build.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Deleted_at</th>
+                <td>{{ build.deletedAt ? build.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_build_index') }}">back to list</a>
+
+    <a href="{{ path('app_build_edit', {'id': build.id}) }}">edit</a>
+
+    {{ include('build/_delete_form.html.twig') }}
+{% endblock %}

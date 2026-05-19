@@ -24,10 +24,10 @@ class Build
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $author = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
@@ -39,13 +39,13 @@ class Build
     #[ORM\Column(nullable: true)]
     private ?int $dimensions_z = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255 , nullable: false)]
     private ?string $difficulty = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private ?int $time_estimated_min = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     private ?string $game_version = null;
 
     #[ORM\Column(length: 255)]
@@ -145,6 +145,9 @@ class Build
     #[ORM\OneToMany(mappedBy: 'build', targetEntity: BuildRating::class, orphanRemoval: true)]
     private Collection $ratings;
 
+    #[ORM\Column]
+    private ?bool $modded = null;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -198,7 +201,7 @@ class Build
 
         return $this;
     }
-    
+
     public function getDimensionsX(): ?int
     {
         return $this->dimensions_x;
@@ -453,6 +456,22 @@ class Build
         return $this->images;
     }
 
+    public function addImage(BuildImage $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setBuild($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(BuildImage $image): static
+    {
+        $this->images->removeElement($image);
+        return $this;
+    }
+
     /**
      * @return Collection<int, BuildMaterial>
      */
@@ -461,12 +480,44 @@ class Build
         return $this->materials;
     }
 
+    public function addMaterial(BuildMaterial $material): static
+    {
+        if (!$this->materials->contains($material)) {
+            $this->materials->add($material);
+            $material->setBuild($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMaterial(BuildMaterial $material): static
+    {
+        $this->materials->removeElement($material);
+        return $this;
+    }
+
     /**
      * @return Collection<int, BuildAsset>
      */
     public function getAssets(): Collection
     {
         return $this->assets;
+    }
+
+    public function addAsset(BuildAsset $asset): static
+    {
+        if (!$this->assets->contains($asset)) {
+            $this->assets->add($asset);
+            $asset->setBuild($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAsset(BuildAsset $asset): static
+    {
+        $this->assets->removeElement($asset);
+        return $this;
     }
 
     /**
@@ -507,5 +558,17 @@ class Build
     public function getRatings(): Collection
     {
         return $this->ratings;
+    }
+
+    public function isModded(): ?bool
+    {
+        return $this->modded;
+    }
+
+    public function setModded(bool $modded): static
+    {
+        $this->modded = $modded;
+
+        return $this;
     }
 }

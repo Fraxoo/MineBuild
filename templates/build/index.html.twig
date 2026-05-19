@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Build index{% endblock %}
+
+{% block body %}
+    <h1>Build index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Dimensions_x</th>
+                <th>Dimensions_y</th>
+                <th>Dimensions_z</th>
+                <th>Difficulty</th>
+                <th>Time_estimated_min</th>
+                <th>Game_version</th>
+                <th>Game_mode</th>
+                <th>Visibility</th>
+                <th>Hidden_reason</th>
+                <th>Hidden_at</th>
+                <th>Views_count</th>
+                <th>Likes_count</th>
+                <th>Saves_count</th>
+                <th>Downloads_count</th>
+                <th>Ratings_count</th>
+                <th>Rating_avg</th>
+                <th>Created_at</th>
+                <th>Updated_at</th>
+                <th>Deleted_at</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for build in builds %}
+            <tr>
+                <td>{{ build.id }}</td>
+                <td>{{ build.title }}</td>
+                <td>{{ build.description }}</td>
+                <td>{{ build.dimensionsX }}</td>
+                <td>{{ build.dimensionsY }}</td>
+                <td>{{ build.dimensionsZ }}</td>
+                <td>{{ build.difficulty }}</td>
+                <td>{{ build.timeEstimatedMin }}</td>
+                <td>{{ build.gameVersion }}</td>
+                <td>{{ build.gameMode }}</td>
+                <td>{{ build.visibility }}</td>
+                <td>{{ build.hiddenReason }}</td>
+                <td>{{ build.hiddenAt ? build.hiddenAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ build.viewsCount }}</td>
+                <td>{{ build.likesCount }}</td>
+                <td>{{ build.savesCount }}</td>
+                <td>{{ build.downloadsCount }}</td>
+                <td>{{ build.ratingsCount }}</td>
+                <td>{{ build.ratingAvg }}</td>
+                <td>{{ build.createdAt ? build.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ build.updatedAt ? build.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ build.deletedAt ? build.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_build_show', {'id': build.id}) }}">show</a>
+                    <a href="{{ path('app_build_edit', {'id': build.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="23">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_build_new') }}">Create new</a>
+{% endblock %}

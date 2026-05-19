@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit BuildImage{% endblock %}
+
+{% block body %}
+    <h1>Edit BuildImage</h1>
+
+    {{ include('build_image/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_build_image_index') }}">back to list</a>
+
+    {{ include('build_image/_delete_form.html.twig') }}
+{% endblock %}

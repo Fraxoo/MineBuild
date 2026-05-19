@@ -143,65 +143,28 @@
 
 ---
 
-## US3.4 — Ajouter un matériau manuellement (P0)
-**En tant que** auteur, je veux ajouter des matériaux en texte libre afin de lister ce qu’il faut.
+## US3.4 — Gérer les matériaux d’un build (P0 / P1)
+**En tant que** auteur, je veux gérer la liste des matériaux (nom, quantité, couleur) afin d’aider les autres à reproduire mon build.
 
-### Scénario 1 — Matériau ajouté
+### Scénario 1 — Ajouter un matériau
 - **Given :** je suis dans “Matériaux requis” sur le formulaire / édition
-- **When :** j’ajoute un matériau via texte
-- **Then :** il apparaît dans la liste
+- **When :** j’ajoute un matériau (nom en texte libre) avec une quantité (> 0) et éventuellement une couleur
+- **Then :** le matériau apparaît dans la liste avec ses informations
 
-### Scénario 2 — Matériau refusé (validation)
+### Scénario 2 — Ajout refusé (validation)
 - **Given :** je suis dans “Matériaux requis”
-- **When :** j’ajoute un nom vide, trop long, ou invalide
+- **When :** j’ajoute un matériau avec des données invalides (nom vide/trop long, quantité invalide, couleur invalide)
 - **Then :** une erreur s’affiche et la ligne n’est pas ajoutée
 
----
-
-## US3.5 — Associer une quantité (P0)
-**En tant que** auteur, je veux indiquer la quantité afin d’être précis.
-
-### Scénario 1 — Quantité valide
+### Scénario 3 — Modifier un matériau
 - **Given :** un matériau existe dans la liste
-- **When :** je saisis une quantité entière > 0
-- **Then :** la quantité est enregistrée et affichée
-
-### Scénario 2 — Quantité invalide
-- **Given :** un matériau existe
-- **When :** je saisis 0 / négatif / non numérique
-- **Then :** une erreur empêche l’enregistrement
-
----
-
-## US3.6 — Couleur d’un matériau (P1)
-**En tant que** auteur, je veux définir une couleur pour un matériau afin de mieux organiser la liste.
-
-### Scénario 1 — Couleur enregistrée
-- **Given :** un matériau existe dans la liste
-- **When :** je renseigne une couleur valide
-- **Then :** la couleur est enregistrée et affichée
-
-### Scénario 2 — Couleur refusée
-- **Given :** un matériau existe
-- **When :** je renseigne une couleur invalide
-- **Then :** une erreur s’affiche et la couleur n’est pas enregistrée
-
----
-
-## US3.7 — Modifier / supprimer un matériau (P1)
-**En tant que** auteur, je veux modifier/supprimer des matériaux afin de corriger ma liste.
-
-### Scénario 1 — Modification
-- **Given :** j’ai une liste de matériaux
-- **When :** je modifie le nom, la quantité ou la couleur
+- **When :** je modifie son nom, sa quantité ou sa couleur
 - **Then :** la ligne est mise à jour
 
-### Scénario 2 — Suppression
-- **Given :** j’ai une liste de matériaux
-- **When :** je supprime une ligne
-- **Then :** elle disparaît de la liste
-
----
+### Scénario 4 — Supprimer un matériau
+- **Given :** un matériau existe dans la liste
+- **When :** je supprime ce matériau
+- **Then :** il disparaît de la liste
 
 # EPIC 4 — Page détail d’un build (infos + stats + interactions)
 

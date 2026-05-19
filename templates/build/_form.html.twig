@@ -1,0 +1,212 @@
+{{ form_start(form, { attr: { class: 'build-form' } }) }}
+
+<section class="build-card">
+    <header class="build-card__header">
+        <h3 class="build-card__title">Capture du build *</h3>
+        <p class="build-card__subtitle">Ajoutez une ou plusieurs images (PNG, JPG, max 10MB)</p>
+    </header>
+    <div class="build-card__body">
+        <div class="build-dropzone" data-controller="image-preview">
+            <label class="build-dropzone__label">
+                <div class="build-dropzone__inner">
+                    <i class="fa-regular fa-image build-dropzone__icon"></i>
+                    <p class="build-dropzone__title">Déposez vos images ici</p>
+                    <p class="build-dropzone__subtitle">ou cliquez pour parcourir</p>
+                </div>
+                {{ form_widget(form.image_files, { attr: { class: 'build-dropzone__input', accept:
+                'image/png,image/jpeg,image/webp', 'data-image-preview-target': 'input', 'data-action':
+                'change->image-preview#change' } }) }}
+            </label>
+            {{ form_errors(form.image_files) }}
+
+            <div class="build-images-preview" data-image-preview-target="list"></div>
+        </div>
+    </div>
+</section>
+
+<section class="build-card">
+    <header class="build-card__header">
+        <h3 class="build-card__title">Informations de base</h3>
+    </header>
+
+    <div class="build-card__body build-form__stack">
+        <div class="build-field">
+            <p class="build-label">Titre *</p>
+            {{ form_widget(form.title) }}
+            {{ form_errors(form.title) }}
+        </div>
+
+        <div class="build-field">
+            <p class="build-label">Description</p>
+            {{ form_widget(form.description) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <div class="build-grid-2">
+            <div class="build-field">
+                <p class="build-label">Catégorie *</p>
+                {{ form_widget(form.category) }}
+                {{ form_errors(form.category) }}
+            </div>
+            <div class="build-field">
+                <p class="build-label">Version *</p>
+                {{ form_widget(form.game_version) }}
+                {{ form_errors(form.game_version) }}
+            </div>
+        </div>
+
+        <div class="build-grid-2">
+            <div class="build-field">
+                <p class="build-label">Difficulté *</p>
+                {{ form_widget(form.difficulty) }}
+                {{ form_errors(form.difficulty) }}
+            </div>
+            <div class="build-field">
+                <p class="build-label">Mode de jeu *</p>
+                {{ form_widget(form.game_mode) }}
+                {{ form_errors(form.game_mode) }}
+            </div>
+        </div>
+
+        <div class="build-grid-2">
+            <div class="build-field">
+                <p class="build-label">Temps estimé *</p>
+                {{ form_widget(form.time_estimated_min) }}
+                {{ form_errors(form.time_estimated_min) }}
+            </div>
+            <div class="build-field">
+                <p class="build-label">Utilisation de mods</p>
+                <div class="flex items-center pt-3 gap-2">
+                    {{ form_widget(form.modded) }}
+                    {{ form_errors(form.modded) }}
+                    <p class="text-(--secondary-color)">Ce build utilise des mods</p>
+                </div>
+            </div>
+        </div>
+        <div class="build-field">
+            <p class="build-label">Taille du build</p>
+            <div class="build-grid-3">
+                <div class="build-field">
+                    <p class="build-hint">Longueur</p>
+                    {{ form_widget(form.dimensions_x) }}
+                    {{ form_errors(form.dimensions_x) }}
+                </div>
+                <div class="build-field">
+                    <p class="build-hint">Largeur</p>
+                    {{ form_widget(form.dimensions_z) }}
+                    {{ form_errors(form.dimensions_z) }}
+                </div>
+                <div class="build-field">
+                    <p class="build-hint">Hauteur</p>
+                    {{ form_widget(form.dimensions_y) }}
+                    {{ form_errors(form.dimensions_y) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="build-card">
+    <header class="build-card__header">
+        <h3 class="build-card__title">Tags</h3>
+        <p class="build-card__subtitle">Ajoutez jusqu’à 10 tags pour aider les autres à trouver votre build</p>
+    </header>
+    <div class="build-card__body">
+        <div class="build-tags" data-controller="tags-input" data-tags-input-max-value="10">
+            {{ form_widget(form.tags, { attr: { 'data-tags-input-target': 'hidden' } }) }}
+
+            <div class="build-tags__row">
+                <input type="text" class="build-tags__input" placeholder="Ajoutez un tag..."
+                    data-tags-input-target="input" />
+                <button type="button" class="container-button build-tags__add" data-action="tags-input#add"
+                    aria-label="Ajouter un tag">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+
+            <div class="build-tags__list" data-tags-input-target="list"></div>
+        </div>
+    </div>
+</section>
+
+<section class="build-card">
+    <header class="build-card__header">
+        <h3 class="build-card__title">Matériaux requis</h3>
+        <p class="build-card__subtitle">Liste des matériaux nécessaires (optionnel)</p>
+    </header>
+    <div class="build-card__body">
+        {% set prototype %}
+        <div class="build-materials__row" data-collection-item>
+            <div class="build-materials__name">{{ form_widget(form.materials.vars.prototype.name) }}</div>
+            <div class="build-materials__qty">{{ form_widget(form.materials.vars.prototype.quantity) }}</div>
+            <div class="h-full!">{{ form_widget(form.materials.vars.prototype.color , {
+                'attr' : { 'class' : 'h-full! ' }
+                }) }}</div>
+            <button type="button" class="container-button build-materials__remove" data-action="collection#remove"
+                aria-label="Supprimer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        {% endset %}
+
+        <div class="build-materials" data-controller="collection"
+            data-collection-prototype-value="{{ prototype|e('html_attr') }}"
+            data-collection-index-value="{{ form.materials|length }}">
+            <div class="build-materials__list" data-collection-target="list">
+                {% for material in form.materials %}
+                <div class="build-materials__row" data-collection-item>
+                    <div class="build-materials__name">{{ form_widget(material.name) }}</div>
+                    <div class="build-materials__qty">{{ form_widget(material.quantity) }}</div>
+                    <div class="build-materials__color">{{ form_widget(material.color) }}</div>
+                    <button type="button" class="container-button build-materials__remove"
+                        data-action="collection#remove" aria-label="Supprimer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" class="container-button build-materials__add" data-action="collection#add">
+                <i class="fa-solid fa-plus"></i>
+                Ajouter un matériau
+            </button>
+        </div>
+
+        {# Empêche form_end() d'afficher une ligne "materials" en plus #}
+        {% do form.materials.setRendered %}
+    </div>
+</section>
+
+<section class="build-card">
+    <header class="build-card__header">
+        <h3 class="build-card__title">Téléchargement du monde (optionnel)</h3>
+        <p class="build-card__subtitle">Ajoutez un monde ou un schematic pour que les autres puissent le télécharger</p>
+    </header>
+    <div class="build-card__body">
+        <div class="build-dropzone">
+            <label class="build-dropzone__label build-dropzone__label--compact">
+                <div class="build-dropzone__inner">
+                    <i class="fa-regular fa-file build-dropzone__icon"></i>
+                    <p class="build-dropzone__title">Upload world file</p>
+                    <p class="build-dropzone__subtitle">.zip, .schematic, .nbt (max 50MB)</p>
+                </div>
+                {{ form_widget(form.world_file, { attr: { class: 'build-dropzone__input', accept: '.zip,.schematic,.nbt'
+                } }) }}
+            </label>
+            {{ form_errors(form.world_file) }}
+        </div>
+    </div>
+</section>
+
+<footer class="build-footer">
+    <div class="build-footer__hint">
+        <i class="fa-solid fa-circle-info"></i>
+        <p>Les champs marqués par * sont obligatoires.</p>
+    </div>
+    <div class="build-footer__actions">
+        <a class="container-color-button" href="{{ path('app_home') }}">Annuler</a>
+        <button class="primary-button">Publier le build</button>
+    </div>
+</footer>
+
+{{ form_end(form) }}
