@@ -13,7 +13,9 @@
                     <p class="build-dropzone__title">Déposez vos images ici</p>
                     <p class="build-dropzone__subtitle">ou cliquez pour parcourir</p>
                 </div>
-                {{ form_widget(form.image_files, { attr: { class: 'build-dropzone__input', accept: 'image/png,image/jpeg,image/webp', 'data-image-preview-target': 'input', 'data-action': 'change->image-preview#change' } }) }}
+                {{ form_widget(form.image_files, { attr: { class: 'build-dropzone__input', accept:
+                'image/png,image/jpeg,image/webp', 'data-image-preview-target': 'input', 'data-action':
+                'change->image-preview#change' } }) }}
             </label>
             {{ form_errors(form.image_files) }}
 
@@ -76,17 +78,17 @@
                 <p class="build-label">Taille du build</p>
                 <div class="build-grid-3">
                     <div class="build-field">
-                        <p class="build-hint">Longueur</p>
+                        {# <p class="build-hint">Longueur</p> #}
                         {{ form_widget(form.dimensions_x) }}
                         {{ form_errors(form.dimensions_x) }}
                     </div>
                     <div class="build-field">
-                        <p class="build-hint">Largeur</p>
+                        {# <p class="build-hint">Largeur</p> #}
                         {{ form_widget(form.dimensions_z) }}
                         {{ form_errors(form.dimensions_z) }}
                     </div>
                     <div class="build-field">
-                        <p class="build-hint">Hauteur</p>
+                        {# <p class="build-hint">Hauteur</p> #}
                         {{ form_widget(form.dimensions_y) }}
                         {{ form_errors(form.dimensions_y) }}
                     </div>
@@ -106,8 +108,10 @@
             {{ form_widget(form.tags, { attr: { 'data-tags-input-target': 'hidden' } }) }}
 
             <div class="build-tags__row">
-                <input type="text" class="build-tags__input" placeholder="Add a tag..." data-tags-input-target="input" />
-                <button type="button" class="container-button build-tags__add" data-action="tags-input#add" aria-label="Ajouter un tag">
+                <input type="text" class="build-tags__input" placeholder="Ajoutez un tag..."
+                    data-tags-input-target="input" />
+                <button type="button" class="container-button build-tags__add" data-action="tags-input#add"
+                    aria-label="Ajouter un tag">
                     <i class="fa-solid fa-plus"></i>
                 </button>
             </div>
@@ -124,27 +128,33 @@
     </header>
     <div class="build-card__body">
         {% set prototype %}
-            <div class="build-materials__row" data-collection-item>
-                <div class="build-materials__name">{{ form_widget(form.materials.vars.prototype.name) }}</div>
-                <div class="build-materials__qty">{{ form_widget(form.materials.vars.prototype.quantity) }}</div>
-                <button type="button" class="container-button build-materials__remove" data-action="collection#remove" aria-label="Supprimer">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
+        <div class="build-materials__row" data-collection-item>
+            <div class="build-materials__name">{{ form_widget(form.materials.vars.prototype.name) }}</div>
+            <div class="build-materials__qty">{{ form_widget(form.materials.vars.prototype.quantity) }}</div>
+            <div class="h-full!">{{ form_widget(form.materials.vars.prototype.color , {
+                'attr' : { 'class' : 'h-full! ' }
+                }) }}</div>
+            <button type="button" class="container-button build-materials__remove" data-action="collection#remove"
+                aria-label="Supprimer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
         {% endset %}
 
         <div class="build-materials" data-controller="collection"
-             data-collection-prototype-value="{{ prototype|e('html_attr') }}"
-             data-collection-index-value="{{ form.materials|length }}">
+            data-collection-prototype-value="{{ prototype|e('html_attr') }}"
+            data-collection-index-value="{{ form.materials|length }}">
             <div class="build-materials__list" data-collection-target="list">
                 {% for material in form.materials %}
-                    <div class="build-materials__row" data-collection-item>
-                        <div class="build-materials__name">{{ form_widget(material.name) }}</div>
-                        <div class="build-materials__qty">{{ form_widget(material.quantity) }}</div>
-                        <button type="button" class="container-button build-materials__remove" data-action="collection#remove" aria-label="Supprimer">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
+                <div class="build-materials__row" data-collection-item>
+                    <div class="build-materials__name">{{ form_widget(material.name) }}</div>
+                    <div class="build-materials__qty">{{ form_widget(material.quantity) }}</div>
+                    <div class="build-materials__color">{{ form_widget(material.color) }}</div>
+                    <button type="button" class="container-button build-materials__remove"
+                        data-action="collection#remove" aria-label="Supprimer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
                 {% endfor %}
             </div>
 
@@ -153,6 +163,9 @@
                 Ajouter un matériau
             </button>
         </div>
+
+        {# Empêche form_end() d'afficher une ligne "materials" en plus #}
+        {% do form.materials.setRendered %}
     </div>
 </section>
 
@@ -169,7 +182,8 @@
                     <p class="build-dropzone__title">Upload world file</p>
                     <p class="build-dropzone__subtitle">.zip, .schematic, .nbt (max 50MB)</p>
                 </div>
-                {{ form_widget(form.world_file, { attr: { class: 'build-dropzone__input', accept: '.zip,.schematic,.nbt' } }) }}
+                {{ form_widget(form.world_file, { attr: { class: 'build-dropzone__input', accept: '.zip,.schematic,.nbt'
+                } }) }}
             </label>
             {{ form_errors(form.world_file) }}
         </div>

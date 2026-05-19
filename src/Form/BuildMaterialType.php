@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\BuildMaterial;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,6 +26,13 @@ class BuildMaterialType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Qté',
                     'min' => 0,
+                ],
+            ])
+            ->add('color', ColorType::class, [
+                'label' => false,
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Couleur (optionnel)',
                 ],
             ]);
     }
