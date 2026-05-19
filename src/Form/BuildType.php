@@ -22,7 +22,7 @@ class BuildType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $requireImages = (bool) ($options['require_images'] ?? true);
-
+        $locale = $options['locale'];
         $builder
             ->add('image_files', FileType::class, [
                 'label' => false,
@@ -65,7 +65,11 @@ class BuildType extends AbstractType
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'name',
+                'choice_label' => function (Category $category) use ($locale) {
+                    return $locale === 'en'
+                        ? $category->getName()
+                        : $category->getNameFr();
+                },
                 'placeholder' => 'Sélectionner une catégorie',
                 'mapped' => false,
                 'required' => true,
@@ -166,6 +170,7 @@ class BuildType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Build::class,
             'require_images' => true,
+            'locale' => 'fr',
         ]);
     }
 }

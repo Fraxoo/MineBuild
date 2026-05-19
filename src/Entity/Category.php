@@ -33,6 +33,9 @@ class Category
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: BuildCategory::class, orphanRemoval: true)]
     private Collection $buildCategories;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name_fr = null;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -47,6 +50,11 @@ class Category
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getNameFr(): ?string
+    {
+        return $this->name_fr;
     }
 
     public function setName(string $name): static
@@ -86,5 +94,12 @@ class Category
     public function getBuildCategories(): Collection
     {
         return $this->buildCategories;
+    }
+
+    public function setNameFr(string $name_fr): static
+    {
+        $this->name_fr = $name_fr;
+
+        return $this;
     }
 }
