@@ -6,6 +6,7 @@ use App\Entity\Build;
 use App\Entity\Category;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -52,12 +53,14 @@ class BuildType extends AbstractType
                 ],
             ])
             ->add('title', null, [
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'ex: Château médiéval épique',
                     'maxlength' => 100,
                 ],
             ])
             ->add('description', null, [
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'Décris ton build : inspiration, fonctionnalités, conseils…',
                     'maxlength' => 2000,
@@ -75,6 +78,7 @@ class BuildType extends AbstractType
                 'required' => true,
             ])
             ->add('game_version', ChoiceType::class, [
+                'required' => true,
                 'placeholder' => 'Sélectionner une version',
                 'choices' => [
                     '1.21.x' => '1.21',
@@ -94,6 +98,7 @@ class BuildType extends AbstractType
                 ],
             ])
             ->add('difficulty', ChoiceType::class, [
+                'required' => true,
                 'placeholder' => 'Sélectionner une difficulté',
                 'choices' => [
                     'Facile' => 'easy',
@@ -124,19 +129,22 @@ class BuildType extends AbstractType
                 ],
             ])
             ->add('time_estimated_min', IntegerType::class, [
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'Temps estimé (min)',
                     'min' => 0,
                 ],
             ])
             ->add('game_mode', ChoiceType::class, [
+                'required' => true,
                 'placeholder' => 'Sélectionner un mode',
                 'choices' => [
                     'Survie' => 'survival',
                     'Créatif' => 'creative',
-                    'Aventure' => 'adventure',
-                    'Hardcore' => 'hardcore',
                 ],
+            ])
+            ->add('modded', CheckboxType::class, [
+                'required' => false,
             ])
             ->add('tags', HiddenType::class, [
                 'mapped' => false,
@@ -148,7 +156,7 @@ class BuildType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
-                'required' => false,
+                'required' => true,
             ])
             ->add('world_file', FileType::class, [
                 'label' => false,

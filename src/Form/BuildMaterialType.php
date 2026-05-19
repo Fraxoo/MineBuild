@@ -16,12 +16,14 @@ class BuildMaterialType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'required' => true,
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Nom du matériau (ex: Stone Bricks)',
                 ],
             ])
             ->add('quantity', IntegerType::class, [
+                'required' => true,
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Qté',
@@ -30,7 +32,7 @@ class BuildMaterialType extends AbstractType
             ])
             ->add('color', ColorType::class, [
                 'label' => false,
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'Couleur (optionnel)',
                 ],

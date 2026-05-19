@@ -2,7 +2,7 @@
 
 <section class="build-card">
     <header class="build-card__header">
-        <h3 class="build-card__title">Capture du build</h3>
+        <h3 class="build-card__title">Capture du build *</h3>
         <p class="build-card__subtitle">Ajoutez une ou plusieurs images (PNG, JPG, max 10MB)</p>
     </header>
     <div class="build-card__body">
@@ -31,7 +31,7 @@
 
     <div class="build-card__body build-form__stack">
         <div class="build-field">
-            <p class="build-label">Titre</p>
+            <p class="build-label">Titre *</p>
             {{ form_widget(form.title) }}
             {{ form_errors(form.title) }}
         </div>
@@ -44,12 +44,12 @@
 
         <div class="build-grid-2">
             <div class="build-field">
-                <p class="build-label">Catégorie</p>
+                <p class="build-label">Catégorie *</p>
                 {{ form_widget(form.category) }}
                 {{ form_errors(form.category) }}
             </div>
             <div class="build-field">
-                <p class="build-label">Version</p>
+                <p class="build-label">Version *</p>
                 {{ form_widget(form.game_version) }}
                 {{ form_errors(form.game_version) }}
             </div>
@@ -57,12 +57,12 @@
 
         <div class="build-grid-2">
             <div class="build-field">
-                <p class="build-label">Difficulté</p>
+                <p class="build-label">Difficulté *</p>
                 {{ form_widget(form.difficulty) }}
                 {{ form_errors(form.difficulty) }}
             </div>
             <div class="build-field">
-                <p class="build-label">Mode de jeu</p>
+                <p class="build-label">Mode de jeu *</p>
                 {{ form_widget(form.game_mode) }}
                 {{ form_errors(form.game_mode) }}
             </div>
@@ -70,28 +70,36 @@
 
         <div class="build-grid-2">
             <div class="build-field">
-                <p class="build-label">Temps estimé</p>
+                <p class="build-label">Temps estimé *</p>
                 {{ form_widget(form.time_estimated_min) }}
                 {{ form_errors(form.time_estimated_min) }}
             </div>
             <div class="build-field">
-                <p class="build-label">Taille du build</p>
-                <div class="build-grid-3">
-                    <div class="build-field">
-                        {# <p class="build-hint">Longueur</p> #}
-                        {{ form_widget(form.dimensions_x) }}
-                        {{ form_errors(form.dimensions_x) }}
-                    </div>
-                    <div class="build-field">
-                        {# <p class="build-hint">Largeur</p> #}
-                        {{ form_widget(form.dimensions_z) }}
-                        {{ form_errors(form.dimensions_z) }}
-                    </div>
-                    <div class="build-field">
-                        {# <p class="build-hint">Hauteur</p> #}
-                        {{ form_widget(form.dimensions_y) }}
-                        {{ form_errors(form.dimensions_y) }}
-                    </div>
+                <p class="build-label">Utilisation de mods</p>
+                <div class="flex items-center pt-3 gap-2">
+                    {{ form_widget(form.modded) }}
+                    {{ form_errors(form.modded) }}
+                    <p class="text-(--secondary-color)">Ce build utilise des mods</p>
+                </div>
+            </div>
+        </div>
+        <div class="build-field">
+            <p class="build-label">Taille du build</p>
+            <div class="build-grid-3">
+                <div class="build-field">
+                    <p class="build-hint">Longueur</p>
+                    {{ form_widget(form.dimensions_x) }}
+                    {{ form_errors(form.dimensions_x) }}
+                </div>
+                <div class="build-field">
+                    <p class="build-hint">Largeur</p>
+                    {{ form_widget(form.dimensions_z) }}
+                    {{ form_errors(form.dimensions_z) }}
+                </div>
+                <div class="build-field">
+                    <p class="build-hint">Hauteur</p>
+                    {{ form_widget(form.dimensions_y) }}
+                    {{ form_errors(form.dimensions_y) }}
                 </div>
             </div>
         </div>

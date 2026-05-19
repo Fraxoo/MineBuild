@@ -24,10 +24,10 @@ class Build
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $author = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
@@ -39,13 +39,13 @@ class Build
     #[ORM\Column(nullable: true)]
     private ?int $dimensions_z = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255 , nullable: false)]
     private ?string $difficulty = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private ?int $time_estimated_min = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     private ?string $game_version = null;
 
     #[ORM\Column(length: 255)]
@@ -145,6 +145,9 @@ class Build
     #[ORM\OneToMany(mappedBy: 'build', targetEntity: BuildRating::class, orphanRemoval: true)]
     private Collection $ratings;
 
+    #[ORM\Column]
+    private ?bool $modded = null;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -198,7 +201,7 @@ class Build
 
         return $this;
     }
-    
+
     public function getDimensionsX(): ?int
     {
         return $this->dimensions_x;
@@ -555,5 +558,17 @@ class Build
     public function getRatings(): Collection
     {
         return $this->ratings;
+    }
+
+    public function isModded(): ?bool
+    {
+        return $this->modded;
+    }
+
+    public function setModded(bool $modded): static
+    {
+        $this->modded = $modded;
+
+        return $this;
     }
 }
