@@ -453,6 +453,22 @@ class Build
         return $this->images;
     }
 
+    public function addImage(BuildImage $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setBuild($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(BuildImage $image): static
+    {
+        $this->images->removeElement($image);
+        return $this;
+    }
+
     /**
      * @return Collection<int, BuildMaterial>
      */
@@ -461,12 +477,44 @@ class Build
         return $this->materials;
     }
 
+    public function addMaterial(BuildMaterial $material): static
+    {
+        if (!$this->materials->contains($material)) {
+            $this->materials->add($material);
+            $material->setBuild($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMaterial(BuildMaterial $material): static
+    {
+        $this->materials->removeElement($material);
+        return $this;
+    }
+
     /**
      * @return Collection<int, BuildAsset>
      */
     public function getAssets(): Collection
     {
         return $this->assets;
+    }
+
+    public function addAsset(BuildAsset $asset): static
+    {
+        if (!$this->assets->contains($asset)) {
+            $this->assets->add($asset);
+            $asset->setBuild($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAsset(BuildAsset $asset): static
+    {
+        $this->assets->removeElement($asset);
+        return $this;
     }
 
     /**

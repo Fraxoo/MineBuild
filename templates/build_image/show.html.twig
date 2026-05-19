@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BuildImage{% endblock %}
+
+{% block body %}
+    <h1>BuildImage</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ build_image.id }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ build_image.url }}</td>
+            </tr>
+            <tr>
+                <th>Alt</th>
+                <td>{{ build_image.alt }}</td>
+            </tr>
+            <tr>
+                <th>Sort_order</th>
+                <td>{{ build_image.sortOrder }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ build_image.createdAt ? build_image.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_build_image_index') }}">back to list</a>
+
+    <a href="{{ path('app_build_image_edit', {'id': build_image.id}) }}">edit</a>
+
+    {{ include('build_image/_delete_form.html.twig') }}
+{% endblock %}

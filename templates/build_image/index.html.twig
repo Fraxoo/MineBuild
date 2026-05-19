@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BuildImage index{% endblock %}
+
+{% block body %}
+    <h1>BuildImage index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Url</th>
+                <th>Alt</th>
+                <th>Sort_order</th>
+                <th>Created_at</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for build_image in build_images %}
+            <tr>
+                <td>{{ build_image.id }}</td>
+                <td>{{ build_image.url }}</td>
+                <td>{{ build_image.alt }}</td>
+                <td>{{ build_image.sortOrder }}</td>
+                <td>{{ build_image.createdAt ? build_image.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_build_image_show', {'id': build_image.id}) }}">show</a>
+                    <a href="{{ path('app_build_image_edit', {'id': build_image.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_build_image_new') }}">Create new</a>
+{% endblock %}
