@@ -9,6 +9,7 @@ use App\Entity\BuildImage;
 use App\Entity\BuildTag;
 use App\Entity\Tag;
 use App\Form\BuildType;
+use App\Repository\BuildLikeRepository;
 use App\Repository\BuildRepository;
 use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,6 +23,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/build')]
 final class BuildController extends AbstractController
 {
+
+
+
     #[Route(name: 'app_build_index', methods: ['GET'])]
     public function index(BuildRepository $buildRepository): Response
     {
@@ -52,14 +56,12 @@ final class BuildController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($build);
 
-            // Catégorie (simple)
             $category = $form->get('category')->getData();
             if ($category) {
                 $buildCategory = new BuildCategory($build, $category);
                 $entityManager->persist($buildCategory);
             }
 
-            // Tags (CSV depuis input hidden)
             $rawTags = (string) $form->get('tags')->getData();
             $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
             $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
@@ -89,7 +91,6 @@ final class BuildController extends AbstractController
                 $entityManager->persist($buildTag);
             }
 
-            // Matériaux (collection mappée)
             foreach ($build->getMaterials() as $material) {
                 $material->setBuild($build);
                 $entityManager->persist($material);
@@ -106,7 +107,6 @@ final class BuildController extends AbstractController
                 try {
                     $file->move($this->getParameter('build_images_directory'), $newFilename);
                 } catch (FileException $e) {
-                    // ignore upload failure; validation already ran
                     continue;
                 }
 
@@ -118,7 +118,6 @@ final class BuildController extends AbstractController
                 $entityManager->persist($image);
             }
 
-            // Fichier monde (optionnel)
             $worldFile = $form->get('world_file')->getData();
             if ($worldFile) {
                 $originalFilename = pathinfo($worldFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -145,7 +144,7 @@ final class BuildController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_build_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('build/new.html.twig', [
@@ -155,11 +154,20 @@ final class BuildController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_build_show', methods: ['GET'])]
-    public function show(Build $build, BuildRepository $buildRepository): Response
+    public function show(Build $build, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
     {
+        $user = $this->getUser();
+        if ($user) {
+            $isLikedByUser = $buildLikeRepository->existsForBuildAndUser($build->getId(), $user->getId());
+        } else {
+            $isLikedByUser = false;
+        }
+
 
         return $this->render('build/show.html.twig', [
-            'build' => $buildRepository->getBuildWithJoinByUser( $build),
+
+            'isLikedByUser' => $isLikedByUser,
+            'build' => $buildRepository->getBuildWithJoinByUser($build),
         ]);
     }
 

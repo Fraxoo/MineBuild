@@ -1,0 +1,56 @@
+<div {{attributes}} class="flex items-center justify-between  rounded p-4 bg-(--container-color)">
+	<div class="flex items-center gap-4">
+		<div class="build-stats">
+			<i class="fa-solid fa-eye"></i>
+			<p>{{build.viewsCount}}
+				Vues</p>
+		</div>
+		<div class="build-stats">
+			<button>
+				<i class="fa-solid fa-thumbs-up"></i>
+			</button>
+			<p>{{ build.likesCount}}
+				J'aime</p>
+		</div>
+		<div class="build-stats">
+			<i class="fa-solid fa-download"></i>
+			<p>{{ build.downloadsCount }}
+				Téléchargements</p>
+		</div>
+		<div class="build-stats">
+			<i class="fa-solid fa-star"></i>
+			<p>{{build.ratingsCount}}
+				({{build.ratingAvg}})</p>
+		</div>
+	</div>
+	<div class="flex items-center gap-4">
+		{% if app.user %}
+			<button type="button" data-action="live#action" data-live-action-param="like" class="container-button">
+				<i class="fa-solid fa-thumbs-up transition-colors duration-300 {{ isLikedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
+				J'aime
+			</button>
+			<button class="container-button">
+				<i class="fa-solid fa-share-alt"></i>
+				Partager
+			</button>
+			<button class="container-button">
+				<i class="fa-solid fa-flag"></i>
+				Signaler
+			</button>
+
+		{% else %}
+			<a href="{{ path('app_login') }}" class="container-button">
+				<i class="fa-solid fa-thumbs-up"></i>
+				J'aime
+			</a>
+			<button class="container-button">
+				<i class="fa-solid fa-share-alt"></i>
+				Partager
+			</button>
+			<a href="{{ path('app_login') }}" class="container-button">
+				<i class="fa-solid fa-flag"></i>
+				Signaler
+			</a>
+		{% endif %}
+	</div>
+</div>
