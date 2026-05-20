@@ -166,8 +166,17 @@ class BuildType extends AbstractType
                 'constraints' => [
                     new File(
                         maxSize: '50M',
+                        extensions: [
+                            'zip',
+                            'schematic',
+                            'nbt',
+                        ],
                         maxSizeMessage: 'Le fichier monde ne doit pas dépasser 50 Mo.',
-                    )
+                        extensionsMessage: 'Format autorisé : .zip, .schematic ou .nbt.',
+                    ),
+                ],
+                'attr' => [
+                    'accept' => '.zip,.schematic,.nbt',
                 ],
             ])
         ;

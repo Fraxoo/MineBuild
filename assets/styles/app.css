@@ -473,6 +473,13 @@ body {
     cursor: pointer;
 }
 
+.build-file-preview {
+    margin-top: 0.5rem;
+    color: var(--secondary-color);
+    font-size: 0.875rem;
+    word-break: break-word;
+}
+
 .build-images-preview {
     margin-top: 0.75rem;
     display: grid;

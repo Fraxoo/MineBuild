@@ -1,5 +1,5 @@
-<div {{attributes}} class="flex items-center justify-between  rounded p-4 bg-(--container-color)">
-	<div class="flex items-center gap-4">
+<div {{attributes}} class="flex flex-wrap gap-4 items-center justify-between  rounded p-4 bg-(--container-color)">
+	<div class="flex items-center gap-4"> 
 		<div class="build-stats">
 			<i class="fa-solid fa-eye"></i>
 			<p>{{build.viewsCount}}
@@ -26,7 +26,7 @@
 	<div class="flex items-center gap-4">
 		{% if app.user %}
 			<button type="button" data-action="live#action" data-live-action-param="like" class="container-button">
-				<i class="fa-solid fa-thumbs-up transition-colors duration-300 {{ isLikedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
+				<i class="fa-solid fa-thumbs-up transition-colors duration-200 {{ isLikedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				J'aime
 			</button>
 			<button class="container-button">

@@ -15,6 +15,7 @@ use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -119,8 +120,11 @@ final class BuildController extends AbstractController
             }
 
             $worldFile = $form->get('world_file')->getData();
-            if ($worldFile) {
-                $originalFilename = pathinfo($worldFile->getClientOriginalName(), PATHINFO_FILENAME);
+            if ($worldFile instanceof UploadedFile && $worldFile->isValid()) {
+                $clientOriginalName = $worldFile->getClientOriginalName();
+                $sizeBytes = (int) ($worldFile->getSize() ?? 0);
+
+                $originalFilename = pathinfo($clientOriginalName, PATHINFO_FILENAME);
                 $safeFilename = strtolower((string) $slugger->slug($originalFilename));
                 $newFilename = ($safeFilename ?: 'world') . '-' . uniqid() . '.' . ($worldFile->guessExtension() ?: 'bin');
 
@@ -136,8 +140,8 @@ final class BuildController extends AbstractController
                     $asset->setBuild($build);
                     $asset->setType('world');
                     $asset->setUrl($newFilename);
-                    $asset->setFilename($worldFile->getClientOriginalName());
-                    $asset->setSizeBytes((int) ($worldFile->getSize() ?? 0));
+                    $asset->setFilename($clientOriginalName);
+                    $asset->setSizeBytes($sizeBytes);
                     $entityManager->persist($asset);
                 }
             }
@@ -157,11 +161,9 @@ final class BuildController extends AbstractController
     public function show(Build $build, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
     {
         $user = $this->getUser();
-        if ($user) {
-            $isLikedByUser = $buildLikeRepository->existsForBuildAndUser($build->getId(), $user->getId());
-        } else {
-            $isLikedByUser = false;
-        }
+        $isLikedByUser = $user instanceof \App\Entity\User
+            ? $buildLikeRepository->existsForBuildAndUser($build->getId(), $user->getId())
+            : false;
 
 
         return $this->render('build/show.html.twig', [
@@ -278,8 +280,11 @@ final class BuildController extends AbstractController
 
             // Fichier monde (optionnel)
             $worldFile = $form->get('world_file')->getData();
-            if ($worldFile) {
-                $originalFilename = pathinfo($worldFile->getClientOriginalName(), PATHINFO_FILENAME);
+            if ($worldFile instanceof UploadedFile && $worldFile->isValid()) {
+                $clientOriginalName = $worldFile->getClientOriginalName();
+                $sizeBytes = (int) ($worldFile->getSize() ?? 0);
+
+                $originalFilename = pathinfo($clientOriginalName, PATHINFO_FILENAME);
                 $safeFilename = strtolower((string) $slugger->slug($originalFilename));
                 $newFilename = ($safeFilename ?: 'world') . '-' . uniqid() . '.' . ($worldFile->guessExtension() ?: 'bin');
 
@@ -294,8 +299,8 @@ final class BuildController extends AbstractController
                     $asset->setBuild($build);
                     $asset->setType('world');
                     $asset->setUrl($newFilename);
-                    $asset->setFilename($worldFile->getClientOriginalName());
-                    $asset->setSizeBytes((int) ($worldFile->getSize() ?? 0));
+                    $asset->setFilename($clientOriginalName);
+                    $asset->setSizeBytes($sizeBytes);
                     $entityManager->persist($asset);
                 }
             }
