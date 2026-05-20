@@ -48,7 +48,7 @@
             </div>
 
             <div class="container">
-                <h3 class="text-(--title-color) font-bold text-2xl">Notez ce build</h3>
+                <h3 class="title">Notez ce build</h3>
                 <div class="flex gap-2">
                     <i class="fa-solid fa-star text-(--primary-color)"></i>
                     <i class="fa-solid fa-star text-(--primary-color)"></i>
@@ -58,13 +58,49 @@
                 </div>
             </div>
 
-            <twig:CommentSection />
+            {#
+            <twig:CommentSection :Build="build" /> #}
 
         </div>
 
 
         <div class="flex flex-col flex-1">
-            <p>yo</p>
+            {#
+            <twig:BuildUserAction :build="build" /> #}
+
+            <div class="container">
+                <h3 class="title">Détails</h3>
+                <div class="build-info-gap">
+                    <div class="build-info-gap-title">
+                        <i class="fa-solid fa-gamepad"></i>
+                        <p>Version</p>
+                    </div>
+                    <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">{{ build.gameVersion }} </p>
+                </div>
+                <div class="build-info-gap">
+                    <div class="build-info-gap-title">
+                        <i class="fa-solid fa-bolt"></i>
+                        <p>Difficulté</p>
+                    </div>
+                    <p class="{{ build.difficulty === 'easy' ? 'bg-green-100 text-green-200' : build.difficulty === 'medium' ? 'bg-blue-300/20 text-blue-600' : build.difficulty === 'hard' ? 'bg-yellow-100 text-yellow-200' : 'bg-red-100 text-red-200' }} px-2 py-1  rounded text-[0.875rem]">{{ build.difficulty }}</p>
+                </div>
+                <div class="build-info-gap">
+                    <div class="build-info-gap-title">
+                        <i class="fa-solid fa-weight-hanging"></i>
+                        <p>Taille</p>
+                    </div>
+                    <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">L:{{build.dimensionsX}} - H:{{build.dimensionsY}} - P:{{build.dimensionsZ}}</p>
+                </div>
+                <div class="build-info-gap">
+                    <div class="build-info-gap-title">
+                        <i class="fa-solid fa-calendar"></i>
+                        <p>Publié le </p>
+                    </div>
+                    <p class=" px-2 py-1 text-(--title-color) rounded text-[0.875rem]">{{ build.createdAt|date('d/m/Y') }}</p>
+                </div>
+            </div>
+
+
         </div>
     </div>
 

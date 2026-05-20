@@ -10,7 +10,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent]
-final class CommentSection
+final class BuildUserAction
 {
     use DefaultActionTrait;
 
@@ -24,5 +24,4 @@ final class CommentSection
         private Security $security,
     ) {
     }
-
 }

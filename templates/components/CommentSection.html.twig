@@ -1,3 +1,10 @@
-<div{{ attributes }}>
-    <!-- component HTML -->
+<div {{attributes}} class="container">
+	<div class="text-(--title-color) flex items-center gap-2 font-bold text-xl">
+		<i class="fa-solid fa-comments"></i>
+		<h3>Commentaires</h3>
+	</div>
+	{% if app.user %}
+		{{ include('comment/_form.html.twig') }}
+	{% endif %}
+    
 </div>
