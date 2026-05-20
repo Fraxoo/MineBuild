@@ -52,7 +52,28 @@ class BuildRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-//    /**
+    /**
+     * 
+     */
+    public function getBuildWithJoinByUser(Build $build): ?Build
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.id = :build_id')
+            ->setParameter('build_id', $build->getId())
+            ->leftJoin('b.images', 'images')->addSelect('images')
+            ->leftJoin('b.materials', 'materials')->addSelect('materials')
+            ->leftJoin('b.author', 'author')->addSelect('author')
+            ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
+            ->leftJoin('buildCategories.category', 'category')->addSelect('category')
+            ->leftJoin('b.buildTags', 'buildTags')->addSelect('buildTags')
+            ->leftJoin('buildTags.tag', 'tag')->addSelect('tag')
+            ->andWhere('b.author = :user')
+            ->setParameter('user', $build->getAuthor()->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    //    /**
 //     * @return Build[] Returns an array of Build objects
 //     */
 //    public function findByExampleField($value): array
@@ -67,7 +88,7 @@ class BuildRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Build
+    //    public function findOneBySomeField($value): ?Build
 //    {
 //        return $this->createQueryBuilder('b')
 //            ->andWhere('b.exampleField = :val')

@@ -1,106 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Build{% endblock %}
+{% block title %}Build
+{% endblock %}
 
 {% block body %}
-    <h1>Build</h1>
+	{# {{ dump(build) }} #}
+	<twig:GoBack/>
+	<div>
+		<div>
+			<div class="relative w-full max-w-3xl  overflow-hidden rounded-xl" data-carousel>
+				<div class="flex transition-transform duration-300 ease-in-out" data-carousel-track>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ build.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ build.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ build.description }}</td>
-            </tr>
-            <tr>
-                <th>Dimensions_x</th>
-                <td>{{ build.dimensionsX }}</td>
-            </tr>
-            <tr>
-                <th>Dimensions_y</th>
-                <td>{{ build.dimensionsY }}</td>
-            </tr>
-            <tr>
-                <th>Dimensions_z</th>
-                <td>{{ build.dimensionsZ }}</td>
-            </tr>
-            <tr>
-                <th>Difficulty</th>
-                <td>{{ build.difficulty }}</td>
-            </tr>
-            <tr>
-                <th>Time_estimated_min</th>
-                <td>{{ build.timeEstimatedMin }}</td>
-            </tr>
-            <tr>
-                <th>Game_version</th>
-                <td>{{ build.gameVersion }}</td>
-            </tr>
-            <tr>
-                <th>Game_mode</th>
-                <td>{{ build.gameMode }}</td>
-            </tr>
-            <tr>
-                <th>Visibility</th>
-                <td>{{ build.visibility }}</td>
-            </tr>
-            <tr>
-                <th>Hidden_reason</th>
-                <td>{{ build.hiddenReason }}</td>
-            </tr>
-            <tr>
-                <th>Hidden_at</th>
-                <td>{{ build.hiddenAt ? build.hiddenAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Views_count</th>
-                <td>{{ build.viewsCount }}</td>
-            </tr>
-            <tr>
-                <th>Likes_count</th>
-                <td>{{ build.likesCount }}</td>
-            </tr>
-            <tr>
-                <th>Saves_count</th>
-                <td>{{ build.savesCount }}</td>
-            </tr>
-            <tr>
-                <th>Downloads_count</th>
-                <td>{{ build.downloadsCount }}</td>
-            </tr>
-            <tr>
-                <th>Ratings_count</th>
-                <td>{{ build.ratingsCount }}</td>
-            </tr>
-            <tr>
-                <th>Rating_avg</th>
-                <td>{{ build.ratingAvg }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ build.createdAt ? build.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ build.updatedAt ? build.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Deleted_at</th>
-                <td>{{ build.deletedAt ? build.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+					{% for image in build.images %}
+						<div class="min-w-full">
+							<img src="{{ asset('uploads/build_images/' ~ image.url) }}" alt="{{ build.title }}" class="w-full h-[400px] object-cover">
+						</div>
+					{% endfor %}
+				</div>
 
-    <a href="{{ path('app_build_index') }}">back to list</a>
+				{% if build.images|length > 1 %}
+					<button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full" data-carousel-prev>
+						‹
+					</button>
 
-    <a href="{{ path('app_build_edit', {'id': build.id}) }}">edit</a>
+					<button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full" data-carousel-next>
+						›
+					</button>
+				{% endif %}
+			</div>
+			<div></div>
+		</div>
 
-    {{ include('build/_delete_form.html.twig') }}
-{% endblock %}
+
+		<a href="{{ path('app_build_edit', {'id': build.id}) }}">edit</a>
+
+	{% endblock %}

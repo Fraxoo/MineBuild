@@ -61,7 +61,7 @@ final class BuildController extends AbstractController
 
             // Tags (CSV depuis input hidden)
             $rawTags = (string) $form->get('tags')->getData();
-            $tagNames = array_values(array_filter(array_map(static fn ($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
+            $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
             $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
             foreach ($tagNames as $tagName) {
                 if ($tagName === '') {
@@ -155,10 +155,11 @@ final class BuildController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_build_show', methods: ['GET'])]
-    public function show(Build $build): Response
+    public function show(Build $build, BuildRepository $buildRepository): Response
     {
+
         return $this->render('build/show.html.twig', [
-            'build' => $build,
+            'build' => $buildRepository->getBuildWithJoinByUser( $build),
         ]);
     }
 
@@ -207,7 +208,7 @@ final class BuildController extends AbstractController
                     $entityManager->remove($existing);
                 }
 
-                $tagNames = array_values(array_filter(array_map(static fn ($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
+                $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
                 $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
 
                 foreach ($tagNames as $tagName) {
@@ -305,7 +306,7 @@ final class BuildController extends AbstractController
     #[Route('/{id}', name: 'app_build_delete', methods: ['POST'])]
     public function delete(Request $request, Build $build, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$build->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $build->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($build);
             $entityManager->flush();
         }
