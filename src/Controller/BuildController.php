@@ -165,10 +165,14 @@ final class BuildController extends AbstractController
             ? $buildLikeRepository->existsForBuildAndUser($build->getId(), $user->getId())
             : false;
 
+        $isFollowedByUser = $user instanceof \App\Entity\User
+            ? $build->getAuthor()->getFollowerRelations()->exists(fn($i, $rel) => $rel->getFollower()->getId() === $user->getId())
+            : false;
 
         return $this->render('build/show.html.twig', [
 
             'isLikedByUser' => $isLikedByUser,
+            'isFollowedByUser' => $isFollowedByUser,
             'build' => $buildRepository->getBuildWithJoinByUser($build),
         ]);
     }
@@ -202,25 +206,31 @@ final class BuildController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Catégorie: on remplace l'existante
-            foreach ($build->getBuildCategories() as $existing) {
-                $entityManager->remove($existing);
-            }
-            $category = $form->get('category')->getData();
-            if ($category) {
-                $entityManager->persist(new BuildCategory($build, $category));
-            }
-
-            // Tags: si rempli, on remplace
-            $rawTags = (string) $form->get('tags')->getData();
-            if (trim($rawTags) !== '') {
-                foreach ($build->getBuildTags() as $existing) {
-                    $entityManager->remove($existing);
+            // Catégorie: éviter remove+recreate identique (collision Doctrine sur clé composite)
+            $selectedCategory = $form->get('category')->getData();
+            $existingBuildCategories = $build->getBuildCategories()->toArray();
+            $keepExistingCategory = false;
+            $selectedCategoryId = $selectedCategory?->getId();
+            foreach ($existingBuildCategories as $existing) {
+                $existingCategoryId = $existing->getCategory()?->getId();
+                if ($selectedCategoryId !== null && $existingCategoryId === $selectedCategoryId) {
+                    $keepExistingCategory = true;
+                    continue;
                 }
 
+                $entityManager->remove($existing);
+            }
+            if ($selectedCategory && !$keepExistingCategory) {
+                $entityManager->persist(new BuildCategory($build, $selectedCategory));
+            }
+
+            // Tags: si rempli, on synchronise (pas de remove+recreate identique)
+            $rawTags = (string) $form->get('tags')->getData();
+            if (trim($rawTags) !== '') {
                 $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
                 $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
 
+                $desiredTagsById = [];
                 foreach ($tagNames as $tagName) {
                     if ($tagName === '') {
                         continue;
@@ -243,7 +253,25 @@ final class BuildController extends AbstractController
                         $existingTag = $tag;
                     }
 
-                    $entityManager->persist(new BuildTag($build, $existingTag));
+                    $tagId = $existingTag->getId();
+                    if ($tagId !== null) {
+                        $desiredTagsById[$tagId] = $existingTag;
+                    }
+                }
+
+                $existingBuildTags = $build->getBuildTags()->toArray();
+                foreach ($existingBuildTags as $existing) {
+                    $existingTagId = $existing->getTag()?->getId();
+                    if ($existingTagId !== null && isset($desiredTagsById[$existingTagId])) {
+                        unset($desiredTagsById[$existingTagId]);
+                        continue;
+                    }
+
+                    $entityManager->remove($existing);
+                }
+
+                foreach ($desiredTagsById as $tag) {
+                    $entityManager->persist(new BuildTag($build, $tag));
                 }
             }
 

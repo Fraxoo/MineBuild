@@ -64,9 +64,9 @@
         </div>
 
 
-        <div class="flex flex-col flex-1">
-            {#
-            <twig:BuildUserAction :build="build" /> #}
+        <div class="flex flex-col gap-4 flex-1">
+
+            <twig:BuildUserAction :build="build" :isFollowedByUser="isFollowedByUser" />
 
             <div class="container">
                 <h3 class="title">Détails</h3>
@@ -84,7 +84,7 @@
                         <p>Difficulté</p>
                     </div>
                     <p
-                        class=" font-bold {{ build.difficulty === 'easy' ? 'bg-green-600/10 text-green-200' : build.difficulty === 'medium' ? 'bg-blue-600/10 text-blue-600' : build.difficulty === 'hard' ? 'bg-yellow-600/10 text-yellow-200' : 'bg-red-600/10 text-red-200' }} px-2 py-1  rounded text-[0.875rem]">
+                        class=" font-bold {{ build.difficulty === 'easy' ? 'bg-green-600/10 text-green-200' : build.difficulty === 'medium' ? 'bg-blue-600/10 text-blue-600' : build.difficulty === 'hard' ? 'bg-orange-900/10 text-orange-400' : 'bg-red-600/10 text-red-200' }} px-2 py-1  rounded text-[0.875rem]">
                         {{ build.difficulty }}</p>
                 </div>
                 <div class="build-info-gap">
@@ -93,7 +93,7 @@
                         <p>Taille</p>
                     </div>
                     <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
-                        L:{{build.dimensionsX}} - H:{{build.dimensionsY}} - P:{{build.dimensionsZ}}</p>
+                        L:{{build.dimensionsX}} - H:{{build.dimensionsY}} - L:{{build.dimensionsZ}}</p>
                 </div>
                 <div class="build-info-gap">
                     <div class="build-info-gap-title">
@@ -110,10 +110,24 @@
                 <h3 class="title">Matériaux Requis</h3>
                 <div class="flex flex-col gap-2">
                     {% for material in build.materials %}
-                    <div class="flex justify-between px-2 py-1 w-full bg-(--container-color-third)">
+                    <div class="flex justify-between px-4 py-2 rounded w-full bg-(--container-color-secondary)">
                         <p class="text-(--title-color)">{{ material.name }}</p>
                         <p class="text-(--primary-color)">x {{ material.quantity }}</p>
                     </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if build.buildTags|length > 0 %}
+            <div class="container">
+                <h3 class="title">Tags</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for tag in build.buildTags %}
+                    <span
+                        class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
+                        {{ tag.tag.name }}
+                    </span>
                     {% endfor %}
                 </div>
             </div>

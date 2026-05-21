@@ -148,7 +148,7 @@
             <div class="build-tags__row">
                 <input type="text" class="build-tags__input" placeholder="Ajoutez un tag..."
                     data-tags-input-target="input" />
-                <button type="button" class="container-button build-tags__add" data-action="tags-input#add"
+                <button type="button" class="container-button build-tags__add" data-action="click->tags-input#add"
                     aria-label="Ajouter un tag">
                     <i class="fa-solid fa-plus"></i>
                 </button>
@@ -172,7 +172,7 @@
             <div class="h-full!">{{ form_widget(form.materials.vars.prototype.color , {
                 'attr' : { 'class' : 'h-full! ' }
                 }) }}</div>
-            <button type="button" class="container-button build-materials__remove" data-action="collection#remove"
+            <button type="button" class="container-button build-materials__remove" data-action="click->collection#remove"
                 aria-label="Supprimer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -189,14 +189,14 @@
                     <div class="build-materials__qty">{{ form_widget(material.quantity) }}</div>
                     <div class="build-materials__color">{{ form_widget(material.color) }}</div>
                     <button type="button" class="container-button build-materials__remove"
-                        data-action="collection#remove" aria-label="Supprimer">
+                        data-action="click->collection#remove" aria-label="Supprimer">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
                 {% endfor %}
             </div>
 
-            <button type="button" class="container-button build-materials__add" data-action="collection#add">
+            <button type="button" class="container-button build-materials__add" data-action="click->collection#add">
                 <i class="fa-solid fa-plus"></i>
                 Ajouter un matériau
             </button>
