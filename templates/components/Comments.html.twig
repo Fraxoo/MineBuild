@@ -1,0 +1,22 @@
+<div {{ attributes }} class="flex gap-4 w-full">
+    <img class="w-12 h-12 rounded-full"
+        src="{{ comment.author.avatarUrl ? asset('uploads/avatars/' ~ comment.author.avatarUrl) : asset('images/default-avatar.svg') }}"
+        alt="Avatar de {{ comment.author.username }}">
+    <div class="flex gap-1 flex-col">
+        <div class="flex items-center gap-2 ">
+            <p class="font-bold text-(--title-color)">{{ comment.author.username }}
+            </p>
+            <p class="text-xs text-(--secondary-color)">{{ comment.createdAt|date('d/m/Y') }}</p>
+        </div>
+        <p class="text-(--secondary-color)">{{ comment.content }}</p>
+        {% if app.user %}
+        <button type="button" data-action="live#action" data-live-action-param="Like" class="w-fit {{ isLikedByUser ? 'text-(--primary-color)' : 'text-(--secondary-color)' }} text-xs">
+            <i
+                class="fa-solid fa-thumbs-up transition-colors duration-200 "></i>
+            {{ comment.commentLikes|length }}
+             
+        </button>
+        {% endif %}
+        
+    </div>
+</div>

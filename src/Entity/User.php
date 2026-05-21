@@ -98,6 +98,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'following', targetEntity: UserFollow::class, orphanRemoval: true)]
     private Collection $followerRelations;
 
+    /**
+     * @var Collection<int, CommentLike>
+     */
+    #[ORM\OneToMany(targetEntity: CommentLike::class, mappedBy: 'user_id')]
+    private Collection $commentLikes;
+
     public function __construct()
     {
         $this->is_active = true;
@@ -109,6 +115,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->buildRatings = new ArrayCollection();
         $this->followingRelations = new ArrayCollection();
         $this->followerRelations = new ArrayCollection();
+        $this->commentLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -314,5 +321,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFollowerRelations(): Collection
     {
         return $this->followerRelations;
+    }
+
+    /**
+     * @return Collection<int, CommentLike>
+     */
+    public function getCommentLikes(): Collection
+    {
+        return $this->commentLikes;
+    }
+
+    public function addCommentLike(CommentLike $commentLike): static
+    {
+        if (!$this->commentLikes->contains($commentLike)) {
+            $this->commentLikes->add($commentLike);
+            $commentLike->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentLike(CommentLike $commentLike): static
+    {
+        if ($this->commentLikes->removeElement($commentLike)) {
+            // set the owning side to null (unless already changed)
+            if ($commentLike->getUserId() === $this) {
+                $commentLike->setUserId(null);
+            }
+        }
+
+        return $this;
     }
 }

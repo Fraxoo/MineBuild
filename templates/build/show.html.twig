@@ -65,7 +65,7 @@
                     <h3>Commentaires</h3>
                 </div>
                 {% if app.user %}
-                <div class="flex  gap-2 w-full">
+                <div class="flex  gap-4 w-full">
                     <img class="w-12 h-12 rounded-full"
                         src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.svg') }}"
                         alt="Avatar de {{ app.user.username }}">
@@ -98,6 +98,9 @@
                 <p class="text-(--secondary-color)">Connectez-vous pour laisser un commentaire.</p>
                 {% endif %}
 
+                {% for comment in build.comments %}
+                <twig:Comments :comment="comment" />
+                {% endfor %}
             </div>
 
         </div>
