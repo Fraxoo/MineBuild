@@ -5,7 +5,7 @@
             src="{{ build.author.avatarUrl ? asset('uploads/avatars/' ~ build.author.avatarUrl) : asset('images/default-avatar.svg') }}"
             alt="Avatar de {{ build.author.username }}">
         <div class="flex flex-col">
-            <h2 class="text-(--title-color) font-bold">{{ build.author.username }}</h2>
+            <a href="{{ path('app_user_show', {'id': build.author.id}) }}" class="text-(--title-color) hover:underline font-bold">{{ build.author.username }}</a>
             <p class="text-(--secondary-color)">{{build.author.followerRelations|length}} Followers</p>
         </div>
     </div>
