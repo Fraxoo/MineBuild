@@ -58,8 +58,47 @@
                 </div>
             </div>
 
-            {#
-            <twig:CommentSection :Build="build" /> #}
+
+            <div class="container">
+                <div class="text-(--title-color) flex items-center gap-2 font-bold text-xl">
+                    <i class="fa-solid fa-comments"></i>
+                    <h3>Commentaires</h3>
+                </div>
+                {% if app.user %}
+                <div class="flex  gap-2 w-full">
+                    <img class="w-12 h-12 rounded-full"
+                        src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.svg') }}"
+                        alt="Avatar de {{ app.user.username }}">
+                    {{ form_start(form, {
+                    attr: {
+                    class: 'w-full flex flex-col gap-2',
+                    }
+                    }) }}
+
+                    {{ form_widget(form.content, {
+                    attr: {
+                    class: 'w-full border border-(--border-color) bg-(--container-color-secondary) px-4 py-2 rounded
+                    text-(--title-color) focus:outline-none focus:ring-2 focus:ring-(--primary-color)
+                    focus:ring-opacity-50',
+                    }
+                    }) }}
+
+                    <div class="error-message flex flex-col gap-2">
+                        {{ form_errors(form.content) }}
+                        {{ form_errors(form) }}
+                    </div>
+
+                    <button type="submit" class="primary-button w-fit">
+                        Commenter
+                    </button>
+
+                    {{ form_end(form) }}
+                </div>
+                {% else %}
+                <p class="text-(--secondary-color)">Connectez-vous pour laisser un commentaire.</p>
+                {% endif %}
+
+            </div>
 
         </div>
 

@@ -7,8 +7,10 @@ use App\Entity\BuildAsset;
 use App\Entity\BuildCategory;
 use App\Entity\BuildImage;
 use App\Entity\BuildTag;
+use App\Entity\Comment;
 use App\Entity\Tag;
 use App\Form\BuildType;
+use App\Form\CommentType;
 use App\Repository\BuildLikeRepository;
 use App\Repository\BuildRepository;
 use App\Repository\TagRepository;
@@ -157,9 +159,11 @@ final class BuildController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_build_show', methods: ['GET'])]
-    public function show(Build $build, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
+    #[Route('/{id}', name: 'app_build_show', methods: ['GET', 'POST'])]
+    public function show(Request $request, Build $build, EntityManagerInterface $em, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
     {
+        $build = $buildRepository->getBuildWithJoinByUser($build);
+
         $user = $this->getUser();
         $isLikedByUser = $user instanceof \App\Entity\User
             ? $buildLikeRepository->existsForBuildAndUser($build->getId(), $user->getId())
@@ -169,11 +173,33 @@ final class BuildController extends AbstractController
             ? $build->getAuthor()->getFollowerRelations()->exists(fn($i, $rel) => $rel->getFollower()->getId() === $user->getId())
             : false;
 
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $this->denyAccessUnlessGranted('ROLE_USER');
+
+            if ($user instanceof \App\Entity\User) {
+                $comment->setAuthor($user);
+            }
+            $comment->setBuild($build);
+
+            if ($form->isValid()) {
+                $em->persist($comment);
+                $em->flush();
+
+                return $this->redirectToRoute('app_build_show', ['id' => $build->getId()], Response::HTTP_SEE_OTHER);
+            }
+        }
+
+
         return $this->render('build/show.html.twig', [
 
             'isLikedByUser' => $isLikedByUser,
             'isFollowedByUser' => $isFollowedByUser,
-            'build' => $buildRepository->getBuildWithJoinByUser($build),
+            'build' => $build,
+            'form' => $form->createView(),
         ]);
     }
 
