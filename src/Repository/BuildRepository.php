@@ -62,6 +62,7 @@ class BuildRepository extends ServiceEntityRepository
             ->setParameter('build_id', $build->getId())
             ->leftJoin('b.images', 'images')->addSelect('images')
             ->leftJoin('b.comments', 'comments')->addSelect('comments')
+            ->orderBy('comments.created_at', 'DESC')
             ->leftJoin('b.materials', 'materials')->addSelect('materials')
             ->leftJoin('b.author', 'author')->addSelect('author')
             ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
