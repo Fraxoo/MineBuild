@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['input', 'list'];
+  static targets = ['input', 'list', 'deleteContainer'];
 
   connect() {
     this.objectUrls = [];
@@ -21,7 +21,12 @@ export default class extends Controller {
 
   render() {
     this.cleanup();
-    this.listTarget.innerHTML = '';
+
+    // Remove only previews created from newly selected files,
+    // keep server-rendered existing images (edit page).
+    for (const el of Array.from(this.listTarget.querySelectorAll('[data-image-preview-kind="new"]'))) {
+      el.remove();
+    }
 
     const files = Array.from(this.dataTransfer.files || []);
     if (files.length === 0) return;
@@ -34,6 +39,7 @@ export default class extends Controller {
 
       const item = document.createElement('div');
       item.className = 'build-images-preview__item';
+      item.setAttribute('data-image-preview-kind', 'new');
 
       const removeBtn = document.createElement('button');
       removeBtn.type = 'button';
@@ -69,6 +75,25 @@ export default class extends Controller {
     this.dataTransfer = next;
     this.applyToInput();
     this.render();
+  }
+
+  removeExisting(event) {
+    const id = event.params.id;
+    if (!id) return;
+
+    if (this.hasDeleteContainerTarget) {
+      const selector = `input[name="delete_images[]"][value="${CSS.escape(String(id))}"]`;
+      if (!this.deleteContainerTarget.querySelector(selector)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'delete_images[]';
+        input.value = String(id);
+        this.deleteContainerTarget.appendChild(input);
+      }
+    }
+
+    const item = event.currentTarget?.closest?.('.build-images-preview__item');
+    if (item) item.remove();
   }
 
   syncFromInput() {

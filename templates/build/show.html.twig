@@ -1,106 +1,165 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Build{% endblock %}
+{% block title %}Build
+{% endblock %}
 
 {% block body %}
-    <h1>Build</h1>
+{{ dump(build) }}
+<div class="flex flex-col overflow-scroll gap-4">
+    <twig:GoBack />
+    <div class="flex gap-4 flex-3">
+        <div class="flex flex-col gap-4 flex-2">
+            <div class="relative w-full h-full  overflow-hidden rounded-xl" data-carousel>
+                <div class="flex transition-transform duration-300 ease-in-out" data-carousel-track>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ build.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ build.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ build.description }}</td>
-            </tr>
-            <tr>
-                <th>Dimensions_x</th>
-                <td>{{ build.dimensionsX }}</td>
-            </tr>
-            <tr>
-                <th>Dimensions_y</th>
-                <td>{{ build.dimensionsY }}</td>
-            </tr>
-            <tr>
-                <th>Dimensions_z</th>
-                <td>{{ build.dimensionsZ }}</td>
-            </tr>
-            <tr>
-                <th>Difficulty</th>
-                <td>{{ build.difficulty }}</td>
-            </tr>
-            <tr>
-                <th>Time_estimated_min</th>
-                <td>{{ build.timeEstimatedMin }}</td>
-            </tr>
-            <tr>
-                <th>Game_version</th>
-                <td>{{ build.gameVersion }}</td>
-            </tr>
-            <tr>
-                <th>Game_mode</th>
-                <td>{{ build.gameMode }}</td>
-            </tr>
-            <tr>
-                <th>Visibility</th>
-                <td>{{ build.visibility }}</td>
-            </tr>
-            <tr>
-                <th>Hidden_reason</th>
-                <td>{{ build.hiddenReason }}</td>
-            </tr>
-            <tr>
-                <th>Hidden_at</th>
-                <td>{{ build.hiddenAt ? build.hiddenAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Views_count</th>
-                <td>{{ build.viewsCount }}</td>
-            </tr>
-            <tr>
-                <th>Likes_count</th>
-                <td>{{ build.likesCount }}</td>
-            </tr>
-            <tr>
-                <th>Saves_count</th>
-                <td>{{ build.savesCount }}</td>
-            </tr>
-            <tr>
-                <th>Downloads_count</th>
-                <td>{{ build.downloadsCount }}</td>
-            </tr>
-            <tr>
-                <th>Ratings_count</th>
-                <td>{{ build.ratingsCount }}</td>
-            </tr>
-            <tr>
-                <th>Rating_avg</th>
-                <td>{{ build.ratingAvg }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ build.createdAt ? build.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ build.updatedAt ? build.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Deleted_at</th>
-                <td>{{ build.deletedAt ? build.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+                    {% for image in build.images %}
+                    <div class="min-w-full">
+                        <img src="{{ asset('uploads/build_images/' ~ image.url) }}" alt="{{ build.title }}"
+                            class="w-full h-[600px] object-cover">
+                    </div>
+                    {% endfor %}
+                </div>
 
-    <a href="{{ path('app_build_index') }}">back to list</a>
+                {% if build.images|length > 1 %}
+                <button type="button"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full"
+                    data-carousel-prev>
+                    <i class="fa-solid fa-angle-left"></i>
+                </button>
 
-    <a href="{{ path('app_build_edit', {'id': build.id}) }}">edit</a>
+                <button type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full"
+                    data-carousel-next>
+                    <i class="fa-solid fa-angle-right"></i>
+                </button>
+                {% endif %}
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold uppercase text-(--title-color)">{{ build.title }}</h3>
+                <p class="text-(--secondary-color) text-xl">{{ build.description }}</p>
+            </div>
 
-    {{ include('build/_delete_form.html.twig') }}
+            <twig:BuildActions :build="build" :isLikedByUser="isLikedByUser" />
+
+
+            <div class="container">
+                <div class="text-(--title-color) flex items-center gap-2 font-bold text-xl">
+                    <i class="fa-solid fa-comments"></i>
+                    <h3>Commentaires ({{ build.comments|length }})</h3>
+                </div>
+                {% if app.user %}
+                <div class="flex  gap-4 w-full">
+                    <img class="w-12 h-12 rounded-full"
+                        src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.svg') }}"
+                        alt="Avatar de {{ app.user.username }}">
+                    {{ form_start(form, {
+                    attr: {
+                    class: 'w-full flex flex-col gap-2',
+                    }
+                    }) }}
+
+                    {{ form_widget(form.content, {
+                    attr: {
+                    class: 'w-full border border-(--border-color) bg-(--container-color-secondary) px-4 py-2 rounded
+                    text-(--title-color) focus:outline-none focus:ring-2 focus:ring-(--primary-color)
+                    focus:ring-opacity-50',
+                    }
+                    }) }}
+
+                    <div class="error-message flex flex-col gap-2">
+                        {{ form_errors(form.content) }}
+                        {{ form_errors(form) }}
+                    </div>
+
+                    <button type="submit" class="primary-button w-fit">
+                        Commenter
+                    </button>
+
+                    {{ form_end(form) }}
+                </div>
+                {% else %}
+                <p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
+                        href="{{ path('app_login') }}">Connectez-vous</a> pour laisser un commentaire.</p>
+                {% endif %}
+
+                {% for comment in build.comments %}
+                <twig:Comments :comment="comment" />
+                {% endfor %}
+            </div>
+
+        </div>
+
+
+        <div class="flex flex-col gap-4 flex-1">
+
+            <twig:BuildUserAction :build="build" :isFollowedByUser="isFollowedByUser" />
+
+            <div class="container">
+                <h3 class="title">Détails</h3>
+                <div class="build-info-gap">
+                    <div class="build-info-gap-title">
+                        <i class="fa-solid fa-gamepad"></i>
+                        <p>Version</p>
+                    </div>
+                    <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
+                        {{ build.gameVersion }} </p>
+                </div>
+                <div class="build-info-gap">
+                    <div class="build-info-gap-title">
+                        <i class="fa-solid fa-bolt"></i>
+                        <p>Difficulté</p>
+                    </div>
+                    <p
+                        class=" font-bold {{ build.difficulty === 'easy' ? 'bg-green-600/10 text-green-200' : build.difficulty === 'medium' ? 'bg-blue-600/10 text-blue-600' : build.difficulty === 'hard' ? 'bg-orange-900/10 text-orange-400' : 'bg-red-600/10 text-red-200' }} px-2 py-1  rounded text-[0.875rem]">
+                        {{ build.difficulty }}</p>
+                </div>
+                <div class="build-info-gap">
+                    <div class="build-info-gap-title">
+                        <i class="fa-solid fa-ruler"></i>
+                        <p>Taille</p>
+                    </div>
+                    <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
+                        L:{{build.dimensionsX}} - H:{{build.dimensionsY}} - L:{{build.dimensionsZ}}</p>
+                </div>
+                <div class="build-info-gap">
+                    <div class="build-info-gap-title">
+                        <i class="fa-solid fa-calendar"></i>
+                        <p>Publié le </p>
+                    </div>
+                    <p class=" px-2 py-1 text-(--title-color) rounded text-[0.875rem]">{{ build.createdAt|date('d/m/Y')
+                        }}</p>
+                </div>
+            </div>
+
+            {% if build.materials|length > 0 %}
+            <div class="container">
+                <h3 class="title">Matériaux Requis</h3>
+                <div class="flex flex-col gap-2">
+                    {% for material in build.materials %}
+                    <div class="flex justify-between px-4 py-2 rounded w-full bg-(--container-color-secondary)">
+                        <p class="text-(--title-color)">{{ material.name }}</p>
+                        <p class="text-(--primary-color)">x {{ material.quantity }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if build.buildTags|length > 0 %}
+            <div class="container">
+                <h3 class="title">Tags</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for tag in build.buildTags %}
+                    <span
+                        class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
+                        {{ tag.tag.name }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 {% endblock %}

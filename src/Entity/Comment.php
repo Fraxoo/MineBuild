@@ -3,18 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Build::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -36,12 +36,19 @@ class Comment
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deleted_at = null;
 
+    /**
+     * @var Collection<int, CommentLike>
+     */
+    #[ORM\OneToMany(targetEntity: CommentLike::class, mappedBy: 'comment_id')]
+    private Collection $commentLikes;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
+        $this->commentLikes = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -112,6 +119,36 @@ class Comment
     public function setDeletedAt(?\DateTimeImmutable $deleted_at): static
     {
         $this->deleted_at = $deleted_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommentLike>
+     */
+    public function getCommentLikes(): Collection
+    {
+        return $this->commentLikes;
+    }
+
+    public function addCommentLike(CommentLike $commentLike): static
+    {
+        if (!$this->commentLikes->contains($commentLike)) {
+            $this->commentLikes->add($commentLike);
+            $commentLike->setCommentId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentLike(CommentLike $commentLike): static
+    {
+        if ($this->commentLikes->removeElement($commentLike)) {
+            // set the owning side to null (unless already changed)
+            if ($commentLike->getCommentId() === $this) {
+                $commentLike->setCommentId(null);
+            }
+        }
 
         return $this;
     }

@@ -6,7 +6,6 @@ use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Uid\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -22,10 +21,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     #[ORM\Column(length: 180)]
     private ?string $username = null;
@@ -100,6 +98,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'following', targetEntity: UserFollow::class, orphanRemoval: true)]
     private Collection $followerRelations;
 
+    /**
+     * @var Collection<int, CommentLike>
+     */
+    #[ORM\OneToMany(targetEntity: CommentLike::class, mappedBy: 'user_id')]
+    private Collection $commentLikes;
+
+    /**
+     * @var Collection<int, BuildDownload>
+     */
+    #[ORM\OneToMany(targetEntity: BuildDownload::class, mappedBy: 'user_id')]
+    private Collection $buildDownloads;
+
     public function __construct()
     {
         $this->is_active = true;
@@ -111,9 +121,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->buildRatings = new ArrayCollection();
         $this->followingRelations = new ArrayCollection();
         $this->followerRelations = new ArrayCollection();
+        $this->commentLikes = new ArrayCollection();
+        $this->buildDownloads = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -316,5 +328,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFollowerRelations(): Collection
     {
         return $this->followerRelations;
+    }
+
+    /**
+     * @return Collection<int, CommentLike>
+     */
+    public function getCommentLikes(): Collection
+    {
+        return $this->commentLikes;
+    }
+
+    public function addCommentLike(CommentLike $commentLike): static
+    {
+        if (!$this->commentLikes->contains($commentLike)) {
+            $this->commentLikes->add($commentLike);
+            $commentLike->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentLike(CommentLike $commentLike): static
+    {
+        if ($this->commentLikes->removeElement($commentLike)) {
+            // set the owning side to null (unless already changed)
+            if ($commentLike->getUserId() === $this) {
+                $commentLike->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BuildDownload>
+     */
+    public function getBuildDownloads(): Collection
+    {
+        return $this->buildDownloads;
+    }
+
+    public function addBuildDownload(BuildDownload $buildDownload): static
+    {
+        if (!$this->buildDownloads->contains($buildDownload)) {
+            $this->buildDownloads->add($buildDownload);
+            $buildDownload->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuildDownload(BuildDownload $buildDownload): static
+    {
+        if ($this->buildDownloads->removeElement($buildDownload)) {
+            // set the owning side to null (unless already changed)
+            if ($buildDownload->getUserId() === $this) {
+                $buildDownload->setUserId(null);
+            }
+        }
+
+        return $this;
     }
 }

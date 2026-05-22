@@ -1,0 +1,84 @@
+<div {{attributes}} class="flex flex-col gap-4">
+	<div class="flex flex-wrap gap-4 items-center justify-between  rounded p-4 bg-(--container-color)">
+		<div class="flex items-center gap-4">
+			<div class="build-stats">
+				<i class="fa-solid fa-eye"></i>
+				<p>{{build.viewsCount}}
+					Vues</p>
+			</div>
+			<div class="build-stats">
+				<button>
+					<i class="fa-solid fa-thumbs-up"></i>
+				</button>
+				<p>{{ build.likesCount}}
+					J'aime</p>
+			</div>
+			<div class="build-stats">
+				<i class="fa-solid fa-download"></i>
+				<p>{{ build.downloadsCount }}
+					Téléchargements</p>
+			</div>
+			<div class="build-stats text-yellow-400!">
+				<i class="fa-solid fa-star"></i>
+				<p>{{build.ratingAvg}}
+					({{build.ratings|length}})</p>
+			</div>
+		</div>
+		<div class="flex items-center gap-4">
+			{% if app.user %}
+			<button type="button" data-action="live#action" data-live-action-param="like" class="container-button">
+				<i
+					class="fa-solid fa-thumbs-up transition-colors duration-200 {{ isLikedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
+				J'aime
+			</button>
+			<button class="container-button" type="button" class="secondary-button flex items-center gap-2" data-share-button
+				data-share-title="{{ build.title }}"
+				data-share-url="{{ absolute_url(path('app_build_show', { id: build.id })) }}">
+				<i class="fa-solid fa-share-nodes"></i>
+				<span>Partager</span>
+			</button>
+			<button class="container-button">
+				<i class="fa-solid fa-flag"></i>
+				Signaler
+			</button>
+
+			{% else %}
+			<a href="{{ path('app_login') }}" class="container-button">
+				<i class="fa-solid fa-thumbs-up"></i>
+				J'aime
+			</a>
+			<button class="container-button">
+				<i class="fa-solid fa-share-alt"></i>
+				Partager
+			</button>
+			<a href="{{ path('app_login') }}" class="container-button">
+				<i class="fa-solid fa-flag"></i>
+				Signaler
+			</a>
+			{% endif %}
+		</div>
+	</div>
+	<a href="{{ path('app_build_download', { id: build.id }) }}"
+		class="flex items-center gap-2 justify-center bg-(--primary-color) py-3 px-4 text-center rounded font-semibold">
+		<i class="fa-solid fa-download"></i>
+		<h3>Télecharger ce build ({{ build.downloadsCount }})</h3>
+	</a>
+
+	<div class="container">
+		<h3 class="title">Notez ce build</h3>
+		{% if app.user %}
+		<div class="flex gap-2">
+			{% for i in 1..5 %}
+			<button type="button" {{ live_action('rate', { value: i }) }}
+				class="text-2xl transition-colors duration-200" aria-label="Noter {{ i }} sur 5">
+				<i class="{{ i <= rating ? 'fa-solid text-yellow-400' : 'fa-regular text-gray-400' }} fa-star"></i>
+			</button>
+			{% endfor %}
+		</div>
+		{% else %}
+		<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
+				href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>
+		{% endif %}
+
+	</div>
+</div>

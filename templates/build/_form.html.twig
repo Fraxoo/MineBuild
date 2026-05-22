@@ -1,5 +1,9 @@
 {{ form_start(form, { attr: { class: 'build-form' } }) }}
 
+<div class="error-message">
+    {{ form_errors(form) }}
+</div>
+
 <section class="build-card">
     <header class="build-card__header">
         <h3 class="build-card__title">Capture du build *</h3>
@@ -17,9 +21,26 @@
                 'image/png,image/jpeg,image/webp', 'data-image-preview-target': 'input', 'data-action':
                 'change->image-preview#change' } }) }}
             </label>
-            {{ form_errors(form.image_files) }}
+            <div class="error-message">
+                {{ form_errors(form.image_files) }}
+            </div>
 
-            <div class="build-images-preview" data-image-preview-target="list"></div>
+            <div class="build-images-preview" data-image-preview-target="list">
+                {% if build.id and build.images|length > 0 %}
+                    {% for image in build.images %}
+                        <div class="build-images-preview__item">
+                            <button type="button" class="build-images-preview__remove" aria-label="Supprimer"
+                                data-action="image-preview#removeExisting" data-image-preview-id-param="{{ image.id }}">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <img class="build-images-preview__img" src="{{ asset('uploads/build_images/' ~ image.url) }}"
+                                alt="{{ image.alt ?: build.title }}" loading="lazy">
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div data-image-preview-target="deleteContainer"></div>
         </div>
     </div>
 </section>
@@ -33,25 +54,35 @@
         <div class="build-field">
             <p class="build-label">Titre *</p>
             {{ form_widget(form.title) }}
-            {{ form_errors(form.title) }}
+            <div class="error-message">
+
+                {{ form_errors(form.title) }}
+            </div>
         </div>
 
         <div class="build-field">
             <p class="build-label">Description</p>
             {{ form_widget(form.description) }}
-            {{ form_errors(form.description) }}
+            <div class="error-message">
+                {{ form_errors(form.description) }}
+
+            </div>
         </div>
 
         <div class="build-grid-2">
             <div class="build-field">
                 <p class="build-label">Catégorie *</p>
                 {{ form_widget(form.category) }}
-                {{ form_errors(form.category) }}
+                <div class="error-message">
+                    {{ form_errors(form.category) }}
+                </div>
             </div>
             <div class="build-field">
                 <p class="build-label">Version *</p>
                 {{ form_widget(form.game_version) }}
-                {{ form_errors(form.game_version) }}
+                <div class="error-message">
+                    {{ form_errors(form.game_version) }}
+                </div>
             </div>
         </div>
 
@@ -59,12 +90,16 @@
             <div class="build-field">
                 <p class="build-label">Difficulté *</p>
                 {{ form_widget(form.difficulty) }}
-                {{ form_errors(form.difficulty) }}
+                <div class="error-message">
+                    {{ form_errors(form.difficulty) }}
+                </div>
             </div>
             <div class="build-field">
                 <p class="build-label">Mode de jeu *</p>
                 {{ form_widget(form.game_mode) }}
-                {{ form_errors(form.game_mode) }}
+                <div class="error-message">
+                    {{ form_errors(form.game_mode) }}
+                </div>
             </div>
         </div>
 
@@ -72,13 +107,17 @@
             <div class="build-field">
                 <p class="build-label">Temps estimé *</p>
                 {{ form_widget(form.time_estimated_min) }}
-                {{ form_errors(form.time_estimated_min) }}
+                <div class="error-message">
+                    {{ form_errors(form.time_estimated_min) }}
+                </div>
             </div>
             <div class="build-field">
                 <p class="build-label">Utilisation de mods</p>
                 <div class="flex items-center pt-3 gap-2">
                     {{ form_widget(form.modded) }}
-                    {{ form_errors(form.modded) }}
+                    <div class="error-message">
+                        {{ form_errors(form.modded) }}
+                    </div>
                     <p class="text-(--secondary-color)">Ce build utilise des mods</p>
                 </div>
             </div>
@@ -89,17 +128,23 @@
                 <div class="build-field">
                     <p class="build-hint">Longueur</p>
                     {{ form_widget(form.dimensions_x) }}
-                    {{ form_errors(form.dimensions_x) }}
+                    <div class="error-message">
+                        {{ form_errors(form.dimensions_x) }}
+                    </div>
                 </div>
                 <div class="build-field">
                     <p class="build-hint">Largeur</p>
                     {{ form_widget(form.dimensions_z) }}
-                    {{ form_errors(form.dimensions_z) }}
+                    <div class="error-message">
+                        {{ form_errors(form.dimensions_z) }}
+                    </div>
                 </div>
                 <div class="build-field">
                     <p class="build-hint">Hauteur</p>
                     {{ form_widget(form.dimensions_y) }}
-                    {{ form_errors(form.dimensions_y) }}
+                    <div class="error-message">
+                        {{ form_errors(form.dimensions_y) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -118,7 +163,7 @@
             <div class="build-tags__row">
                 <input type="text" class="build-tags__input" placeholder="Ajoutez un tag..."
                     data-tags-input-target="input" />
-                <button type="button" class="container-button build-tags__add" data-action="tags-input#add"
+                <button type="button" class="container-button build-tags__add" data-action="click->tags-input#add"
                     aria-label="Ajouter un tag">
                     <i class="fa-solid fa-plus"></i>
                 </button>
@@ -142,7 +187,7 @@
             <div class="h-full!">{{ form_widget(form.materials.vars.prototype.color , {
                 'attr' : { 'class' : 'h-full! ' }
                 }) }}</div>
-            <button type="button" class="container-button build-materials__remove" data-action="collection#remove"
+            <button type="button" class="container-button build-materials__remove" data-action="click->collection#remove"
                 aria-label="Supprimer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -159,14 +204,14 @@
                     <div class="build-materials__qty">{{ form_widget(material.quantity) }}</div>
                     <div class="build-materials__color">{{ form_widget(material.color) }}</div>
                     <button type="button" class="container-button build-materials__remove"
-                        data-action="collection#remove" aria-label="Supprimer">
+                        data-action="click->collection#remove" aria-label="Supprimer">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
                 {% endfor %}
             </div>
 
-            <button type="button" class="container-button build-materials__add" data-action="collection#add">
+            <button type="button" class="container-button build-materials__add" data-action="click->collection#add">
                 <i class="fa-solid fa-plus"></i>
                 Ajouter un matériau
             </button>
@@ -183,16 +228,45 @@
         <p class="build-card__subtitle">Ajoutez un monde ou un schematic pour que les autres puissent le télécharger</p>
     </header>
     <div class="build-card__body">
-        <div class="build-dropzone">
+        {% if build.id and build.assets is defined and build.assets|length > 0 %}
+            {% set worldAsset = null %}
+            {% for a in build.assets %}
+                {% if a.type == 'world' %}
+                    {% set worldAsset = a %}
+                {% endif %}
+            {% endfor %}
+
+            {% if worldAsset %}
+                <div class="build-images-preview" data-file-preview-target="list">
+                    <div class="build-images-preview__item">
+                        <button type="button" class="build-images-preview__remove" aria-label="Supprimer"
+                            data-action="file-preview#removeExisting">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <a class="build-images-preview__file text-(--secondary-color)" href="{{ asset('uploads/build_assets/' ~ worldAsset.url) }}" target="_blank" rel="noopener">
+                            {{ worldAsset.filename ?: worldAsset.url }}
+                        </a>
+                    </div>
+                </div>
+                <div data-file-preview-target="deleteContainer"></div>
+            {% endif %}
+        {% endif %}
+
+        <div class="build-dropzone" data-controller="file-preview">
             <label class="build-dropzone__label build-dropzone__label--compact">
                 <div class="build-dropzone__inner">
                     <i class="fa-regular fa-file build-dropzone__icon"></i>
                     <p class="build-dropzone__title">Upload world file</p>
                     <p class="build-dropzone__subtitle">.zip, .schematic, .nbt (max 50MB)</p>
                 </div>
-                {{ form_widget(form.world_file, { attr: { class: 'build-dropzone__input', accept: '.zip,.schematic,.nbt'
+                {{ form_widget(form.world_file, { attr: {
+                class: 'build-dropzone__input',
+                accept: '.zip,.schematic,.nbt',
+                'data-file-preview-target': 'input',
+                'data-action': 'change->file-preview#change'
                 } }) }}
             </label>
+            <p class="build-file-preview" data-file-preview-target="name"></p>
             {{ form_errors(form.world_file) }}
         </div>
     </div>

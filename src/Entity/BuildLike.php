@@ -38,6 +38,18 @@ class BuildLike
         return $this->user;
     }
 
+    public function setBuild(?Build $build): static
+    {
+        $this->build = $build;
+        return $this;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;

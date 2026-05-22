@@ -473,6 +473,13 @@ body {
     cursor: pointer;
 }
 
+.build-file-preview {
+    margin-top: 0.5rem;
+    color: var(--secondary-color);
+    font-size: 0.875rem;
+    word-break: break-word;
+}
+
 .build-images-preview {
     margin-top: 0.75rem;
     display: grid;
@@ -618,4 +625,40 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+}
+
+.build-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--secondary-color);
+}
+
+.container {
+    background-color: var(--container-color);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.build-info-gap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.build-info-gap-title{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--secondary-color);
+}
+
+.title {
+    color: var(--title-color);
+    font-weight: bold;
+    font-size: 1.5rem;
 }

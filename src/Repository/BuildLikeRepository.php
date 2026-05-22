@@ -17,4 +17,18 @@ class BuildLikeRepository extends ServiceEntityRepository
     }
 
 
+    public function existsForBuildAndUser(int $buildId, int $userId): bool
+    {
+        $id = $this->createQueryBuilder('bl')
+            ->select('bl')
+            ->andWhere('IDENTITY(bl.build) = :buildId')
+            ->andWhere('IDENTITY(bl.user) = :userId')
+            ->setParameter('buildId', $buildId)
+            ->setParameter('userId', $userId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $id !== null;
+    }
 }
