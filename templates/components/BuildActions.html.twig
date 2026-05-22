@@ -56,11 +56,11 @@
 			{% endif %}
 		</div>
 	</div>
-	<div
+	<a href="{{ path('app_build_download', { id: build.id }) }}"
 		class="flex items-center gap-2 justify-center bg-(--primary-color) py-3 px-4 text-center rounded font-semibold">
 		<i class="fa-solid fa-download"></i>
 		<h3>Télecharger ce build ({{ build.downloadsCount }})</h3>
-	</div>
+	</a>
 
 	<div class="container">
 		<h3 class="title">Notez ce build</h3>
@@ -74,7 +74,8 @@
 			{% endfor %}
 		</div>
 		{% else %}
-		<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)" href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>	
+		<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
+				href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>
 		{% endif %}
 
 	</div>

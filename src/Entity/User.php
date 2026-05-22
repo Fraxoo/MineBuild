@@ -104,6 +104,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: CommentLike::class, mappedBy: 'user_id')]
     private Collection $commentLikes;
 
+    /**
+     * @var Collection<int, BuildDownload>
+     */
+    #[ORM\OneToMany(targetEntity: BuildDownload::class, mappedBy: 'user_id')]
+    private Collection $buildDownloads;
+
     public function __construct()
     {
         $this->is_active = true;
@@ -116,6 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->followingRelations = new ArrayCollection();
         $this->followerRelations = new ArrayCollection();
         $this->commentLikes = new ArrayCollection();
+        $this->buildDownloads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -347,6 +354,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($commentLike->getUserId() === $this) {
                 $commentLike->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BuildDownload>
+     */
+    public function getBuildDownloads(): Collection
+    {
+        return $this->buildDownloads;
+    }
+
+    public function addBuildDownload(BuildDownload $buildDownload): static
+    {
+        if (!$this->buildDownloads->contains($buildDownload)) {
+            $this->buildDownloads->add($buildDownload);
+            $buildDownload->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuildDownload(BuildDownload $buildDownload): static
+    {
+        if ($this->buildDownloads->removeElement($buildDownload)) {
+            // set the owning side to null (unless already changed)
+            if ($buildDownload->getUserId() === $this) {
+                $buildDownload->setUserId(null);
             }
         }
 

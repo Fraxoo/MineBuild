@@ -16,10 +16,12 @@ use App\Repository\BuildRepository;
 use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -157,6 +159,37 @@ final class BuildController extends AbstractController
             'build' => $build,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/build/{id}/download', name: 'app_build_download')]
+    public function download(Build $build): BinaryFileResponse
+    {
+        $worldAsset = null;
+        foreach ($build->getAssets() as $asset) {
+            if ($asset->getType() === 'world') {
+                $worldAsset = $asset;
+                break;
+            }
+        }
+
+        if (!$worldAsset) {
+            throw $this->createNotFoundException('Aucun fichier à télécharger.');
+        }
+
+        $storedFilename = (string) $worldAsset->getUrl();
+        $downloadFilename = (string) ($worldAsset->getFilename() ?: $storedFilename);
+
+        $filePath = rtrim((string) $this->getParameter('build_assets_directory'), '/') . '/' . $storedFilename;
+
+        if (!file_exists($filePath)) {
+            throw $this->createNotFoundException('Fichier introuvable.');
+        }
+
+        return $this->file(
+            $filePath,
+            $downloadFilename,
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT
+        );
     }
 
     #[Route('/{id}', name: 'app_build_show', methods: ['GET', 'POST'])]

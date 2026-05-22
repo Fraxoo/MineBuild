@@ -146,6 +146,12 @@ class Build
     #[ORM\Column]
     private ?bool $modded = null;
 
+    /**
+     * @var Collection<int, BuildDownload>
+     */
+    #[ORM\OneToMany(targetEntity: BuildDownload::class, mappedBy: 'build')]
+    private Collection $buildDownloads;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -158,6 +164,7 @@ class Build
         $this->likes = new ArrayCollection();
         $this->saves = new ArrayCollection();
         $this->ratings = new ArrayCollection();
+        $this->buildDownloads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -566,6 +573,36 @@ class Build
     public function setModded(bool $modded): static
     {
         $this->modded = $modded;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BuildDownload>
+     */
+    public function getBuildDownloads(): Collection
+    {
+        return $this->buildDownloads;
+    }
+
+    public function addBuildDownload(BuildDownload $buildDownload): static
+    {
+        if (!$this->buildDownloads->contains($buildDownload)) {
+            $this->buildDownloads->add($buildDownload);
+            $buildDownload->setBuild($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuildDownload(BuildDownload $buildDownload): static
+    {
+        if ($this->buildDownloads->removeElement($buildDownload)) {
+            // set the owning side to null (unless already changed)
+            if ($buildDownload->getBuild() === $this) {
+                $buildDownload->setBuild(null);
+            }
+        }
 
         return $this;
     }
