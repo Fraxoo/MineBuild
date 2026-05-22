@@ -41,24 +41,7 @@
 
             <twig:BuildActions :build="build" :isLikedByUser="isLikedByUser" />
 
-            <div
-                class="flex items-center gap-2 justify-center bg-(--primary-color) py-3 px-4 text-center rounded font-semibold">
-                <i class="fa-solid fa-download"></i>
-                <h3>Télecharger ce build ({{ build.downloadsCount }})</h3>
-            </div>
-
-            <div class="container">
-                <h3 class="title">Notez ce build</h3>
-                <div class="flex gap-2">
-                    <i class="fa-solid fa-star text-(--primary-color)"></i>
-                    <i class="fa-solid fa-star text-(--primary-color)"></i>
-                    <i class="fa-solid fa-star text-(--primary-color)"></i>
-                    <i class="fa-solid fa-star text-(--primary-color)"></i>
-                    <i class="fa-solid fa-star text-(--primary-color)"></i>
-                </div>
-            </div>
-
-
+           
             <div class="container">
                 <div class="text-(--title-color) flex items-center gap-2 font-bold text-xl">
                     <i class="fa-solid fa-comments"></i>

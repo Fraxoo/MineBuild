@@ -60,6 +60,7 @@ class BuildRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->where('b.id = :build_id')
             ->setParameter('build_id', $build->getId())
+            ->leftJoin('b.ratings', 'ratings')->addSelect('ratings')
             ->leftJoin('b.images', 'images')->addSelect('images')
             ->leftJoin('b.comments', 'comments')->addSelect('comments')
             ->orderBy('comments.created_at', 'DESC')
