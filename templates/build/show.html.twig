@@ -4,7 +4,6 @@
 {% endblock %}
 
 {% block body %}
-{{ dump(build) }}
 <div class="flex flex-col overflow-scroll gap-4">
     <twig:GoBack />
     <div class="flex gap-4 flex-3">
@@ -39,7 +38,7 @@
                 <p class="text-(--secondary-color) text-xl">{{ build.description }}</p>
             </div>
 
-            <twig:BuildActions :build="build" :isLikedByUser="isLikedByUser" />
+            <twig:BuildActions :build="build" :isLikedByUser="isLikedByUser" :isSavedByUser="isSavedByUser" />
 
 
             <div class="container">
@@ -92,7 +91,7 @@
 
         <div class="flex flex-col gap-4 flex-1">
 
-            <twig:BuildUserAction :build="build" :isFollowedByUser="isFollowedByUser" />
+            <twig:BuildUserAction :build="build" :isFollowedByUser="isFollowedByUser"  />
 
             <div class="container">
                 <h3 class="title">Détails</h3>
