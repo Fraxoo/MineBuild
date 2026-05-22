@@ -37,10 +37,14 @@
 				<i class="fa-solid fa-share-nodes"></i>
 				<span>Partager</span>
 			</button>
-			<button class="container-button">
+			<button class="container-button" {{live_action('save')}}>
+				<i class="fa-solid fa-star {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
+				<p>Favoris</p>
+			</button>
+			{# <button class="container-button">
 				<i class="fa-solid fa-flag"></i>
 				Signaler
-			</button>
+			</button> #}
 
 			{% else %}
 			<a href="{{ path('app_login') }}" class="container-button">

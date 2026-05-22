@@ -15,6 +15,7 @@ use App\Form\CommentType;
 use App\Repository\BuildDownloadRepository;
 use App\Repository\BuildLikeRepository;
 use App\Repository\BuildRepository;
+use App\Repository\BuildSaveRepository;
 use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -209,7 +210,7 @@ final class BuildController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_build_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Build $build, EntityManagerInterface $em, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
+    public function show(Request $request, Build $build, EntityManagerInterface $em,BuildSaveRepository $buildSaveRepository, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
     {
         $build = $buildRepository->getBuildWithJoinByUser($build);
 
@@ -220,6 +221,13 @@ final class BuildController extends AbstractController
 
         $isFollowedByUser = $user instanceof \App\Entity\User
             ? $build->getAuthor()->getFollowerRelations()->exists(fn($i, $rel) => $rel->getFollower()->getId() === $user->getId())
+            : false;
+
+        $isSavedByUser = $user instanceof \App\Entity\User
+            ? $buildSaveRepository->findOneBy([
+                'build' => $build,
+                'user' => $user,
+            ]) !== null
             : false;
 
         $comment = new Comment();
@@ -244,7 +252,7 @@ final class BuildController extends AbstractController
 
 
         return $this->render('build/show.html.twig', [
-
+            'isSavedByUser' => $isSavedByUser,
             'isLikedByUser' => $isLikedByUser,
             'isFollowedByUser' => $isFollowedByUser,
             'build' => $build,

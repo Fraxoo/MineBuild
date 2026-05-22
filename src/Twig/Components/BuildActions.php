@@ -5,6 +5,7 @@ namespace App\Twig\Components;
 use App\Entity\Build;
 use App\Entity\BuildLike;
 use App\Entity\BuildRating;
+use App\Entity\BuildSave;
 use App\Entity\User;
 use App\Repository\BuildRatingRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +26,9 @@ final class BuildActions
 
     #[LiveProp]
     public int $rating = 0;
+
+    #[LiveProp]
+    public bool $isSavedByUser = false;
 
     #[LiveProp]
     public bool $isLikedByUser = false;
@@ -111,6 +115,28 @@ final class BuildActions
 
         // Sauvegarde de la nouvelle moyenne
         $this->em->flush();
+    }
+
+    #[LiveAction()]
+    public function save(): void
+    {
+
+        $saved = $this->em->getRepository(BuildSave::class)->findOneBy([
+            'build' => $this->build,
+            'user' => $this->security->getUser(),
+        ]);
+
+        if (!$saved) {
+            $saved = new BuildSave($this->build, $this->security->getUser());
+            $this->em->persist($saved);
+            $this->isSavedByUser = true;
+        } else {
+            $this->em->remove($saved);
+            $this->isSavedByUser = false;
+        }
+
+        $this->em->flush();
+
     }
 
     #[LiveAction]
