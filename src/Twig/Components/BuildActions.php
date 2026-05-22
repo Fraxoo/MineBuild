@@ -78,18 +78,42 @@ final class BuildActions
             $rating = new BuildRating($this->build, $user, $value);
         } else {
             if ($rating->getRating() === $value) {
-                $this->rating = 0;
                 $this->em->remove($rating);
                 $this->em->flush();
-                return;
-            }
-            $rating->setRating($value);
-        }
+                $value = 0;
+                $this->rating = 0;
 
-    
+                $ratings = $this->build->getRatings();
+
+                $average = $ratings->isEmpty()
+                    ? 0
+                    : array_sum(
+                        $ratings->map(fn($rating) => $rating->getRating())->toArray()
+                    ) / $ratings->count();
+
+                $this->build->setRatingAvg(
+                    $average
+                );
+                return;
+            } else {
+                $rating->setRating($value);
+            }
+        }
 
         $this->em->persist($rating);
         $this->em->flush();
+        $ratings = $this->build->getRatings();
+
+        $average = $ratings->isEmpty()
+            ? 0
+            : array_sum(
+                $ratings->map(fn($rating) => $rating->getRating())->toArray()
+            ) / $ratings->count();
+
+        $this->build->setRatingAvg(
+            $average
+        );
+
 
         $this->rating = $value;
     }

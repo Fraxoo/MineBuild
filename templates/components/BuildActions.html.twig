@@ -18,7 +18,7 @@
 				<p>{{ build.downloadsCount }}
 					Téléchargements</p>
 			</div>
-			<div class="build-stats">
+			<div class="build-stats text-yellow-400!">
 				<i class="fa-solid fa-star"></i>
 				<p>{{build.ratingsCount}}
 					({{build.ratingAvg}})</p>
@@ -74,7 +74,7 @@
 			{% endfor %}
 		</div>
 		{% else %}
-		<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)" href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>
+		<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)" href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>	
 		{% endif %}
 
 	</div>
