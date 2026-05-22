@@ -41,7 +41,7 @@
 
             <twig:BuildActions :build="build" :isLikedByUser="isLikedByUser" />
 
-           
+
             <div class="container">
                 <div class="text-(--title-color) flex items-center gap-2 font-bold text-xl">
                     <i class="fa-solid fa-comments"></i>
@@ -78,7 +78,8 @@
                     {{ form_end(form) }}
                 </div>
                 {% else %}
-                <p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)" href="{{ path('app_login') }}">Connectez-vous</a> pour laisser un commentaire.</p>
+                <p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
+                        href="{{ path('app_login') }}">Connectez-vous</a> pour laisser un commentaire.</p>
                 {% endif %}
 
                 {% for comment in build.comments %}
@@ -157,13 +158,8 @@
                 </div>
             </div>
             {% endif %}
-
-
         </div>
     </div>
-
-
-    <a href="{{ path('app_build_edit', {'id': build.id}) }}">edit</a>
 </div>
 
 {% endblock %}

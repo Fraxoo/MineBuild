@@ -31,9 +31,11 @@
 					class="fa-solid fa-thumbs-up transition-colors duration-200 {{ isLikedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				J'aime
 			</button>
-			<button class="container-button">
-				<i class="fa-solid fa-share-alt"></i>
-				Partager
+			<button class="container-button" type="button" class="secondary-button flex items-center gap-2" data-share-button
+				data-share-title="{{ build.title }}"
+				data-share-url="{{ absolute_url(path('app_build_show', { id: build.id })) }}">
+				<i class="fa-solid fa-share-nodes"></i>
+				<span>Partager</span>
 			</button>
 			<button class="container-button">
 				<i class="fa-solid fa-flag"></i>

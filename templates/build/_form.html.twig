@@ -25,7 +25,22 @@
                 {{ form_errors(form.image_files) }}
             </div>
 
-            <div class="build-images-preview" data-image-preview-target="list"></div>
+            <div class="build-images-preview" data-image-preview-target="list">
+                {% if build.id and build.images|length > 0 %}
+                    {% for image in build.images %}
+                        <div class="build-images-preview__item">
+                            <button type="button" class="build-images-preview__remove" aria-label="Supprimer"
+                                data-action="image-preview#removeExisting" data-image-preview-id-param="{{ image.id }}">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <img class="build-images-preview__img" src="{{ asset('uploads/build_images/' ~ image.url) }}"
+                                alt="{{ image.alt ?: build.title }}" loading="lazy">
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div data-image-preview-target="deleteContainer"></div>
         </div>
     </div>
 </section>
@@ -213,6 +228,30 @@
         <p class="build-card__subtitle">Ajoutez un monde ou un schematic pour que les autres puissent le télécharger</p>
     </header>
     <div class="build-card__body">
+        {% if build.id and build.assets is defined and build.assets|length > 0 %}
+            {% set worldAsset = null %}
+            {% for a in build.assets %}
+                {% if a.type == 'world' %}
+                    {% set worldAsset = a %}
+                {% endif %}
+            {% endfor %}
+
+            {% if worldAsset %}
+                <div class="build-images-preview" data-file-preview-target="list">
+                    <div class="build-images-preview__item">
+                        <button type="button" class="build-images-preview__remove" aria-label="Supprimer"
+                            data-action="file-preview#removeExisting">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <a class="build-images-preview__file text-(--secondary-color)" href="{{ asset('uploads/build_assets/' ~ worldAsset.url) }}" target="_blank" rel="noopener">
+                            {{ worldAsset.filename ?: worldAsset.url }}
+                        </a>
+                    </div>
+                </div>
+                <div data-file-preview-target="deleteContainer"></div>
+            {% endif %}
+        {% endif %}
+
         <div class="build-dropzone" data-controller="file-preview">
             <label class="build-dropzone__label build-dropzone__label--compact">
                 <div class="build-dropzone__inner">

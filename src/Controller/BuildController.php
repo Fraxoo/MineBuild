@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\Build;
 use App\Entity\BuildAsset;
 use App\Entity\BuildCategory;
+use App\Entity\BuildDownload;
 use App\Entity\BuildImage;
 use App\Entity\BuildTag;
 use App\Entity\Comment;
 use App\Entity\Tag;
 use App\Form\BuildType;
 use App\Form\CommentType;
+use App\Repository\BuildDownloadRepository;
 use App\Repository\BuildLikeRepository;
 use App\Repository\BuildRepository;
 use App\Repository\TagRepository;
@@ -162,7 +164,7 @@ final class BuildController extends AbstractController
     }
 
     #[Route('/build/{id}/download', name: 'app_build_download')]
-    public function download(Build $build): BinaryFileResponse
+    public function download(Build $build, BuildDownloadRepository $buildDownloadRepository, EntityManagerInterface $entityManager): BinaryFileResponse
     {
         $worldAsset = null;
         foreach ($build->getAssets() as $asset) {
@@ -183,6 +185,20 @@ final class BuildController extends AbstractController
 
         if (!file_exists($filePath)) {
             throw $this->createNotFoundException('Fichier introuvable.');
+        }
+
+        $user = $this->getUser();
+        if ($user instanceof \App\Entity\User) {
+            $downloadedByUser = $buildDownloadRepository->findOneBy([
+                'build' => $build,
+                'user_id' => $user,
+            ]);
+
+            if (!$downloadedByUser) {
+                $entityManager->persist(new BuildDownload($build, $user));
+                $build->setDownloadsCount($build->getDownloadsCount() + 1);
+                $entityManager->flush();
+            }
         }
 
         return $this->file(
@@ -265,6 +281,34 @@ final class BuildController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $deleteImageIds = $request->request->all('delete_images');
+            } catch (\Symfony\Component\HttpFoundation\Exception\BadRequestException) {
+                $deleteImageIds = [];
+            }
+            $deleteImageIds = array_fill_keys(array_map('strval', $deleteImageIds), true);
+
+            $buildImagesDir = rtrim((string) $this->getParameter('build_images_directory'), '/');
+            foreach ($build->getImages()->toArray() as $existingImage) {
+                $imageId = $existingImage->getId();
+                if ($imageId === null || !isset($deleteImageIds[(string) $imageId])) {
+                    continue;
+                }
+
+                $filename = $existingImage->getUrl();
+                if ($filename) {
+                    $filePath = $buildImagesDir . '/' . $filename;
+                    if (is_file($filePath)) {
+                        @unlink($filePath);
+                    }
+                }
+
+                $build->removeImage($existingImage);
+                $entityManager->remove($existingImage);
+            }
+
+            $deleteWorldAsset = $request->request->has('delete_world_asset');
+
             // Catégorie: éviter remove+recreate identique (collision Doctrine sur clé composite)
             $selectedCategory = $form->get('category')->getData();
             $existingBuildCategories = $build->getBuildCategories()->toArray();
@@ -367,6 +411,30 @@ final class BuildController extends AbstractController
 
             // Fichier monde (optionnel)
             $worldFile = $form->get('world_file')->getData();
+            if ($worldFile instanceof UploadedFile && $worldFile->isValid()) {
+                $deleteWorldAsset = true;
+            }
+
+            if ($deleteWorldAsset) {
+                $buildAssetsDir = rtrim((string) $this->getParameter('build_assets_directory'), '/');
+                foreach ($build->getAssets()->toArray() as $existingAsset) {
+                    if ($existingAsset->getType() !== 'world') {
+                        continue;
+                    }
+
+                    $filename = $existingAsset->getUrl();
+                    if ($filename) {
+                        $assetPath = $buildAssetsDir . '/' . $filename;
+                        if (is_file($assetPath)) {
+                            @unlink($assetPath);
+                        }
+                    }
+
+                    $build->removeAsset($existingAsset);
+                    $entityManager->remove($existingAsset);
+                }
+            }
+
             if ($worldFile instanceof UploadedFile && $worldFile->isValid()) {
                 $clientOriginalName = $worldFile->getClientOriginalName();
                 $sizeBytes = (int) ($worldFile->getSize() ?? 0);
