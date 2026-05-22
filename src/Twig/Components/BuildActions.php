@@ -57,7 +57,7 @@ final class BuildActions
 
 
     #[LiveAction]
-    public function rate(#[LiveArg()] int $value): void
+    public function rate(#[LiveArg] int $value): void
     {
         if ($value < 1 || $value > 5) {
             return;
@@ -76,48 +76,42 @@ final class BuildActions
 
         if (!$rating) {
             $rating = new BuildRating($this->build, $user, $value);
+
+            $this->em->persist($rating);
+            $this->rating = $value;
+        } elseif ($rating->getRating() === $value) {
+            $this->em->remove($rating);
+            $this->rating = 0;
         } else {
-            if ($rating->getRating() === $value) {
-                $this->em->remove($rating);
-                $this->em->flush();
-                $value = 0;
-                $this->rating = 0;
-
-                $ratings = $this->build->getRatings();
-
-                $average = $ratings->isEmpty()
-                    ? 0
-                    : array_sum(
-                        $ratings->map(fn($rating) => $rating->getRating())->toArray()
-                    ) / $ratings->count();
-
-                $this->build->setRatingAvg(
-                    $average
-                );
-                return;
-            } else {
-                $rating->setRating($value);
-            }
+            $rating->setRating($value);
+            $this->rating = $value;
         }
 
-        $this->em->persist($rating);
+        // Sauvegarde d'abord la création / modification / suppression de la note
         $this->em->flush();
-        $ratings = $this->build->getRatings();
 
-        $average = $ratings->isEmpty()
-            ? 0
-            : array_sum(
-                $ratings->map(fn($rating) => $rating->getRating())->toArray()
-            ) / $ratings->count();
+        // On récupère les notes actuelles depuis la BDD
+        $ratings = $this->buildRatingRepository->findBy([
+            'build' => $this->build,
+        ]);
 
-        $this->build->setRatingAvg(
-            $average
-        );
+        if (count($ratings) === 0) {
+            $average = 0;
+        } else {
+            $total = 0;
 
+            foreach ($ratings as $buildRating) {
+                $total += $buildRating->getRating();
+            }
 
-        $this->rating = $value;
+            $average = $total / count($ratings);
+        }
+
+        $this->build->setRatingAvg(round($average, 1));
+
+        // Sauvegarde de la nouvelle moyenne
+        $this->em->flush();
     }
-
 
     #[LiveAction]
     public function like(): void
