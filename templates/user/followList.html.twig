@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Follow List
+{% endblock %}
+
+{% block body %}
+<div class="flex flex-col gap-4">
+<twig:GoBack/>
+    {% if app.request.pathInfo == "/user/follow/" ~ user.id %}
+    <h1 class="title">Abonné de
+        {{ user.username }}</h1>
+    {% else %}
+    <h1 class="title">Abonnements de
+        {{ user.username }}</h1>
+    {% endif %}
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {% for relation in follows %}
+        <div class="user-box">
+            <a href="{{ path('app_user_show', {id: relation.following.id}) }}" class="flex items-center gap-4">
+                <img class="w-12 h-12 rounded-full object-cover"
+                    src="{{ relation.following.avatarUrl ? asset('uploads/avatars/' ~ relation.following.avatarUrl) : asset('images/default-avatar.svg') }}"
+                    alt="Avatar de {{ relation.following.username }}">
+                <p class="text-(--title-color) font-bold">{{ relation.following.username }}</p>
+            </a>
+        </div>
+        {% else %}
+        <p class="text-(--secondary-color)">Aucun abonnement pour le moment.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

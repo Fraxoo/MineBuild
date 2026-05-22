@@ -32,6 +32,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+    
+    public function getFollowByUser(User $user)
+    {
+        return $this->createQueryBuilder('u')
+            ->innerJoin('u.followingRelations', 'f')
+            ->where('f.follower = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
 
     //    /**
     //     * @return User[] Returns an array of User objects
