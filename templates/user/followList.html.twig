@@ -5,23 +5,24 @@
 
 {% block body %}
 <div class="flex flex-col gap-4">
-<twig:GoBack/>
+    <twig:GoBack />
     {% if app.request.pathInfo == "/user/follow/" ~ user.id %}
-    <h1 class="title">Abonné de
-        {{ user.username }}</h1>
-    {% else %}
     <h1 class="title">Abonnements de
         {{ user.username }}</h1>
+    {% else %}
+    <h1 class="title">Abonné de
+        {{ user.username }}</h1>
     {% endif %}
+
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {% for relation in follows %}
         <div class="user-box">
-            <a href="{{ path('app_user_show', {id: relation.following.id}) }}" class="flex items-center gap-4">
+            <a href="{{ path('app_user_show', {id: relation.follower.id}) }}" class="flex items-center gap-4">
                 <img class="w-12 h-12 rounded-full object-cover"
-                    src="{{ relation.following.avatarUrl ? asset('uploads/avatars/' ~ relation.following.avatarUrl) : asset('images/default-avatar.svg') }}"
-                    alt="Avatar de {{ relation.following.username }}">
-                <p class="text-(--title-color) font-bold">{{ relation.following.username }}</p>
+                    src="{{ relation.follower.avatarUrl ? asset('uploads/avatars/' ~ relation.follower.avatarUrl) : asset('images/default-avatar.svg') }}"
+                    alt="Avatar de {{ relation.follower.username }}">
+                <p class="text-(--title-color) hover:underline font-bold">{{ relation.follower.username }}</p>
             </a>
         </div>
         {% else %}
