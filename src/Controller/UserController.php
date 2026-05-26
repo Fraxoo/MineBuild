@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\UserPasswordForm;
 use App\Form\UserType;
 use App\Repository\BuildRepository;
+use App\Repository\UserFollowRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +22,13 @@ use Symfony\Component\Form\FormError;
 #[Route('/user')]
 final class UserController extends AbstractController
 {
+
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager)
+    {
+
+    }
+
+
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -186,5 +194,40 @@ final class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
+    #[Route('/follow/{id}', name: 'app_user_get_follow_list', methods: ['GET'], defaults: ['type' => 'followers'])]
+    #[Route('/following/{id}', name: 'app_user_get_following_list', methods: ['GET'], defaults: ['type' => 'following'])]
+    public function getFollowList(
+        int $id,
+        string $type,
+        UserRepository $userRepository,
+        UserFollowRepository $userFollowRepository
+    ): Response {
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur introuvable.');
+        }
+
+        if ($type === 'followers') {
+            // Ceux qui suivent cet utilisateur
+            $follows = $userFollowRepository->findBy([
+                'following' => $user,
+            ]);
+        } else {
+            // Ceux que cet utilisateur suit
+            $follows = $userFollowRepository->findBy([
+                'follower' => $user,
+            ]);
+        }
+
+        return $this->render('user/followList.html.twig', [
+            'user' => $user,
+            'follows' => $follows,
+            'type' => $type,
+        ]);
     }
 }

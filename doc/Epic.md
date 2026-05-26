@@ -320,7 +320,7 @@
 
 # EPIC 6 — Système social (follow)
 
-## US7.1 — Suivre / se désabonner d’un créateur (P1)
+## US6.1 — Suivre / se désabonner d’un créateur (P1)
 **En tant que** utilisateur, je veux suivre un créateur afin de voir ses nouveautés.
 
 ### Scénario 1 — Suivre
@@ -337,7 +337,7 @@
 
 ---
 
-## US7.2 — Voir la liste des créateurs suivis (P1)
+## US6.2 — Voir la liste des créateurs suivis (P1)
 **En tant que** utilisateur, je veux voir mes abonnements afin de les gérer.
 
 ### Scénario 1 — Liste affichée
