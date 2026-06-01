@@ -20,14 +20,19 @@ final class HomeController extends AbstractController
 
 
     #[Route('/home/{page}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
-    #[Route('/home/{page}/{sortBy}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
-    #[Route('/home/{page}/{filter}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
-    public function index(Request $request, int $page, string $sortBy, string $filter): Response
+    public function index(Request $request, int $page): Response
     {
         $page = max(1, $page);
         $limit = 12;
 
-        $items = $this->buildRepository->findPaginatedOnlineBuilds($page, $limit);
+        $filters = [
+            'search' => trim($request->query->get('search', '')),
+            'category' => $request->query->getInt('category') ?: null,
+            'difficulty' => $request->query->get('difficulty') ?: null,
+            'sort' => $request->query->get('sort', 'DESC'),
+        ];
+
+        $items = $this->buildRepository->findPaginatedOnlineBuilds($page, $limit, $filters);
         $totalItems = $this->buildRepository->countOnlineBuilds();
 
         $totalPages = ceil($totalItems / $limit);
