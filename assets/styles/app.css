@@ -22,8 +22,8 @@
     --border-color-secondary: rgb(155, 155, 155, 0.2);
     --red-border: rgb(255, 0, 0, 0.7);
     --red-background: #2e2626;
-    --primary-color-muted: rgb(74, 222, 128,0.7);
-    --background-color-transparent: rgb(26, 26, 26,0.5);
+    --primary-color-muted: rgb(74, 222, 128, 0.7);
+    --background-color-transparent: rgb(26, 26, 26, 0.5);
 }
 
 input {
@@ -652,7 +652,7 @@ body {
     align-items: center;
 }
 
-.build-info-gap-title{
+.build-info-gap-title {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -663,4 +663,17 @@ body {
     color: var(--title-color);
     font-weight: bold;
     font-size: 1.5rem;
+}
+
+.filter-select {
+    background-color: var(--container-color-secondary);
+    color: var(--title-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    padding: 0.3rem 0.8rem;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
 }
