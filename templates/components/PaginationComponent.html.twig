@@ -1,0 +1,16 @@
+<div class=" flex flex-col md:grid md:grid-cols-4 gap-4" {{ attributes }}>
+
+    {% for item in items %}
+    <pre>
+            {{ dump(item) }}
+        </pre>
+    <div class="flex rounded-lg h-fit hover:border-2 transition-colors hover:border-(--primary-color) flex-col">
+        <img class="object-cover rounded-t-lg" src="{{ asset('uploads/build_images/' ~ item.images|first.url) }}"
+            alt="{{ item.title }}" />
+        <div class="flex rounded-b-lg bg-(--container-color) flex-col p-2">
+            <h3 class="text-(--title-color)">{{item.title}}</h3>
+            <p>{{ item.description|slice(0, 120) }}...</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>

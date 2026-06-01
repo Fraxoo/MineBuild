@@ -4,6 +4,23 @@
 
 {% block body %}
 
+<div class="container  flex flex-row! justify-between items-center">
+    <div class="flex items-center gap-4">
+        <select name="" id="">
+        </select>
+        <select name="" id="">
+        </select>
+        <select name="" id="">
+        </select>
+        <select name="" id="">
+        </select>
+    </div>
+    <div class="flex items-center gap-2">
+        <p class="text-(--secondary-color)">Filtrer par :</p>
+        <select name="" id=""></select>
+    </div>
+</div>
+<twig:PaginationComponent :items="items" :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage"/>
 
 
 {% endblock %}
