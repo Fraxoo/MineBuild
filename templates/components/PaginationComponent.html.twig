@@ -1,16 +1,69 @@
-<div class=" flex flex-col md:grid md:grid-cols-4 gap-4" {{ attributes }}>
-
-    {% for item in items %}
-    <pre>
-            {{ dump(item) }}
-        </pre>
-    <div class="flex rounded-lg h-fit hover:border-2 transition-colors hover:border-(--primary-color) flex-col">
-        <img class="object-cover rounded-t-lg" src="{{ asset('uploads/build_images/' ~ item.images|first.url) }}"
-            alt="{{ item.title }}" />
-        <div class="flex rounded-b-lg bg-(--container-color) flex-col p-2">
-            <h3 class="text-(--title-color)">{{item.title}}</h3>
-            <p>{{ item.description|slice(0, 120) }}...</p>
-        </div>
+<div {{ attributes }} class="flex flex-col gap-4">
+    <div class=" flex flex-col md:grid md:grid-cols-4 gap-4" {{ attributes }}>
+        {% for item in items %}
+        <a class="flex rounded-lg h-fit hover:border-2 transition-colors duration-200 hover:border-(--primary-color-muted) flex-col"
+            href="{{ path('app_build_show', {'id': item.id}) }}">
+            <div class="relative">
+                <img class="object-cover h-50 w-full  rounded-t-lg"
+                    src="{{ asset('uploads/build_images/' ~ item.images|first.url) }}" alt="{{ item.title }}" />
+                <div
+                    class="absolute top-2 right-2 flex items-center text-(--title-color) text-xs bg-(--background-color-transparent) gap-1 rounded p-1">
+                    <i class="fa-regular fa-eye"></i>
+                    <p>{{item.viewsCount}}</p>
+                </div>
+            </div>
+            <div class="flex rounded-b-lg bg-(--container-color) flex-col p-4">
+                <h3 class="text-(--title-color) font-semibold">{{item.title}}</h3>
+                <p class="text-(--secondary-color) text-wrap wrap-anywhere">{{ item.description|slice(0, 70) }}...</p>
+                <div class="flex justify-between items-center mt-2">
+                    <div class="flex items-center gap-2 ">
+                        <img class="w-6 h-6 rounded-full  object-cover" data-avatar-preview-target="image"
+                            src="{{ item.author.avatarUrl ? asset('uploads/avatars/' ~ item.author.avatarUrl) : asset('images/default-avatar.svg') }}"
+                            alt="Avatar de {{ item.author.username }}">
+                        <p class="text-(--secondary-color) text-sm">{{ item.author.username }}</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-(--secondary-color) text-xs">
+                        <div class="flex items-center gap-1">
+                            <i class="fa-regular fa-heart"></i>
+                            <p>{{ item.likesCount }}</p>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <i class="fa-solid fa-download"></i>
+                            <p>{{ item.downloadsCount }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+
+
+    {% if totalPages > 1 %}
+    <nav class="flex items-center justify-center gap-2 mt-8">
+
+        {% if currentPage > 1 %}
+        <a href="{{ path('app_home', { page: currentPage - 1 }) }}" class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
+            <i class="fa-solid fa-angle-left text-white"></i>
+        </a>
+        {% endif %}
+
+        {% for page in 1..totalPages %}
+        <a href="{{ path('app_home', { page: page }) }}"
+            class="px-3 h-fit py-2 border border-(--primary-color-muted) rounded {{ page == currentPage ? 'bg-(--primary-color) text-black' : 'text-white' }}">
+            {{ page }}
+        </a>
+        {% endfor %}
+
+        {% if currentPage < totalPages %} <a href="{{ path('app_home', { page: currentPage + 1 }) }}"
+            class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
+            <i class="fa-solid fa-angle-right text-white"></i>
+            </a>
+            {% endif %}
+
+    </nav>
+    {% endif %}
+
+
 </div>
