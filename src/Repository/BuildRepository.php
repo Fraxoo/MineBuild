@@ -17,6 +17,33 @@ class BuildRepository extends ServiceEntityRepository
         parent::__construct($registry, Build::class);
     }
 
+    public function findPaginatedOnlineBuilds(int $page, int $limit, string $sortBy = 'DESC', string $filter = 'PUBLIC'): array
+    {
+        $offset = ($page - 1) * $limit;
+
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.author', 'author')->addSelect('author')
+            ->leftJoin('b.images', 'images')->addSelect('images')
+            ->andWhere('b.visibility = :visibility')
+            ->setParameter('visibility', $filter)
+            ->orderBy('b.created_at', $sortBy)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+    
+
+    public function countOnlineBuilds(): int
+    {
+        return (int) $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->andWhere('b.visibility = :visibility')
+            ->setParameter('visibility', 'PUBLIC')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function getAllLikeForAllBuildsByUser(User $user): array
     {
         $qb = $this->createQueryBuilder('b')

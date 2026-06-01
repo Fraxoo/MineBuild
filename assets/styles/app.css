@@ -22,6 +22,8 @@
     --border-color-secondary: rgb(155, 155, 155, 0.2);
     --red-border: rgb(255, 0, 0, 0.7);
     --red-background: #2e2626;
+    --primary-color-muted: rgb(74, 222, 128,0.7);
+    --background-color-transparent: rgb(26, 26, 26,0.5);
 }
 
 input {
