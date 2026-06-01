@@ -17,22 +17,28 @@ class BuildRepository extends ServiceEntityRepository
         parent::__construct($registry, Build::class);
     }
 
-    public function findPaginatedOnlineBuilds(int $page, int $limit, string $sortBy = 'DESC', string $filter = 'PUBLIC'): array
+    public function findPaginatedOnlineBuilds(int $page, int $limit, array $filters = []): array
     {
         $offset = ($page - 1) * $limit;
 
-        return $this->createQueryBuilder('b')
+        $queryBuilder = $this->createQueryBuilder('b')
             ->leftJoin('b.author', 'author')->addSelect('author')
             ->leftJoin('b.images', 'images')->addSelect('images')
             ->andWhere('b.visibility = :visibility')
-            ->setParameter('visibility', $filter)
-            ->orderBy('b.created_at', $sortBy)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('visibility', 'PUBLIC');
+
+        if (in_array(strtoupper($filters['sort']), ['ASC', 'DESC'])) {
+            $queryBuilder->orderBy('b.created_at', $filters['sort']);
+        } else {
+            $queryBuilder->orderBy('b.views_count', 'DESC');
+        }
+
+        $queryBuilder->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
     }
-    
+
 
     public function countOnlineBuilds(): int
     {
