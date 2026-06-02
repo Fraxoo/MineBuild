@@ -285,6 +285,11 @@ final class BuildController extends AbstractController
                 $form->get('category')->setData($existingCategory->getCategory());
             }
 
+            $existingBuildVersion = $build->getBuildVersions()->first();
+            if ($existingBuildVersion) {
+                $form->get('Mcversion')->setData($existingBuildVersion->getVersion());
+            }
+
             $existingTags = [];
             foreach ($build->getBuildTags() as $buildTag) {
                 if ($buildTag->getTag() && $buildTag->getTag()->getName()) {
@@ -343,6 +348,23 @@ final class BuildController extends AbstractController
             }
             if ($selectedCategory && !$keepExistingCategory) {
                 $entityManager->persist(new BuildCategory($build, $selectedCategory));
+            }
+
+            $selectedMcVersion = $form->get('Mcversion')->getData();
+            $existingBuildVersions = $build->getBuildVersions()->toArray();
+            $buildVersion = array_shift($existingBuildVersions);
+
+            if ($buildVersion) {
+                $buildVersion->setVersion($selectedMcVersion);
+            } elseif ($selectedMcVersion) {
+                $buildVersion = new BuildVersion();
+                $buildVersion->setBuild($build);
+                $buildVersion->setVersion($selectedMcVersion);
+                $entityManager->persist($buildVersion);
+            }
+
+            foreach ($existingBuildVersions as $extraBuildVersion) {
+                $entityManager->remove($extraBuildVersion);
             }
 
             // Tags: si rempli, on synchronise (pas de remove+recreate identique)
