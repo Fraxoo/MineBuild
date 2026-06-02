@@ -31,8 +31,8 @@ final class HomeController extends AbstractController
         $filters = [
             'search' => trim($request->query->get('search', '')),
             'versions' => $request->query->get('version') ? :  null,
-            'category' => $request->query->getInt('category') ?: null,
-            'difficulty' => $request->query->get('difficulty') ?: null,
+            'category' => $request->query->get('category') ? : null,
+            'difficulty' => $request->query->get('difficulty') ? : null,
             'sort' => $request->query->get('sort', 'DESC'),
         ];
 
