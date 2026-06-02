@@ -44,6 +44,8 @@ class BuildRepository extends ServiceEntityRepository
                 ->setParameter('category' , $filters['category']);
         }
 
+        if($filters['version'])
+
         $queryBuilder->setFirstResult($offset)
             ->setMaxResults($limit);
 
