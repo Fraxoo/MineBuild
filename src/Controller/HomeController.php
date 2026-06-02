@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\BuildRepository;
+use App\Repository\CategoryRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,17 +22,20 @@ final class HomeController extends AbstractController
 
 
     #[Route('/home/{page}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
-    public function index(Request $request, int $page): Response
+    public function index(Request $request,CategoryRepository $categoryRepository ,LoggerInterface $loggerInterface , int $page): Response
     {
         $page = max(1, $page);
         $limit = 12;
 
         $filters = [
             'search' => trim($request->query->get('search', '')),
+            'versions' => $request->query->get('version') ? :  null,
             'category' => $request->query->getInt('category') ?: null,
             'difficulty' => $request->query->get('difficulty') ?: null,
             'sort' => $request->query->get('sort', 'DESC'),
         ];
+
+        
 
         $items = $this->buildRepository->findPaginatedOnlineBuilds($page, $limit, $filters);
         $totalItems = $this->buildRepository->countOnlineBuilds();
@@ -43,6 +48,9 @@ final class HomeController extends AbstractController
             'totalItems' => $totalItems,
             'totalPages' => $totalPages,
             'currentPage' => $page,
+            'filters' => $filters,
+            'categories' => $categoryRepository->findAll(),
+            'request' => $request
         ]);
     }
 }

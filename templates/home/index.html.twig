@@ -4,22 +4,62 @@
 
 {% block body %}
 <div class="flex flex-col gap-4">
+    <pre>
+        {{ dump(filters) }}
+    </pre>
 
-<div class="container w-full max-w-none! flex flex-row! justify-between items-center">        <div class="flex items-center gap-4">
-            <select name="" id="">
+    <pre>
+        {{ dump(request) }}
+    </pre>
+
+    <form method="get" action="{{ path('app_home', {pages: 1})}}"
+        class="container w-full max-w-none! flex flex-row! justify-between items-center">
+        <div class="flex items-center gap-4">
+            <button class="text-(--secondary-color)">Filtres :</button>
+            <select onchange="this.form.submit()" class="filter-select" name="version" id="">
+                <option disabled selected value="">Versions</option>
+                <option value="">Toutes</option>
+                <option value="">1.21</option>
+                <option value="">1.20</option>
+                <option value="">1.19</option>
+                <option value="">1.18</option>
+                <option value="">1.17</option>
+                <option value="">1.16</option>
+                <option value="">1.15</option>
+                <option value="">1.14</option>
+                <option value="">1.13</option>
+                <option value="">1.12</option>
+                <option value="">1.11</option>
+                <option value="">1.10</option>
+                <option value="">1.9</option>
+                <option value="">1.8</option>
+                <option value="">1.7</option>
+                <option value="">1.6</option>
             </select>
-            <select name="" id="">
+            <select onchange="this.form.submit()" class="filter-select" name="category" id="">
+                <option selected disabled value="">Catégories</option>
+                <option value="">Toutes</option>
+                {% for categorie in categories %}
+                <option {{filters.category === categorie.name ? 'selected' : ''}} value="{{categorie.id}}">{{categorie.nameFr}}</option>
+                {% endfor %}
             </select>
-            <select name="" id="">
-            </select>
-            <select name="" id="">
+            <select onchange="this.form.submit()" class="filter-select" name="difficulty" id="">
+                <option disabled selected value="">Difficultés</option>
+                <option {{filters.difficulty === '' ? 'selected' : ''}} value="">Toutes</option>
+                <option {{filters.difficulty === 'easy' ? 'selected' : ''}} value="easy">Facile</option>
+                <option {{filters.difficulty === 'medium' ? 'selected' : ''}} value="medium">Moyen</option>
+                <option {{filters.difficulty === 'hard' ? 'selected' : ''}} value="hard">Difficile</option>
             </select>
         </div>
         <div class="flex items-center gap-2">
             <p class="text-(--secondary-color)">Filtrer par :</p>
-            <select name="" id=""></select>
+            <select onchange="this.form.submit()" class="filter-select" name="sort" id="">
+                <option {{filters.sort==='DESC' ? 'selected' : '' }} value="DESC">Nouveau</option>
+                <option {{filters.sort==='POPULAR' ? 'selected' : '' }} value="POPULAR">Populaire</option>
+                <option {{filters.sort==='ASC' ? 'selected' : '' }} value="ASC">Ancien</option>
+            </select>
         </div>
-    </div>
+    </form>
     <twig:PaginationComponent :items="items" :totalPages="totalPages" :totalItems="totalItems"
         :currentPage="currentPage" />
 </div>
