@@ -24,6 +24,7 @@ class BuildRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('b')
             ->leftJoin('b.author', 'author')->addSelect('author')
             ->leftJoin('b.images', 'images')->addSelect('images')
+            ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
             ->andWhere('b.visibility = :visibility')
             ->setParameter('visibility', 'PUBLIC');
 
@@ -31,6 +32,16 @@ class BuildRepository extends ServiceEntityRepository
             $queryBuilder->orderBy('b.created_at', $filters['sort']);
         } else {
             $queryBuilder->orderBy('b.views_count', 'DESC');
+        }
+
+        if ($filters['difficulty'] !== null) {
+            $queryBuilder->andWhere('b.difficulty = :difficulty')
+                ->setParameter('difficulty', $filters['difficulty']);
+        }
+
+        if($filters['category'] !== null){
+            $queryBuilder->andWhere('buildCategories.category = :category')
+                ->setParameter('category' , $filters['category']);
         }
 
         $queryBuilder->setFirstResult($offset)
