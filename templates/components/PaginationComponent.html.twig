@@ -1,7 +1,7 @@
 <div {{ attributes }} class="flex flex-col gap-4">
     <div class=" flex flex-col md:grid md:grid-cols-4 gap-4" {{ attributes }}>
         {% for item in items %}
-        <a class="flex rounded-lg h-fit hover:border-2 transition-colors duration-200 hover:border-(--primary-color-muted) flex-col"
+        <a class="flex group rounded-lg h-fit hover: hover:border-2 transition-colors duration-200 hover:border-(--primary-color-muted) flex-col"
             href="{{ path('app_build_show', {'id': item.id}) }}">
             <div class="relative">
                 <img class="object-cover h-50 w-full  rounded-t-lg"
@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="flex rounded-b-lg bg-(--container-color) flex-col p-4">
-                <h3 class="text-(--title-color) font-semibold">{{item.title}}</h3>
+                <h3 class="text-(--title-color) transition-colors duration-200 group-hover:text-(--primary-color) font-semibold">{{item.title}}</h3>
                 <p class="text-(--secondary-color) text-wrap wrap-anywhere">{{ item.description|slice(0, 70) }}...</p>
                 <div class="flex justify-between items-center mt-2">
                     <div class="flex items-center gap-2 ">
