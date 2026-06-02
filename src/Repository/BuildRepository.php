@@ -24,6 +24,8 @@ class BuildRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('b')
             ->leftJoin('b.author', 'author')->addSelect('author')
             ->leftJoin('b.images', 'images')->addSelect('images')
+            ->leftJoin('b.buildVersions', 'buildVersions')->addSelect('buildVersions')
+            ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
             ->andWhere('b.visibility = :visibility')
             ->setParameter('visibility', 'PUBLIC');
 
@@ -31,6 +33,21 @@ class BuildRepository extends ServiceEntityRepository
             $queryBuilder->orderBy('b.created_at', $filters['sort']);
         } else {
             $queryBuilder->orderBy('b.views_count', 'DESC');
+        }
+
+        if ($filters['difficulty'] !== null) {
+            $queryBuilder->andWhere('b.difficulty = :difficulty')
+                ->setParameter('difficulty', $filters['difficulty']);
+        }
+
+        if ($filters['category'] !== null) {
+            $queryBuilder->andWhere('buildCategories.category = :category')
+                ->setParameter('category', $filters['category']);
+        }
+
+        if ($filters['versions'] !== null) {
+            $queryBuilder->andWhere('buildVersions.version = :version')
+                ->setParameter('version', $filters['versions']);
         }
 
         $queryBuilder->setFirstResult($offset)
@@ -104,6 +121,8 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('buildCategories.category', 'category')->addSelect('category')
             ->leftJoin('b.buildTags', 'buildTags')->addSelect('buildTags')
             ->leftJoin('buildTags.tag', 'tag')->addSelect('tag')
+            ->leftJoin('b.buildVersions', 'buildVersions')->addSelect('buildVersions')
+            ->leftJoin('buildVersions.version', 'Mcversion')->addSelect('Mcversion')
             ->andWhere('b.author = :user')
             ->setParameter('user', $build->getAuthor()->getId())
             ->getQuery()

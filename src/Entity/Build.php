@@ -43,14 +43,13 @@ class Build
     #[ORM\Column(nullable: false)]
     private ?int $time_estimated_min = null;
 
-    #[ORM\Column(length: 255, nullable: false)]
-    private ?string $game_version = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $game_mode = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $visibility = null;
+    #[ORM\Column(length: 255 , options: ['default' => 'PUBLIC'])]
+    private ?string $visibility = "PUBLIC";
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $hidden_reason = null;
@@ -152,6 +151,12 @@ class Build
     #[ORM\OneToMany(targetEntity: BuildDownload::class, mappedBy: 'build')]
     private Collection $buildDownloads;
 
+    /**
+     * @var Collection<int, BuildVersion>
+     */
+    #[ORM\OneToMany(targetEntity: BuildVersion::class, mappedBy: 'Build')]
+    private Collection $buildVersions;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -165,6 +170,7 @@ class Build
         $this->saves = new ArrayCollection();
         $this->ratings = new ArrayCollection();
         $this->buildDownloads = new ArrayCollection();
+        $this->buildVersions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -278,17 +284,7 @@ class Build
         return $this;
     }
 
-    public function getGameVersion(): ?string
-    {
-        return $this->game_version;
-    }
 
-    public function setGameVersion(string $game_version): static
-    {
-        $this->game_version = $game_version;
-
-        return $this;
-    }
 
     public function getGameMode(): ?string
     {
@@ -601,6 +597,36 @@ class Build
             // set the owning side to null (unless already changed)
             if ($buildDownload->getBuild() === $this) {
                 $buildDownload->setBuild(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BuildVersion>
+     */
+    public function getBuildVersions(): Collection
+    {
+        return $this->buildVersions;
+    }
+
+    public function addBuildVersion(BuildVersion $buildVersion): static
+    {
+        if (!$this->buildVersions->contains($buildVersion)) {
+            $this->buildVersions->add($buildVersion);
+            $buildVersion->setBuild($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuildVersion(BuildVersion $buildVersion): static
+    {
+        if ($this->buildVersions->removeElement($buildVersion)) {
+            // set the owning side to null (unless already changed)
+            if ($buildVersion->getBuild() === $this) {
+                $buildVersion->setBuild(null);
             }
         }
 

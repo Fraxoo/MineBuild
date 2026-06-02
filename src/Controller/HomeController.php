@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\BuildRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\McversionRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ final class HomeController extends AbstractController
 
 
     #[Route('/home/{page}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
-    public function index(Request $request,CategoryRepository $categoryRepository ,LoggerInterface $loggerInterface , int $page): Response
+    public function index(McversionRepository $mcversionRepository,Request $request,CategoryRepository $categoryRepository ,LoggerInterface $loggerInterface , int $page): Response
     {
         $page = max(1, $page);
         $limit = 12;
@@ -30,8 +31,8 @@ final class HomeController extends AbstractController
         $filters = [
             'search' => trim($request->query->get('search', '')),
             'versions' => $request->query->get('version') ? :  null,
-            'category' => $request->query->getInt('category') ?: null,
-            'difficulty' => $request->query->get('difficulty') ?: null,
+            'category' => $request->query->get('category') ? : null,
+            'difficulty' => $request->query->get('difficulty') ? : null,
             'sort' => $request->query->get('sort', 'DESC'),
         ];
 
@@ -50,7 +51,8 @@ final class HomeController extends AbstractController
             'currentPage' => $page,
             'filters' => $filters,
             'categories' => $categoryRepository->findAll(),
-            'request' => $request
+            'request' => $request,
+            'versions' => $mcversionRepository->findBy([], ['id' => 'DESC'] )
         ]);
     }
 }
