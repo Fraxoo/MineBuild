@@ -4,13 +4,6 @@
 
 {% block body %}
 <div class="flex flex-col gap-4">
-    <pre>
-        {{ dump(filters) }}
-    </pre>
-
-
-
-
 
     <form method="get" action="{{ path('app_home', { page: 1 }) }}"
         class="container w-full max-w-none! flex flex-row! justify-between items-center">
