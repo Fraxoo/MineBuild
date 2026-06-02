@@ -12,6 +12,10 @@
         {{ dump(request) }}
     </pre>
 
+    <pre>
+        {{ dump(versions) }}
+    </pre>
+
     <form method="get" action="{{ path('app_home', {pages: 1})}}"
         class="container w-full max-w-none! flex flex-row! justify-between items-center">
         <div class="flex items-center gap-4">
@@ -19,22 +23,9 @@
             <select onchange="this.form.submit()" class="filter-select" name="version" id="">
                 <option disabled selected value="">Versions</option>
                 <option value="">Toutes</option>
-                <option value="">1.21</option>
-                <option value="">1.20</option>
-                <option value="">1.19</option>
-                <option value="">1.18</option>
-                <option value="">1.17</option>
-                <option value="">1.16</option>
-                <option value="">1.15</option>
-                <option value="">1.14</option>
-                <option value="">1.13</option>
-                <option value="">1.12</option>
-                <option value="">1.11</option>
-                <option value="">1.10</option>
-                <option value="">1.9</option>
-                <option value="">1.8</option>
-                <option value="">1.7</option>
-                <option value="">1.6</option>
+                {% for version in versions %}
+                    <option value="{{version.id}}">{{version.number}}</option>
+                {% endfor %}
             </select>
             <select onchange="this.form.submit()" class="filter-select" name="category" id="">
                 <option selected disabled value="">Catégories</option>

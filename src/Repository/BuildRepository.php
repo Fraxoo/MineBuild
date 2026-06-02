@@ -117,6 +117,8 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('buildCategories.category', 'category')->addSelect('category')
             ->leftJoin('b.buildTags', 'buildTags')->addSelect('buildTags')
             ->leftJoin('buildTags.tag', 'tag')->addSelect('tag')
+            ->leftJoin('b.buildVersions','buildVersions')->addSelect('buildVersions')
+            ->leftJoin('buildVersions.version','Mcversion')->addSelect('Mcversion')
             ->andWhere('b.author = :user')
             ->setParameter('user', $build->getAuthor()->getId())
             ->getQuery()

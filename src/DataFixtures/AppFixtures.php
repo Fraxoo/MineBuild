@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\Mcversion;
 use App\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -57,6 +58,11 @@ class AppFixtures extends Fixture
         $manager->persist($category6);
         $manager->persist($category7);
 
+        for ($i = 0; $i < 27; $i++) {
+            $version = new Mcversion() ;
+            $version->setNumber('1.'.$i);
+            $manager->persist($version);
+        }
 
         $manager->flush();
     }

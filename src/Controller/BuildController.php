@@ -8,7 +8,9 @@ use App\Entity\BuildCategory;
 use App\Entity\BuildDownload;
 use App\Entity\BuildImage;
 use App\Entity\BuildTag;
+use App\Entity\BuildVersion;
 use App\Entity\Comment;
+use App\Entity\Mcversion;
 use App\Entity\Tag;
 use App\Form\BuildType;
 use App\Form\CommentType;
@@ -18,6 +20,7 @@ use App\Repository\BuildRepository;
 use App\Repository\BuildSaveRepository;
 use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Exception\MissingColumnException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -54,15 +57,14 @@ final class BuildController extends AbstractController
         if ($user instanceof \App\Entity\User) {
             $build->setAuthor($user);
         }
-        if (!$build->getVisibility()) {
-            $build->setVisibility('PUBLIC');
-        }
 
         $form = $this->createForm(BuildType::class, $build);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($build);
+
+            
 
             $category = $form->get('category')->getData();
             if ($category) {
@@ -151,6 +153,14 @@ final class BuildController extends AbstractController
                     $asset->setSizeBytes($sizeBytes);
                     $entityManager->persist($asset);
                 }
+            }
+
+            $mcVersion = $form->get('Mcversion')->getData();
+            if ($mcVersion) {
+                $newMcVersion = new BuildVersion();
+                $newMcVersion->setVersion($mcVersion);
+                $newMcVersion->setBuild($build);
+                $entityManager->persist($newMcVersion);
             }
 
             $entityManager->flush();
@@ -275,6 +285,11 @@ final class BuildController extends AbstractController
                 $form->get('category')->setData($existingCategory->getCategory());
             }
 
+            $existingBuildVersion = $build->getBuildVersions()->first();
+            if ($existingBuildVersion) {
+                $form->get('Mcversion')->setData($existingBuildVersion->getVersion());
+            }
+
             $existingTags = [];
             foreach ($build->getBuildTags() as $buildTag) {
                 if ($buildTag->getTag() && $buildTag->getTag()->getName()) {
@@ -333,6 +348,23 @@ final class BuildController extends AbstractController
             }
             if ($selectedCategory && !$keepExistingCategory) {
                 $entityManager->persist(new BuildCategory($build, $selectedCategory));
+            }
+
+            $selectedMcVersion = $form->get('Mcversion')->getData();
+            $existingBuildVersions = $build->getBuildVersions()->toArray();
+            $buildVersion = array_shift($existingBuildVersions);
+
+            if ($buildVersion) {
+                $buildVersion->setVersion($selectedMcVersion);
+            } elseif ($selectedMcVersion) {
+                $buildVersion = new BuildVersion();
+                $buildVersion->setBuild($build);
+                $buildVersion->setVersion($selectedMcVersion);
+                $entityManager->persist($buildVersion);
+            }
+
+            foreach ($existingBuildVersions as $extraBuildVersion) {
+                $entityManager->remove($extraBuildVersion);
             }
 
             // Tags: si rempli, on synchronise (pas de remove+recreate identique)
