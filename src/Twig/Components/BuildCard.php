@@ -2,6 +2,7 @@
 
 namespace App\Twig\Components;
 
+use App\Entity\Build;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
@@ -9,4 +10,6 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 final class BuildCard
 {
     use DefaultActionTrait;
+
+    public Build $build;
 }
