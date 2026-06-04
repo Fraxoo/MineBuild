@@ -51,20 +51,20 @@
     <nav class="flex items-center justify-center gap-2 mt-8">
 
         {% if currentPage > 1 %}
-        <a href="{{ path('app_home', { page: currentPage - 1 }) }}"
+        <a href="{{ path('app_home', app.request.query.all|merge({ page: currentPage - 1 })) }}"
             class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
             <i class="fa-solid fa-angle-left text-white"></i>
         </a>
         {% endif %}
 
         {% for page in 1..totalPages %}
-        <a href="{{ path('app_home', { page: page }) }}"
+        <a href="{{ path('app_home', app.request.query.all|merge({ page: page })) }}"
             class="px-3 h-fit py-2 border border-(--primary-color-muted) rounded {{ page == currentPage ? 'bg-(--primary-color) text-black' : 'text-white' }}">
             {{ page }}
         </a>
         {% endfor %}
 
-        {% if currentPage < totalPages %} <a href="{{ path('app_home', { page: currentPage + 1 }) }}"
+        {% if currentPage < totalPages %} <a href="{{ path('app_home', app.request.query.all|merge({ page: currentPage + 1 })) }}"
             class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
             <i class="fa-solid fa-angle-right text-white"></i>
             </a>
