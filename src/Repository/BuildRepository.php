@@ -27,6 +27,7 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('b.buildVersions', 'buildVersions')->addSelect('buildVersions')
             ->leftJoin('buildVersions.version', 'mcVersion')->addSelect('mcVersion')
             ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
+            ->leftJoin('buildCategories.category', 'category')->addSelect('category')
             ->andWhere('b.visibility = :visibility')
             ->setParameter('visibility', 'PUBLIC');
 
@@ -57,7 +58,9 @@ class BuildRepository extends ServiceEntityRepository
                     $queryBuilder->expr()->orX(
                         'LOWER(b.title) LIKE :search',
                         'LOWER(author.username) LIKE :search',
-                        'LOWER(mcVersion.number) LIKE :search'
+                        'LOWER(mcVersion.number) LIKE :search',
+                        'LOWER(category.name) LIKE :search',
+                        'LOWER(category.name_fr) LIKE :search'
                     )
                 )
                 ->setParameter('search', '%' . strtolower($filters['search']) . '%');
@@ -79,6 +82,53 @@ class BuildRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function countOnlineBuildsWithFilters(array $filters = []): int
+    {
+        $queryBuilder = $this->createQueryBuilder('b')
+        ->leftJoin('b.author', 'author')->addSelect('author')
+        ->leftJoin('b.images', 'images')->addSelect('images')
+        ->leftJoin('b.buildVersions', 'buildVersions')->addSelect('buildVersions')
+        ->leftJoin('buildVersions.version', 'mcVersion')->addSelect('mcVersion')
+        ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
+        ->leftJoin('buildCategories.category', 'category')->addSelect('category')
+        ->andWhere('b.visibility = :visibility')
+        ->setParameter('visibility', 'PUBLIC')
+        ->select('COUNT(b.id)');
+        
+
+        if ($filters['difficulty'] !== null) {
+            $queryBuilder->andWhere('b.difficulty = :difficulty')
+                ->setParameter('difficulty', $filters['difficulty']);
+        }
+
+        if ($filters['category'] !== null) {
+            $queryBuilder->andWhere('buildCategories.category = :category')
+                ->setParameter('category', $filters['category']);
+        }
+
+        if ($filters['versions'] !== null) {
+            $queryBuilder->andWhere('buildVersions.version = :version')
+                ->setParameter('version', $filters['versions']);
+        }
+
+        if (!empty($filters['search'])) {
+            $queryBuilder
+                ->andWhere(
+                    $queryBuilder->expr()->orX(
+                        'LOWER(b.title) LIKE :search',
+                        'LOWER(author.username) LIKE :search',
+                        'LOWER(mcVersion.number) LIKE :search',
+                        'LOWER(category.name) LIKE :search',
+                        'LOWER(category.name_fr) LIKE :search'
+                    )
+                )
+                ->setParameter('search', '%' . strtolower($filters['search']) . '%');
+        }
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
 
     public function getAllLikeForAllBuildsByUser(User $user): array
     {

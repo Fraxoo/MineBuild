@@ -39,7 +39,7 @@ final class HomeController extends AbstractController
         
 
         $items = $this->buildRepository->findPaginatedOnlineBuilds($page, $limit, $filters);
-        $totalItems = $this->buildRepository->countOnlineBuilds();
+        $totalItems = $this->buildRepository->countOnlineBuildsWithFilters($filters);
 
         $totalPages = ceil($totalItems / $limit);
 
