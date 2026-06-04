@@ -25,6 +25,7 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('b.author', 'author')->addSelect('author')
             ->leftJoin('b.images', 'images')->addSelect('images')
             ->leftJoin('b.buildVersions', 'buildVersions')->addSelect('buildVersions')
+            ->leftJoin('buildVersions.version', 'mcVersion')->addSelect('mcVersion')
             ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
             ->andWhere('b.visibility = :visibility')
             ->setParameter('visibility', 'PUBLIC');
@@ -48,6 +49,18 @@ class BuildRepository extends ServiceEntityRepository
         if ($filters['versions'] !== null) {
             $queryBuilder->andWhere('buildVersions.version = :version')
                 ->setParameter('version', $filters['versions']);
+        }
+
+        if (!empty($filters['search'])) {
+            $queryBuilder
+                ->andWhere(
+                    $queryBuilder->expr()->orX(
+                        'LOWER(b.title) LIKE :search',
+                        'LOWER(author.username) LIKE :search',
+                        'LOWER(mcVersion.number) LIKE :search'
+                    )
+                )
+                ->setParameter('search', '%' . strtolower($filters['search']) . '%');
         }
 
         $queryBuilder->setFirstResult($offset)
