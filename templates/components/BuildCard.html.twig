@@ -1,3 +1,36 @@
-<div{{ attributes }}>
-    <!-- component HTML -->
-</div>
+<a {{attributes}} class="flex group rounded-lg h-fit border-2 border-transparent transition-colors overflow-hidden duration-200 hover:border-(--primary-color-muted) flex-col"
+            href="{{ path('app_build_show', {'id': build.id}) }}">
+            <div class="relative">
+                <img class="object-cover h-50 w-full group-hover:scale-105 transition-transform duration-200  rounded-t-lg"
+                    src="{{ asset('uploads/build_images/' ~ build.images|first.url) }}" alt="{{ build.title }}" />
+                <div
+                    class="absolute top-2 right-2 flex items-center text-(--title-color) text-xs bg-(--background-color-transparent) gap-1 rounded p-1">
+                    <i class="fa-regular fa-eye"></i>
+                    <p>{{build.viewsCount}}</p>
+                </div>
+            </div>
+            <div class="flex rounded-b-lg bg-(--container-color) flex-col p-4">
+                <h3
+                    class="text-(--title-color) transition-colors duration-200 group-hover:text-(--primary-color) font-semibold">
+                    {{build.title}}</h3>
+                <p class="text-(--secondary-color) text-sm line-clamp-2 min-h-10 text-wrap wrap-anywhere">{{ build.description|slice(0, 70) }}...</p>
+                <div class="flex justify-between items-center mt-2">
+                    <div class="flex items-center gap-2 ">
+                        <img class="w-6 h-6 rounded-full  object-cover" data-avatar-preview-target="image"
+                            src="{{ build.author.avatarUrl ? asset('uploads/avatars/' ~ build.author.avatarUrl) : asset('images/default-avatar.svg') }}"
+                            alt="Avatar de {{ build.author.username }}">
+                        <p class="text-(--secondary-color) text-sm">{{ build.author.username }}</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-(--secondary-color) text-xs">
+                        <div class="flex items-center gap-1">
+                            <i class="fa-regular fa-heart"></i>
+                            <p>{{ build.likesCount }}</p>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <i class="fa-solid fa-download"></i>
+                            <p>{{ build.downloadsCount }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
