@@ -4,24 +4,19 @@
 
 {% block body %}
 <div class="flex flex-col gap-4">
-    <pre>
-        {{ dump(filters) }}
-    </pre>
-
-
-
-
 
     <form method="get" action="{{ path('app_home', { page: 1 }) }}"
         class="container w-full max-w-none! flex flex-row! justify-between items-center">
         <div class="flex items-center gap-4">
+            <input type="hidden" name="search" value="{{ filters.search }}">
+            <input type="hidden" name="sort" value="{{ filters.sort }}">
             <p class="text-(--secondary-color)">Filtres :</p>
 
             <select onchange="this.form.submit()" class="filter-select" name="version">
                 <option value="">Toutes les versions</option>
 
                 {% for version in versions %}
-                <option value="{{ version.id }}" {{ filters.versions ==version.id ? 'selected' : '' }}>
+                <option value="{{ version.id }}" {{ filters.versions==version.id ? 'selected' : '' }}>
                     {{ version.number }}
                 </option>
                 {% endfor %}
