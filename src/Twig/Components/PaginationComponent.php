@@ -2,6 +2,7 @@
 
 namespace App\Twig\Components;
 
+use App\Entity\User;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
@@ -17,5 +18,7 @@ final class PaginationComponent
     public int $totalPages = 0;
 
     public int $currentPage = 1;
+
+    public ?User $user ;
 
 }

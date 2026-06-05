@@ -101,28 +101,9 @@
 			</a>
 		</div>
 		<div>
-			{% if contents|length < 0 %}
-				{% if app.request.attributes.get('_route')==='app_user_show' or
-            app.request.attributes.get('_route')==='app_user_favorites' %}
-					{% for build in contents %}
-						<div class="build-card">
-							<h3>{{ build.title }}</h3>
-							<p>{{ build.description }}</p>
-						</div>
-					{% endfor %}
-				{% else %}
-					{% for relation in contents %}
-						<div class="flex items-center gap-4 p-4 rounded bg-(--container-color)">
-							<img class="w-12 h-12 rounded-full" src="{{ relation.followed.avatarUrl ? asset('uploads/avatars/' ~ relation.followed.avatarUrl) : asset('images/default-avatar.jpg') }}" alt="Avatar de {{ relation.followed.username }}">
-							<div>
-								<p class="text-(--title-color) font-bold">{{ relation.followed.username }}</p>
-								<p class="text-(--secondary-color) text-sm">Inscrit depuis le
-									{{ relation.followed.createdAt|date('d/m/Y')
-                }}</p>
-							</div>
-						</div>
-					{% endfor %}
-				{% endif %}
+	
+			{% if items|length > 0 %}
+				<twig:PaginationComponent :items="items" :totalPages="totalPages" :totalItems="totalItems" :user="user" :currentPage="currentPage"/>
 			{% else %}
 				<p class="text-(--secondary-color)">Aucun contenu à afficher.</p>
 			{% endif %}

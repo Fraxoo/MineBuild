@@ -17,7 +17,7 @@ class BuildRepository extends ServiceEntityRepository
         parent::__construct($registry, Build::class);
     }
 
-    public function findPaginatedOnlineBuilds(int $page, int $limit, array $filters = []): array
+    public function findPaginatedOnlineBuilds(int $page, int $limit = 12, array $filters = [], $user = null , $isFavorite = false): array
     {
         $offset = ($page - 1) * $limit;
 
@@ -31,40 +31,55 @@ class BuildRepository extends ServiceEntityRepository
             ->andWhere('b.visibility = :visibility')
             ->setParameter('visibility', 'PUBLIC');
 
-        if (in_array(strtoupper($filters['sort']), ['ASC', 'DESC'])) {
-            $queryBuilder->orderBy('b.created_at', $filters['sort']);
-        } else {
-            $queryBuilder->orderBy('b.views_count', 'DESC');
+        if ($user !== null) {
+            $queryBuilder->andWhere('b.author = :user')
+                ->setParameter('user', $user);
         }
 
-        if ($filters['difficulty'] !== null) {
-            $queryBuilder->andWhere('b.difficulty = :difficulty')
-                ->setParameter('difficulty', $filters['difficulty']);
+        if($isFavorite) {
+            $queryBuilder->innerJoin('b.saves', 'saves')
+                ->andWhere('saves.user = :user')
+                ->setParameter('user', $user);
         }
 
-        if ($filters['category'] !== null) {
-            $queryBuilder->andWhere('buildCategories.category = :category')
-                ->setParameter('category', $filters['category']);
-        }
+        if ($filters) {
+            if (in_array(strtoupper($filters['sort']), ['ASC', 'DESC'])) {
+                $queryBuilder->orderBy('b.created_at', $filters['sort']);
+            } else {
+                $queryBuilder->orderBy('b.views_count', 'DESC');
+            }
+            if ($filters['difficulty'] !== null) {
+                $queryBuilder->andWhere('b.difficulty = :difficulty')
+                    ->setParameter('difficulty', $filters['difficulty']);
+            }
 
-        if ($filters['versions'] !== null) {
-            $queryBuilder->andWhere('buildVersions.version = :version')
-                ->setParameter('version', $filters['versions']);
-        }
+            if ($filters['category'] !== null) {
+                $queryBuilder->andWhere('buildCategories.category = :category')
+                    ->setParameter('category', $filters['category']);
+            }
 
-        if (!empty($filters['search'])) {
-            $queryBuilder
-                ->andWhere(
-                    $queryBuilder->expr()->orX(
-                        'LOWER(b.title) LIKE :search',
-                        'LOWER(author.username) LIKE :search',
-                        'LOWER(mcVersion.number) LIKE :search',
-                        'LOWER(category.name) LIKE :search',
-                        'LOWER(category.name_fr) LIKE :search'
+            if ($filters['versions'] !== null) {
+                $queryBuilder->andWhere('buildVersions.version = :version')
+                    ->setParameter('version', $filters['versions']);
+            }
+
+            if (!empty($filters['search'])) {
+                $queryBuilder
+                    ->andWhere(
+                        $queryBuilder->expr()->orX(
+                            'LOWER(b.title) LIKE :search',
+                            'LOWER(author.username) LIKE :search',
+                            'LOWER(mcVersion.number) LIKE :search',
+                            'LOWER(category.name) LIKE :search',
+                            'LOWER(category.name_fr) LIKE :search'
+                        )
                     )
-                )
-                ->setParameter('search', '%' . strtolower($filters['search']) . '%');
+                    ->setParameter('search', '%' . strtolower($filters['search']) . '%');
+            }
+        } else {
+            $queryBuilder->orderBy('b.created_at', 'DESC');
         }
+
 
         $queryBuilder->setFirstResult($offset)
             ->setMaxResults($limit);
@@ -83,48 +98,60 @@ class BuildRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function countOnlineBuildsWithFilters(array $filters = []): int
+    public function countOnlineBuildsWithFilters(array $filters = [], $user = null, $isFavorite = false): int
     {
         $queryBuilder = $this->createQueryBuilder('b')
-        ->leftJoin('b.author', 'author')->addSelect('author')
-        ->leftJoin('b.images', 'images')->addSelect('images')
-        ->leftJoin('b.buildVersions', 'buildVersions')->addSelect('buildVersions')
-        ->leftJoin('buildVersions.version', 'mcVersion')->addSelect('mcVersion')
-        ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
-        ->leftJoin('buildCategories.category', 'category')->addSelect('category')
-        ->andWhere('b.visibility = :visibility')
-        ->setParameter('visibility', 'PUBLIC')
-        ->select('COUNT(b.id)');
-        
+            ->leftJoin('b.author', 'author')->addSelect('author')
+            ->leftJoin('b.images', 'images')->addSelect('images')
+            ->leftJoin('b.buildVersions', 'buildVersions')->addSelect('buildVersions')
+            ->leftJoin('buildVersions.version', 'mcVersion')->addSelect('mcVersion')
+            ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
+            ->leftJoin('buildCategories.category', 'category')->addSelect('category')
+            ->andWhere('b.visibility = :visibility')
+            ->setParameter('visibility', 'PUBLIC')
+            ->select('COUNT(b.id)');
 
-        if ($filters['difficulty'] !== null) {
-            $queryBuilder->andWhere('b.difficulty = :difficulty')
-                ->setParameter('difficulty', $filters['difficulty']);
+        if ($user !== null) {
+            $queryBuilder->andWhere('b.author = :user')
+                ->setParameter('user', $user);
         }
 
-        if ($filters['category'] !== null) {
-            $queryBuilder->andWhere('buildCategories.category = :category')
-                ->setParameter('category', $filters['category']);
+        if ($isFavorite) {
+            $queryBuilder->innerJoin('b.saves', 'saves')
+                ->andWhere('saves.user = :user')
+                ->setParameter('user', $user);
         }
 
-        if ($filters['versions'] !== null) {
-            $queryBuilder->andWhere('buildVersions.version = :version')
-                ->setParameter('version', $filters['versions']);
-        }
+        if ($filters) {
+            if ($filters['difficulty'] !== null) {
+                $queryBuilder->andWhere('b.difficulty = :difficulty')
+                    ->setParameter('difficulty', $filters['difficulty']);
+            }
 
-        if (!empty($filters['search'])) {
-            $queryBuilder
-                ->andWhere(
-                    $queryBuilder->expr()->orX(
-                        'LOWER(b.title) LIKE :search',
-                        'LOWER(author.username) LIKE :search',
-                        'LOWER(mcVersion.number) LIKE :search',
-                        'LOWER(category.name) LIKE :search',
-                        'LOWER(category.name_fr) LIKE :search'
+            if ($filters['category'] !== null) {
+                $queryBuilder->andWhere('buildCategories.category = :category')
+                    ->setParameter('category', $filters['category']);
+            }
+
+            if ($filters['versions'] !== null) {
+                $queryBuilder->andWhere('buildVersions.version = :version')
+                    ->setParameter('version', $filters['versions']);
+            }
+
+            if (!empty($filters['search'])) {
+                $queryBuilder
+                    ->andWhere(
+                        $queryBuilder->expr()->orX(
+                            'LOWER(b.title) LIKE :search',
+                            'LOWER(author.username) LIKE :search',
+                            'LOWER(mcVersion.number) LIKE :search',
+                            'LOWER(category.name) LIKE :search',
+                            'LOWER(category.name_fr) LIKE :search'
+                        )
                     )
-                )
-                ->setParameter('search', '%' . strtolower($filters['search']) . '%');
-        }
+                    ->setParameter('search', '%' . strtolower($filters['search']) . '%');
+            }
+        } 
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
