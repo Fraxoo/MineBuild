@@ -9,7 +9,7 @@
 		<twig:GoBack/>
 		<div class="flex gap-4 flex-wrap items-center justify-between w-full bg-(--container-color) p-8 rounded">
 			<div class="flex flex-wrap gap-4 items-center">
-				<img class="w-28 h-28 rounded-full border-4 border-(--border-color-secondary) object-cover" data-avatar-preview-target="image" src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.svg') }}" alt="Avatar de {{ user.username }}">
+				<img class="w-28 h-28 rounded-full border-4 border-(--border-color-secondary) object-cover" data-avatar-preview-target="image" src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.jpg') }}" alt="Avatar de {{ user.username }}">
 				<div class="flex flex-wrap flex-col gap-2 justify-between">
 					<div class="flex gap-2">
 						<h2 class="font-bold text-2xl text-(--title-color)">{{user.username}}</h2>
@@ -113,7 +113,7 @@
 				{% else %}
 					{% for relation in contents %}
 						<div class="flex items-center gap-4 p-4 rounded bg-(--container-color)">
-							<img class="w-12 h-12 rounded-full" src="{{ relation.followed.avatar ? asset('uploads/avatars/' ~ relation.followed.avatar) : asset('images/default-avatar.svg') }}" alt="Avatar de {{ relation.followed.username }}">
+							<img class="w-12 h-12 rounded-full" src="{{ relation.followed.avatarUrl ? asset('uploads/avatars/' ~ relation.followed.avatarUrl) : asset('images/default-avatar.jpg') }}" alt="Avatar de {{ relation.followed.username }}">
 							<div>
 								<p class="text-(--title-color) font-bold">{{ relation.followed.username }}</p>
 								<p class="text-(--secondary-color) text-sm">Inscrit depuis le

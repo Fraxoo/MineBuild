@@ -1,6 +1,6 @@
 <div {{ attributes }} class="flex gap-4 w-full">
     <img class="w-12 h-12 rounded-full"
-        src="{{ comment.author.avatarUrl ? asset('uploads/avatars/' ~ comment.author.avatarUrl) : asset('images/default-avatar.svg') }}"
+        src="{{ comment.author.avatarUrl ? asset('uploads/avatars/' ~ comment.author.avatarUrl) : asset('images/default-avatar.jpg') }}"
         alt="Avatar de {{ comment.author.username }}">
     <div class="flex gap-1 flex-col">
         <div class="flex items-center gap-2 ">

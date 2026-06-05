@@ -20,7 +20,7 @@
         <div class="user-box">
             <a href="{{ path('app_user_show', {id: relation.follower.id}) }}" class="flex items-center gap-4">
                 <img class="w-12 h-12 rounded-full object-cover"
-                    src="{{ relation.follower.avatarUrl ? asset('uploads/avatars/' ~ relation.follower.avatarUrl) : asset('images/default-avatar.svg') }}"
+                    src="{{ relation.follower.avatarUrl ? asset('uploads/avatars/' ~ relation.follower.avatarUrl) : asset('images/default-avatar.jpg') }}"
                     alt="Avatar de {{ relation.follower.username }}">
                 <p class="text-(--title-color) hover:underline font-bold">{{ relation.follower.username }}</p>
             </a>

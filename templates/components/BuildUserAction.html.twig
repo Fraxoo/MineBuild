@@ -2,7 +2,7 @@
     <div class="flex gap-2 items-center">
         <img class="w-18 h-18 rounded-full border-4 border-(--border-color-secondary) object-cover"
             data-avatar-preview-target="image"
-            src="{{ build.author.avatarUrl ? asset('uploads/avatars/' ~ build.author.avatarUrl) : asset('images/default-avatar.svg') }}"
+            src="{{ build.author.avatarUrl ? asset('uploads/avatars/' ~ build.author.avatarUrl) : asset('images/default-avatar.jpg') }}"
             alt="Avatar de {{ build.author.username }}">
         <div class="flex flex-col">
             <a href="{{ path('app_user_show', {'id': build.author.id}) }}" class="text-(--title-color) hover:underline font-bold">{{ build.author.username }}</a>
