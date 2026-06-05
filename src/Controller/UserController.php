@@ -61,7 +61,7 @@ final class UserController extends AbstractController
     #[Route('/{id}/favorites/{page}', name: 'app_user_favorites', defaults: ['page' => 1], methods: ['GET'])]
     #[Route('/{id}/following/{page}', name: 'app_user_following', defaults: ['page' => 1], methods: ['GET'])]
     #[Route('/{id}/followers/{page}', name: 'app_user_followers', defaults: ['page' => 1], methods: ['GET'])]
-    public function show(User $user, int $page = 1, BuildRepository $buildRepository, Request $request): Response
+    public function show(User $user, int $page = 1, BuildRepository $buildRepository, UserFollowRepository $userFollowRepository, Request $request): Response
     {
 
         $page = max(1, $page);
@@ -69,16 +69,19 @@ final class UserController extends AbstractController
         $limit = 12;
         $totalItems = 0;
         $section = $request->attributes->get('_route');
+        $isFollow = false;
 
         if ($section === 'app_user_favorites') {
-            $items = $items = $buildRepository->findPaginatedOnlineBuilds($page, 12, [], $user, true);
+            $items = $items = $buildRepository->findPaginatedOnlineBuilds($page, $limit, [], $user, true);
             $totalItems = $buildRepository->countOnlineBuildsWithFilters([], $user, true);
         } elseif ($section === 'app_user_following') {
-            $items = $user->getFollowingRelations();
+            $items = $userFollowRepository->getFollowersByUser($user, $page, $limit);
+            $isFollow = true;
         } elseif ($section === 'app_user_followers') {
-            $items = $user->getFollowerRelations();
+            $items = $userFollowRepository->getFollowingsByUser($user, $page, $limit);
+            $isFollow = true;
         } else {
-            $items = $buildRepository->findPaginatedOnlineBuilds($page, 12, [], $user);
+            $items = $buildRepository->findPaginatedOnlineBuilds($page, $limit, [], $user);
             $totalItems = $buildRepository->countOnlineBuildsWithFilters([], $user);
         }
 
@@ -92,7 +95,8 @@ final class UserController extends AbstractController
             'items' => $items,
             'totalPages' => $totalPages,
             'totalItems' => $totalItems,
-            'currentPage' => $page
+            'currentPage' => $page,
+            'isFollow' => $isFollow,
         ]);
     }
 

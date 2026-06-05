@@ -15,4 +15,34 @@ class UserFollowRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, UserFollow::class);
     }
+
+    public function getFollowingsByUser($user, $page, $limit)
+    {
+        $offset = ($page - 1) * $limit;
+
+
+        $queryBuilder = $this->createQueryBuilder('uf')
+            ->andWhere('uf.following = :user')
+            ->setParameter('user', $user)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
+        public function getFollowersByUser($user, $page, $limit)
+    {
+        $offset = ($page - 1) * $limit;
+
+
+        $queryBuilder = $this->createQueryBuilder('uf')
+            ->andWhere('uf.follower = :user')
+            ->setParameter('user', $user)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
 }

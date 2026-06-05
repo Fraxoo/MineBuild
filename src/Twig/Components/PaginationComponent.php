@@ -11,7 +11,7 @@ final class PaginationComponent
 {
     use DefaultActionTrait;
 
-    public array $items = [];
+    public  $items = [];
 
     public int $totalItems = 0;
 
@@ -20,5 +20,7 @@ final class PaginationComponent
     public int $currentPage = 1;
 
     public ?User $user ;
+
+    public ?bool $isFollow = false;
 
 }
