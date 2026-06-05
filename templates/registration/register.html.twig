@@ -88,18 +88,7 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
             {{ form_errors(registrationForm) }}
         </div>
         <button type="submit" class="btn  primary-button">Créer un compte</button>
-        {{ form_end(registrationForm) }}
-        <p class="text-(--secondary-color)">Ou continuer avec</p>
-        <div class="flex w-full flex-wrap gap-4">
-            <a class="container-button flex-1" href="">
-                <i class="fa-brands fa-google"></i>
-                <p>Google</p>
-            </a>
-            <a class="container-button flex-1" href="">
-                <i class="fa-brands fa-github"></i>
-                <p>GitHub</p>
-            </a>
-        </div>
+        {{ form_end(registrationForm) }}        
         <p class="text-(--secondary-color) text-center">Déja un compte ? <a href="{{ path('app_login') }}"
                 class="text-(--primary-color) hover:underline">Se connecter</a></p>
     </div>

@@ -3,10 +3,11 @@
 		<div class=" flex flex-col md:grid md:grid-cols-4 gap-4" {{ attributes }}>
 			{% if isFollow %}
 				{% for item in items %}
-						<a href="{{ path('app_user_show', {id: item.following.id}) }}" class="flex user-box group items-center gap-4">
-							<img class="w-12 h-12 rounded-full object-cover" src="{{ item.following.avatarUrl ? asset('uploads/avatars/' ~ item.following.avatarUrl) : asset('images/default-avatar.jpg') }}" alt="Avatar de {{ item.following.username }}">
-							<p class="text-(--title-color) group-hover:underline font-bold">{{ item.following.username }}</p>
-						</a>
+					{% set followUser = followType == 'followers' ? item.follower : item.following %}
+					<a href="{{ path('app_user_show', {id: followUser.id}) }}" class="flex user-box group items-center gap-4">
+						<img class="w-12 h-12 rounded-full object-cover" src="{{ followUser.avatarUrl ? asset('uploads/avatars/' ~ followUser.avatarUrl) : asset('images/default-avatar.jpg') }}" alt="Avatar de {{ followUser.username }}">
+						<p class="text-(--title-color) group-hover:underline font-bold">{{ followUser.username }}</p>
+					</a>
 				{% endfor %}
 			{% else %}
 				{% for item in items %}
