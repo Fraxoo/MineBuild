@@ -70,16 +70,21 @@ final class UserController extends AbstractController
         $totalItems = 0;
         $section = $request->attributes->get('_route');
         $isFollow = false;
+        $followType = null;
 
         if ($section === 'app_user_favorites') {
             $items = $items = $buildRepository->findPaginatedOnlineBuilds($page, $limit, [], $user, true);
             $totalItems = $buildRepository->countOnlineBuildsWithFilters([], $user, true);
         } elseif ($section === 'app_user_following') {
-            $items = $userFollowRepository->getFollowersByUser($user, $page, $limit);
-            $isFollow = true;
-        } elseif ($section === 'app_user_followers') {
             $items = $userFollowRepository->getFollowingsByUser($user, $page, $limit);
+            $totalItems = $userFollowRepository->countFollowingsByUser($user);
             $isFollow = true;
+            $followType = 'following';
+        } elseif ($section === 'app_user_followers') {
+            $items = $userFollowRepository->getFollowersByUser($user, $page, $limit);
+            $totalItems = $userFollowRepository->countFollowersByUser($user);
+            $isFollow = true;
+            $followType = 'followers';
         } else {
             $items = $buildRepository->findPaginatedOnlineBuilds($page, $limit, [], $user);
             $totalItems = $buildRepository->countOnlineBuildsWithFilters([], $user);
@@ -97,6 +102,7 @@ final class UserController extends AbstractController
             'totalItems' => $totalItems,
             'currentPage' => $page,
             'isFollow' => $isFollow,
+            'followType' => $followType,
         ]);
     }
 

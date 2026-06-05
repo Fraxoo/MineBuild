@@ -112,7 +112,7 @@
 
 		{% if items|length > 0 %}
 		{% if isFollow %}
-		<twig:PaginationComponent :items="items" :isFollow="true" :totalPages="totalPages" :totalItems="totalItems"
+		<twig:PaginationComponent :items="items" :isFollow="true" :followType="followType" :totalPages="totalPages" :totalItems="totalItems"
 			:user="user" :currentPage="currentPage" />
 		{% else %}
 		<twig:PaginationComponent :items="items" :isFollow="false" :totalPages="totalPages" :totalItems="totalItems"
