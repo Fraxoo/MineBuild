@@ -15,7 +15,7 @@
     <div class="flex gap-2 items-center" data-controller="avatar-preview">
         <img class="w-24 h-24 rounded-full border-4 border-(--border-color-secondary) object-cover"
             data-avatar-preview-target="image"
-            src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.svg') }}"
+            src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.jpg') }}"
             alt="Avatar de {{ user.username }}">
         <div class="flex gap-2 flex-col">
             <p class="input-title">Photo de profil</p>

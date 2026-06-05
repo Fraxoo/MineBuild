@@ -14,7 +14,7 @@
 				{% if app.user %}
 				<img class="w-10 h-10 rounded-full border-4 border-(--border-color-secondary) object-cover"
 					data-avatar-preview-target="image"
-					src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.svg') }}"
+					src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
 					alt="Avatar de {{ app.user.username }}">
 
 				{% else %}

@@ -49,7 +49,7 @@
                 {% if app.user %}
                 <div class="flex  gap-4 w-full">
                     <img class="w-12 h-12 rounded-full"
-                        src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.svg') }}"
+                        src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
                         alt="Avatar de {{ app.user.username }}">
                     {{ form_start(form, {
                     attr: {
