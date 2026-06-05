@@ -1,42 +1,48 @@
 <div {{ attributes }} class="flex flex-col gap-4">
-    {% if items %}
-    <div class=" flex flex-col md:grid md:grid-cols-4 gap-4" {{ attributes }}>
-        {% for item in items %}
-            <twig:BuildCard :build="item" />
-        {% endfor %}
-    </div>
-    {% else %}
-    <p class="text-(--title-color) font-semibold p-12 text-center w-full">Aucun résultat</p>
+	{% if items %}
+		<div class=" flex flex-col md:grid md:grid-cols-4 gap-4" {{ attributes }}>
+			{% if isFollow %}
+				{% for item in items %}
+						<a href="{{ path('app_user_show', {id: item.following.id}) }}" class="flex user-box group items-center gap-4">
+							<img class="w-12 h-12 rounded-full object-cover" src="{{ item.following.avatarUrl ? asset('uploads/avatars/' ~ item.following.avatarUrl) : asset('images/default-avatar.jpg') }}" alt="Avatar de {{ item.following.username }}">
+							<p class="text-(--title-color) group-hover:underline font-bold">{{ item.following.username }}</p>
+						</a>
+				{% endfor %}
+			{% else %}
+				{% for item in items %}
+					<twig:BuildCard :build="item"/>
+				{% endfor %}
+			{% endif %}
+		</div>
+	{% else %}
+		<p class="text-(--title-color) font-semibold p-12 text-center w-full">Aucun résultat</p>
 
-    {% endif %}
+	{% endif %}
 
 
+	{% if totalPages > 1 %}
+		<nav class="flex items-center justify-center gap-2 mt-8">
 
-    {% if totalPages > 1 %}
-    <nav class="flex items-center justify-center gap-2 mt-8">
+			{% if currentPage > 1 %}
+				<a href="{{ path( app.current_route , app.current_route_parameters|merge(app.request.query.all)|merge({ page: currentPage - 1 })) }}" class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
+					<i class="fa-solid fa-angle-left text-white"></i>
+				</a>
+			{% endif %}
 
-        {% if currentPage > 1 %}
-        <a href="{{ path('app_home', app.request.query.all|merge({ page: currentPage - 1 })) }}"
-            class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
-            <i class="fa-solid fa-angle-left text-white"></i>
-        </a>
-        {% endif %}
+			{% for page in 1..totalPages %}
+				<a href="{{ path( app.current_route , app.current_route_parameters|merge(app.request.query.all)|merge({ page: page })) }}" class="px-3 h-fit py-2 border border-(--primary-color-muted) rounded {{ page == currentPage ? 'bg-(--primary-color) text-black' : 'text-white' }}">
+					{{ page }}
+				</a>
+			{% endfor %}
 
-        {% for page in 1..totalPages %}
-        <a href="{{ path('app_home', app.request.query.all|merge({ page: page })) }}"
-            class="px-3 h-fit py-2 border border-(--primary-color-muted) rounded {{ page == currentPage ? 'bg-(--primary-color) text-black' : 'text-white' }}">
-            {{ page }}
-        </a>
-        {% endfor %}
+			{% if currentPage < totalPages %}
+				<a href="{{ path( app.current_route , app.current_route_parameters|merge(app.request.query.all)|merge({ page: currentPage + 1 })) }}" class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
+					<i class="fa-solid fa-angle-right text-white"></i>
+				</a>
+			{% endif %}
 
-        {% if currentPage < totalPages %} <a href="{{ path('app_home', app.request.query.all|merge({ page: currentPage + 1 })) }}"
-            class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
-            <i class="fa-solid fa-angle-right text-white"></i>
-            </a>
-            {% endif %}
-
-    </nav>
-    {% endif %}
+		</nav>
+	{% endif %}
 
 
 </div>

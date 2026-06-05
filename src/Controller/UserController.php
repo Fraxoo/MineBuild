@@ -57,33 +57,46 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    #[Route('/{id}/favorites', name: 'app_user_favorites', methods: ['GET'])]
-    #[Route('/{id}/following', name: 'app_user_following', methods: ['GET'])]
-    #[Route('/{id}/followers', name: 'app_user_followers', methods: ['GET'])]
-    public function show(User $user, ?string $favorites = null, ?string $following = null, ?string $followers = null, BuildRepository $buildRepository): Response
+    #[Route('/{id}/all/{page}', name: 'app_user_show', defaults: ['page' => 1], methods: ['GET'])]
+    #[Route('/{id}/favorites/{page}', name: 'app_user_favorites', defaults: ['page' => 1], methods: ['GET'])]
+    #[Route('/{id}/following/{page}', name: 'app_user_following', defaults: ['page' => 1], methods: ['GET'])]
+    #[Route('/{id}/followers/{page}', name: 'app_user_followers', defaults: ['page' => 1], methods: ['GET'])]
+    public function show(User $user, int $page = 1, BuildRepository $buildRepository, UserFollowRepository $userFollowRepository, Request $request): Response
     {
 
+        $page = max(1, $page);
+        $items = null;
+        $limit = 12;
+        $totalItems = 0;
+        $section = $request->attributes->get('_route');
+        $isFollow = false;
 
-        $contents = null;
-
-        if ($favorites) {
-            $contents = $user->getBuildSaves();
-        } elseif ($following) {
-            $contents = $user->getFollowingRelations();
-        } elseif ($followers) {
-            $contents = $user->getFollowerRelations();
+        if ($section === 'app_user_favorites') {
+            $items = $items = $buildRepository->findPaginatedOnlineBuilds($page, $limit, [], $user, true);
+            $totalItems = $buildRepository->countOnlineBuildsWithFilters([], $user, true);
+        } elseif ($section === 'app_user_following') {
+            $items = $userFollowRepository->getFollowersByUser($user, $page, $limit);
+            $isFollow = true;
+        } elseif ($section === 'app_user_followers') {
+            $items = $userFollowRepository->getFollowingsByUser($user, $page, $limit);
+            $isFollow = true;
         } else {
-            $contents = $user->getBuilds();
+            $items = $buildRepository->findPaginatedOnlineBuilds($page, $limit, [], $user);
+            $totalItems = $buildRepository->countOnlineBuildsWithFilters([], $user);
         }
 
+        $totalPages = ceil($totalItems / $limit);
 
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'totalLikes' => $buildRepository->getAllLikeForAllBuildsByUser($user),
             'totalViews' => $buildRepository->getTotalViewForAllBuildsByUser($user),
             'totalSaves' => $buildRepository->getTotalSaveForAllBuildsByUser($user),
-            'contents' => $contents
+            'items' => $items,
+            'totalPages' => $totalPages,
+            'totalItems' => $totalItems,
+            'currentPage' => $page,
+            'isFollow' => $isFollow,
         ]);
     }
 
