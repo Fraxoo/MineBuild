@@ -226,13 +226,18 @@
 
 # EPIC 8 - Modération et signalements
 
-## US8.1 - Signaler un contenu (P1)
-**En tant que** utilisateur, je veux signaler un build ou un commentaire afin d'aider la modération.
+## US8.1 - Signaler un contenu ou un utilisateur (P1)
+**En tant que** utilisateur, je veux signaler un build, un commentaire **ou un utilisateur** afin d'aider la modération.
 
 ### Scénario 1 - Signalement créé
 - **Given :** je suis connecté
-- **When :** je choisis un motif et je valide
+- **When :** je signale un build, un commentaire ou un utilisateur, je choisis un motif et je valide
 - **Then :** un `Report` est créé avec son statut
+
+### Scénario 2 - Accès refusé (non connecté)
+- **Given :** je ne suis pas connecté
+- **When :** je tente de signaler un build, un commentaire ou un utilisateur
+- **Then :** je suis redirigé vers “Connexion” (ou je vois une invite à me connecter)
 
 ## US8.2 - Masquer un build (P1)
 **En tant que** modérateur/admin, je veux masquer un build avec un motif afin de retirer un contenu non conforme.
@@ -242,15 +247,18 @@
 - **When :** je masque un build avec une raison
 - **Then :** sa visibilité change et les champs `hidden_reason`, `hidden_by` et `hidden_at` sont renseignés
 
+### Scénario 2 - Motif obligatoire
+- **Given :** je suis modérateur/admin
+- **When :** je tente de masquer un build sans raison
+- **Then :** l'action est refusée et un message indique que le motif est obligatoire
+
 ## US8.3 - Historiser une action de modération (P1)
 **En tant que** système, je veux conserver les actions de modération afin de garder une trace.
 
 ### Scénario 1 - Action enregistrée
-- **Given :** un modérateur agit sur un build ou un commentaire
+- **Given :** un modérateur agit sur un build, un commentaire **ou un utilisateur**
 - **When :** l'action est validée
 - **Then :** une `ModerationAction` est créée
-
----
 
 # EPIC 9 - Notifications
 
