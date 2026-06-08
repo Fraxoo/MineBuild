@@ -157,39 +157,34 @@ class BuildRepository extends ServiceEntityRepository
     }
 
 
-    public function getAllLikeForAllBuildsByUser(User $user): array
+    public function getAllLikeForAllBuildsByUser(User $user): int
     {
-        $qb = $this->createQueryBuilder('b')
-            ->select('b', 'COUNT(bl.build) AS likeCount')
-            ->leftJoin('b.likes', 'bl')
-            ->groupBy('b.id')
+        return (int) $this->createQueryBuilder('b')
+            ->select('COALESCE(SUM(b.likes_count), 0) AS totalLikes')
             ->where('b.author = :user_id')
-            ->setParameter('user_id', $user->getId());
-
-        return $qb->getQuery()->getResult();
+            ->setParameter('user_id', $user->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
-    public function getTotalViewForAllBuildsByUser(User $user): array
+    public function getTotalViewForAllBuildsByUser(User $user): int
     {
-        $qb = $this->createQueryBuilder('b')
-            ->select('b', 'COUNT(b.views_count) AS viewCount')
-            ->groupBy('b.id')
+        return (int) $this->createQueryBuilder('b')
+            ->select('COALESCE(SUM(b.views_count), 0) AS totalViews')
             ->where('b.author = :user_id')
-            ->setParameter('user_id', $user->getId());
-
-        return $qb->getQuery()->getResult();
+            ->setParameter('user_id', $user->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
-    public function getTotalSaveForAllBuildsByUser(User $user): array
+    public function getTotalSaveForAllBuildsByUser(User $user): int
     {
-        $qb = $this->createQueryBuilder('b')
-            ->select('b', 'COUNT(bs.build) AS saveCount')
-            ->leftJoin('b.saves', 'bs')
-            ->groupBy('b.id')
+        return (int) $this->createQueryBuilder('b')
+            ->select('COALESCE(SUM(b.saves_count), 0) AS totalSaves')
             ->where('b.author = :user_id')
-            ->setParameter('user_id', $user->getId());
-
-        return $qb->getQuery()->getResult();
+            ->setParameter('user_id', $user->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**

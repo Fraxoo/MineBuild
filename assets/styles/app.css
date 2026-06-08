@@ -223,6 +223,12 @@ body {
     border-radius: 0.25rem;
 }
 
+.user-box div{
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
 .user-filter-container {
     display: flex;
     align-items: center;
