@@ -40,14 +40,14 @@
 			</div>
 		</div>
 		<div class="flex gap-4 items-center">
-			<a href="{{ path('app_user_get_follow_list', {id: user.id}) }}" class="flex flex-col gap-2 items-center">
+			<div class="flex flex-col gap-2 items-center">
 				<p class="text-(--title-color) font-bold">{{ user.followerRelations|length }}</p>
 				<p class="text-(--secondary-color)">Followers</p>
-			</a>
-			<a href="{{ path('app_user_get_following_list', {id: user.id}) }}" class="flex flex-col gap-2 items-center">
+			</div>
+			<div class="flex flex-col gap-2 items-center">
 				<p class="text-(--title-color) font-bold">{{ user.followingRelations|length }}</p>
 				<p class="text-(--secondary-color)">Following</p>
-			</a>
+			</div>
 		</div>
 	</div>
 	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -61,22 +61,22 @@
 		<div class="user-box">
 			<i class="fa-solid  bg-[#242d3a]  text-[#2a85fd] fa-users"></i>
 			<div>
-				<p class="text-(--title-color) font-bold">{{ totalViews|length }}</p>
+				<p class="text-(--title-color) font-bold">{{ totalViews }}</p>
 				<p class="text-(--secondary-color)">Total vues</p>
 			</div>
 		</div>
 		<div class="user-box">
 			<i class="fa-solid  bg-[#3a2426]  text-[#ff2b36] fa-heart"></i>
 			<div>
-				<p class="text-(--title-color) font-bold">{{ totalLikes|length }}</p>
-				<p class="text-(--secondary-color)">Total Likes</p>
+				<p class="text-(--title-color) font-bold">{{ totalLikes }}</p>
+				<p class="text-(--secondary-color)">Total J'aimes</p>
 			</div>
 		</div>
 		<div class="user-box">
 			<i class="fa-solid  bg-[#203428]  text-[#00c84e] fa-star"></i>
 			<div>
-				<p class="text-(--title-color) font-bold">{{ totalSaves|length }}</p>
-				<p class="text-(--secondary-color)">Total saves</p>
+				<p class="text-(--title-color) font-bold">{{ totalSaves }}</p>
+				<p class="text-(--secondary-color)">Total Sauvegarde</p>
 			</div>
 		</div>
 	</div>
