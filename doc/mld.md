@@ -1,6 +1,6 @@
-# MCD - Plateforme de partage de builds Minecraft
+# MlD - Plateforme de partage de builds Minecraft
 
-Ce MCD reflète les entités Doctrine présentes dans `src/Entity`.
+Ce MlD reflète les entités Doctrine présentes dans `src/Entity`.
 
 ```mermaid
 erDiagram
@@ -197,6 +197,17 @@ erDiagram
     DATETIME created_at
   }
 
+  MCVERSION {
+    INT id PK
+    VARCHAR number
+  }
+
+  BUILD_VERSION {
+    INT id PK
+    INT version_id FK
+    INT build_id FK
+  }
+
   ROLE ||--o{ USER : has
   USER ||--o{ BUILD : creates
   USER ||--o{ COMMENT : writes
@@ -204,7 +215,10 @@ erDiagram
   BUILD ||--o{ BUILD_IMAGE : has
   BUILD ||--o{ BUILD_MATERIAL : requires
   BUILD ||--o{ BUILD_ASSET : contains
+  BUILD ||--o{ BUILD_VERSION : has_versions
   BUILD ||--o{ COMMENT : has
+
+  MCVERSION ||--o{ BUILD_VERSION : used_by
 
   BUILD ||--o{ BUILD_LIKE : liked_by
   USER ||--o{ BUILD_LIKE : likes
@@ -244,11 +258,3 @@ erDiagram
   BUILD ||--o{ MODERATION_ACTION : moderated_build
   COMMENT ||--o{ MODERATION_ACTION : moderated_comment
 ```
-
-## Notes de cohérence avec les entités
-
-- Les identifiants principaux simples sont des `int` auto-générés, pas des `UUID`.
-- Les tables `BUILD_LIKE`, `BUILD_SAVE`, `BUILD_RATING`, `BUILD_TAG`, `BUILD_CATEGORY` et `USER_FOLLOW` utilisent une clé primaire composée basée sur leurs relations.
-- `COMMENT_LIKE` et `BUILD_DOWNLOAD` possèdent actuellement un `id` technique auto-généré.
-- `Build` contient maintenant le booléen `modded`, utile pour distinguer les builds vanilla et moddés.
-- `Category` contient `name` et `name_fr`, avec unicité sur `name`.
