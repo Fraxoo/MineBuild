@@ -229,6 +229,10 @@ body {
     gap: 0.25rem;
 }
 
+.check {
+    accent-color: var(--primary-color);
+}
+
 .user-filter-container {
     display: flex;
     align-items: center;

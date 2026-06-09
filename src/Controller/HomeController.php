@@ -22,7 +22,6 @@ final class HomeController extends AbstractController
 
 
     #[Route('/home/{page}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
-    #[Route('/{page}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
     public function index(McversionRepository $mcversionRepository, Request $request, CategoryRepository $categoryRepository, LoggerInterface $loggerInterface, int $page): Response
     {
         $page = max(1, $page);
