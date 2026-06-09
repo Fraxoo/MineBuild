@@ -4,12 +4,44 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Edit Build</h1>
 
+<div class="flex flex-col items-center gap-4">
+	<div class="flex flex-col w-full max-w-[56rem] m-auto gap-4">
+		<twig:GoBack />
+		<h1 class="text-(--title-color) text-4xl font-bold">Modifier Votre Build</h1>
+		<p class="text-(--secondary-color) text-xl">Partagez votre création minecraft avec la communeauté</p>
+	</div>
 	{{ include('build/_form.html.twig', {'button_label': 'Update'}) }}
 
-	<a href="{{ path('app_build_index') }}">back to list</a>
 
-	{{ include('build/_delete_form.html.twig') }}
+	<div class="flex flex-col mx-auto w-full max-w-4xl   gap-4 ">
+		<div class="user-edit-container border! border-(--red-border)!">
+			<div class="flex flex-col gap-2">
+				<div class="flex gap-2 text-red-500 items-center">
+					<i class="fa-solid fa-triangle-exclamation"></i>
+					<h1 class="font-bold ">Zone de danger</h1>
+				</div>
+				<p class="text-(--secondary-color)">Action irréversible faite attention</p>
+			</div>
+			<div
+				class="flex p-4 bg-(--red-background) rounded-lg border border-(--red-border)  justify-between items-center">
+				<div class="flex  flex-col gap-2">
+					<h3 class="text-(--title-color) font-bold">Supprimer mon Build</h3>
+					<p class="text-(--secondary-color)">Supprimer définitivement votre Build.</p>
+				</div>
+				<form method="post" action="{{ path('app_build_delete', {'id': build.id}) }}"
+					onsubmit="return confirm('Are you sure you want to delete this item?');">
+					<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ build.id) }}">
+					<button
+						class="btn flex gap-4 items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-[1rem] px-4 py-2"
+						type="submit">
+						<i class="fa-solid fa-trash-can"></i>
+						<p>Supprimer</p>
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}
