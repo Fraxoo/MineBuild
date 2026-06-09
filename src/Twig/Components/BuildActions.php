@@ -91,10 +91,8 @@ final class BuildActions
             $this->rating = $value;
         }
 
-        // Sauvegarde d'abord la création / modification / suppression de la note
         $this->em->flush();
 
-        // On récupère les notes actuelles depuis la BDD
         $ratings = $this->buildRatingRepository->findBy([
             'build' => $this->build,
         ]);
@@ -113,7 +111,6 @@ final class BuildActions
 
         $this->build->setRatingAvg(round($average, 1));
 
-        // Sauvegarde de la nouvelle moyenne
         $this->em->flush();
     }
 
