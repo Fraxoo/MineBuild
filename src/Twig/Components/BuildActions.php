@@ -128,9 +128,13 @@ final class BuildActions
 
         if (!$saved) {
             $saved = new BuildSave($this->build, $this->security->getUser());
+            $query = $this->build->setSavesCount($this->build->getSavesCount() + 1);
+            $this->em->persist($query);
             $this->em->persist($saved);
             $this->isSavedByUser = true;
         } else {
+            $query = $this->build->setSavesCount($this->build->getSavesCount() - 1);
+            $this->em->persist($query);
             $this->em->remove($saved);
             $this->isSavedByUser = false;
         }

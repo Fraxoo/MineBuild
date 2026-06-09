@@ -17,7 +17,7 @@ class BuildRepository extends ServiceEntityRepository
         parent::__construct($registry, Build::class);
     }
 
-    public function findPaginatedOnlineBuilds(int $page, int $limit = 12, array $filters = [], $user = null , $isFavorite = false): array
+    public function findPaginatedOnlineBuilds(int $page, int $limit = 12, array $filters = [], $user = null, $isFavorite = false): array
     {
         $offset = ($page - 1) * $limit;
 
@@ -31,15 +31,16 @@ class BuildRepository extends ServiceEntityRepository
             ->andWhere('b.visibility = :visibility')
             ->setParameter('visibility', 'PUBLIC');
 
-        if ($user !== null) {
-            $queryBuilder->andWhere('b.author = :user')
-                ->setParameter('user', $user);
-        }
 
-        if($isFavorite) {
-            $queryBuilder->innerJoin('b.saves', 'saves')
+        if ($isFavorite) {
+            $queryBuilder->leftJoin('b.saves', 'saves')
                 ->andWhere('saves.user = :user')
                 ->setParameter('user', $user);
+        } else {
+            if ($user !== null) {
+                $queryBuilder->andWhere('b.author = :user')
+                    ->setParameter('user', $user);
+            }
         }
 
         if ($filters) {
@@ -111,15 +112,16 @@ class BuildRepository extends ServiceEntityRepository
             ->setParameter('visibility', 'PUBLIC')
             ->select('COUNT(b.id)');
 
-        if ($user !== null) {
-            $queryBuilder->andWhere('b.author = :user')
-                ->setParameter('user', $user);
-        }
 
         if ($isFavorite) {
             $queryBuilder->innerJoin('b.saves', 'saves')
                 ->andWhere('saves.user = :user')
                 ->setParameter('user', $user);
+        } else {
+            if ($user !== null) {
+                $queryBuilder->andWhere('b.author = :user')
+                    ->setParameter('user', $user);
+            }
         }
 
         if ($filters) {
@@ -151,7 +153,7 @@ class BuildRepository extends ServiceEntityRepository
                     )
                     ->setParameter('search', '%' . strtolower($filters['search']) . '%');
             }
-        } 
+        }
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
