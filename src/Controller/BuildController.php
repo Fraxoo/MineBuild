@@ -177,6 +177,10 @@ final class BuildController extends AbstractController
     #[Route('/build/{id}/download', name: 'app_build_download')]
     public function download(Build $build, BuildDownloadRepository $buildDownloadRepository, EntityManagerInterface $entityManager): BinaryFileResponse
     {
+        if ($build->getDeletedAt() !== null) {
+            throw $this->createNotFoundException('Build introuvable.');
+        }
+
         $worldAsset = null;
         foreach ($build->getAssets() as $asset) {
             if ($asset->getType() === 'world') {
@@ -223,6 +227,9 @@ final class BuildController extends AbstractController
     public function show(Request $request, Build $build, EntityManagerInterface $em, BuildSaveRepository $buildSaveRepository, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
     {
         $build = $buildRepository->getBuildWithJoinByUser($build);
+        if (!$build) {
+            throw $this->createNotFoundException('Build introuvable.');
+        }
 
         $user = $this->getUser();
         $isLikedByUser = $user instanceof \App\Entity\User
@@ -274,6 +281,10 @@ final class BuildController extends AbstractController
     public function edit(Request $request, Build $build, EntityManagerInterface $entityManager, TagRepository $tagRepository, SluggerInterface $slugger): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($build->getDeletedAt() !== null) {
+            throw $this->createNotFoundException('Build introuvable.');
+        }
 
         $form = $this->createForm(BuildType::class, $build, [
             'require_images' => false,
@@ -515,11 +526,20 @@ final class BuildController extends AbstractController
     public function delete(Request $request, Build $build, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $build->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($build);
+            $build->setDeletedAt(new \DateTimeImmutable());
+
+            $user = $this->getUser();
+            if ($user instanceof \App\Entity\User) {
+                $build->setDeletedBy($user);
+            }
+
+            $deletedReason = trim($request->getPayload()->getString('deleted_reason'));
+            $build->setDeletedReason($deletedReason !== '' ? $deletedReason : null);
+
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_build_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 
 

@@ -29,6 +29,7 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
             ->leftJoin('buildCategories.category', 'category')->addSelect('category')
             ->andWhere('b.visibility = :visibility')
+            ->andWhere('b.deleted_at IS NULL')
             ->setParameter('visibility', 'PUBLIC');
 
 
@@ -94,6 +95,7 @@ class BuildRepository extends ServiceEntityRepository
         return (int) $this->createQueryBuilder('b')
             ->select('COUNT(b.id)')
             ->andWhere('b.visibility = :visibility')
+            ->andWhere('b.deleted_at IS NULL')
             ->setParameter('visibility', 'PUBLIC')
             ->getQuery()
             ->getSingleScalarResult();
@@ -109,6 +111,7 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')
             ->leftJoin('buildCategories.category', 'category')->addSelect('category')
             ->andWhere('b.visibility = :visibility')
+            ->andWhere('b.deleted_at IS NULL')
             ->setParameter('visibility', 'PUBLIC')
             ->select('COUNT(b.id)');
 
@@ -164,6 +167,7 @@ class BuildRepository extends ServiceEntityRepository
         return (int) $this->createQueryBuilder('b')
             ->select('COALESCE(SUM(b.likes_count), 0) AS totalLikes')
             ->where('b.author = :user_id')
+            ->andWhere('b.deleted_at IS NULL')
             ->setParameter('user_id', $user->getId())
             ->getQuery()
             ->getSingleScalarResult();
@@ -174,6 +178,7 @@ class BuildRepository extends ServiceEntityRepository
         return (int) $this->createQueryBuilder('b')
             ->select('COALESCE(SUM(b.views_count), 0) AS totalViews')
             ->where('b.author = :user_id')
+            ->andWhere('b.deleted_at IS NULL')
             ->setParameter('user_id', $user->getId())
             ->getQuery()
             ->getSingleScalarResult();
@@ -184,6 +189,7 @@ class BuildRepository extends ServiceEntityRepository
         return (int) $this->createQueryBuilder('b')
             ->select('COALESCE(SUM(b.saves_count), 0) AS totalSaves')
             ->where('b.author = :user_id')
+            ->andWhere('b.deleted_at IS NULL')
             ->setParameter('user_id', $user->getId())
             ->getQuery()
             ->getSingleScalarResult();
@@ -211,6 +217,7 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('b.buildVersions', 'buildVersions')->addSelect('buildVersions')
             ->leftJoin('buildVersions.version', 'Mcversion')->addSelect('Mcversion')
             ->andWhere('b.author = :user')
+            ->andWhere('b.deleted_at IS NULL')
             ->setParameter('user', $build->getAuthor()->getId())
             ->getQuery()
             ->getOneOrNullResult();

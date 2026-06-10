@@ -92,7 +92,7 @@ Afficher et mettre à jour :
 
 ## 10. Gestion de ses propres builds
 - Modifier un build.
-- Supprimer ou masquer un build.
+- Supprimer un build.
 - Ajouter / retirer des images.
 - Mettre à jour les matériaux.
 - Mettre à jour les tags, catégories, ressources et informations générales.

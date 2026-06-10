@@ -105,8 +105,8 @@
 - **When :** j'ouvre sa page
 - **Then :** je vois galerie, description, catégories, tags, matériaux, stats, note, commentaires et ressources
 
-### Scénario 2 - Build masqué
-- **Given :** un build est masqué
+### Scénario 2 - Build supprimé
+- **Given :** un build est supprimé
 - **When :** je ne suis ni auteur ni modérateur
 - **Then :** le build n'est pas accessible publiquement
 
@@ -239,17 +239,17 @@
 - **When :** je tente de signaler un build, un commentaire ou un utilisateur
 - **Then :** je suis redirigé vers “Connexion” (ou je vois une invite à me connecter)
 
-## US8.2 - Masquer un build (P1)
-**En tant que** modérateur/admin, je veux masquer un build avec un motif afin de retirer un contenu non conforme.
+## US8.2 - Supprimer un build (P1)
+**En tant que** modérateur/admin, je veux supprimer un build avec un motif afin de retirer un contenu non conforme.
 
-### Scénario 1 - Build masqué
+### Scénario 1 - Build Supprimé
 - **Given :** je suis modérateur/admin
-- **When :** je masque un build avec une raison
-- **Then :** sa visibilité change et les champs `hidden_reason`, `hidden_by` et `hidden_at` sont renseignés
+- **When :** je supprime un build avec une raison
+- **Then :** un avertissement est envoyer 
 
 ### Scénario 2 - Motif obligatoire
 - **Given :** je suis modérateur/admin
-- **When :** je tente de masquer un build sans raison
+- **When :** je tente de supprimer un build sans raison
 - **Then :** l'action est refusée et un message indique que le motif est obligatoire
 
 ## US8.3 - Historiser une action de modération (P1)
