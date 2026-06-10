@@ -191,6 +191,11 @@ body {
     cursor: pointer;
 }
 
+.nav-button:hover{
+    background-color: var(--container-color-secondary);
+    transition: background-color 0.2s;
+}
+
 .nav-title {
     color: var(--secondary-color);
     font-weight: bold;
@@ -201,6 +206,11 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+.nav-selected{
+    background-color: rgb(74, 222, 128,0.1);
+    color: var(--primary-color);
 }
 
 .user-box {

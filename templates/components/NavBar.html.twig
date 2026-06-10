@@ -15,35 +15,35 @@
     </div>
     <div class="nav-block">
         <h3 class="nav-title">Catégories</h3>
-        <a class="nav-button" href="">
+        <a class="nav-button {{ app.current_route === "app_home" and app.request.query.get('category') === null ? "nav-selected" : ""}}" href="{{ path('app_home')}}">
             <i class="fa-solid fa-table-cells"></i>
             <p>Tout les builds</p>
         </a>
-        <a class="nav-button" href="">
+        <a class="nav-button {{ app.request.query.get('category') === "1" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{1 }}">
             <i class="fa-solid fa-house"></i>
             <p>Maisons</p>
         </a>
-        <a class="nav-button" href="">
+        <a class="nav-button {{ app.request.query.get('category') === "2" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{2 }}">
             <i class="fa-brands fa-fort-awesome"></i>
             <p>Chateaux</p>
         </a>
-        <a class="nav-button" href="">
+        <a class="nav-button {{ app.request.query.get('category') === "3" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{3 }}">
             <i class="fa-solid fa-tree"></i>
             <p>Nature</p>
         </a>
-        <a class="nav-button" href="">
+        <a class="nav-button {{ app.request.query.get('category') === "4" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{4 }}">
             <i class="fa-solid fa-bolt"></i>
             <p>Redstone</p>
         </a>
-        <a class="nav-button" href="">
+        <a class="nav-button {{ app.request.query.get('category') === "5" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{5 }}">
             <i class="fa-solid fa-ship"></i>
             <p>Bateaux</p>
         </a>
-        <a class="nav-button" href="">
+        <a class="nav-button {{ app.request.query.get('category') === "6" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{6 }}">
             <i class="fa-solid fa-hammer"></i>
             <p>Médieval</p>
         </a>
-        <a class="nav-button" href="">
+        <a class="nav-button {{ app.request.query.get('category') === "7" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{7 }}">
             <i class="fa-solid fa-building"></i>
             <p>Moderne</p>
         </a>
