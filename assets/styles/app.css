@@ -684,6 +684,8 @@ body {
     padding: 0.3rem 0.8rem;
 }
 
+
+
 .filter-select:focus {
     outline: none;
     border-color: var(--primary-color);
