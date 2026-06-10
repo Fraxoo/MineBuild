@@ -51,16 +51,6 @@ class Build
     #[ORM\Column(length: 255 , options: ['default' => 'PUBLIC'])]
     private ?string $visibility = "PUBLIC";
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $hidden_reason = null;
-
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?User $hidden_by = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $hidden_at = null;
-
     #[ORM\Column(options: ['default' => 0])]
     private int $views_count = 0;
 
@@ -87,6 +77,13 @@ class Build
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deleted_at = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $deleted_reason = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $deleted_by = null;
 
     /**
      * @var Collection<int, Comment>
@@ -273,19 +270,6 @@ class Build
         return $this;
     }
 
-    public function getHiddenBy(): ?User
-    {
-        return $this->hidden_by;
-    }
-
-    public function setHiddenBy(?User $hidden_by): static
-    {
-        $this->hidden_by = $hidden_by;
-        return $this;
-    }
-
-
-
     public function getGameMode(): ?string
     {
         return $this->game_mode;
@@ -306,30 +290,6 @@ class Build
     public function setVisibility(string $visibility): static
     {
         $this->visibility = $visibility;
-
-        return $this;
-    }
-
-    public function getHiddenReason(): ?string
-    {
-        return $this->hidden_reason;
-    }
-
-    public function setHiddenReason(?string $hidden_reason): static
-    {
-        $this->hidden_reason = $hidden_reason;
-
-        return $this;
-    }
-
-    public function getHiddenAt(): ?\DateTimeImmutable
-    {
-        return $this->hidden_at;
-    }
-
-    public function setHiddenAt(?\DateTimeImmutable $hidden_at): static
-    {
-        $this->hidden_at = $hidden_at;
 
         return $this;
     }
@@ -437,6 +397,30 @@ class Build
     public function setDeletedAt(?\DateTimeImmutable $deleted_at): static
     {
         $this->deleted_at = $deleted_at;
+
+        return $this;
+    }
+
+    public function getDeletedReason(): ?string
+    {
+        return $this->deleted_reason;
+    }
+
+    public function setDeletedReason(?string $deleted_reason): static
+    {
+        $this->deleted_reason = $deleted_reason;
+
+        return $this;
+    }
+
+    public function getDeletedBy(): ?User
+    {
+        return $this->deleted_by;
+    }
+
+    public function setDeletedBy(?User $deleted_by): static
+    {
+        $this->deleted_by = $deleted_by;
 
         return $this;
     }

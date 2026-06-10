@@ -37,9 +37,6 @@ erDiagram
     VARCHAR game_version
     VARCHAR game_mode
     VARCHAR visibility
-    TEXT hidden_reason
-    INT hidden_by_id FK
-    DATETIME hidden_at
     INT views_count
     INT likes_count
     INT saves_count
@@ -50,6 +47,8 @@ erDiagram
     DATETIME created_at
     DATETIME updated_at
     DATETIME deleted_at
+    TEXT deleted_reason
+    INT deleted_by_id FK
   }
 
   CATEGORY {
@@ -210,6 +209,7 @@ erDiagram
 
   ROLE ||--o{ USER : has
   USER ||--o{ BUILD : creates
+  USER ||--o{ BUILD : deletes
   USER ||--o{ COMMENT : writes
 
   BUILD ||--o{ BUILD_IMAGE : has

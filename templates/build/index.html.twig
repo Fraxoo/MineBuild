@@ -19,8 +19,8 @@
                 <th>Game_version</th>
                 <th>Game_mode</th>
                 <th>Visibility</th>
-                <th>Hidden_reason</th>
-                <th>Hidden_at</th>
+                <th>Deleted_reason</th>
+                <th>Deleted_by</th>
                 <th>Views_count</th>
                 <th>Likes_count</th>
                 <th>Saves_count</th>
@@ -47,8 +47,8 @@
                 <td>{{ build.gameVersion }}</td>
                 <td>{{ build.gameMode }}</td>
                 <td>{{ build.visibility }}</td>
-                <td>{{ build.hiddenReason }}</td>
-                <td>{{ build.hiddenAt ? build.hiddenAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ build.deletedReason }}</td>
+                <td>{{ build.deletedBy ? build.deletedBy.username : '' }}</td>
                 <td>{{ build.viewsCount }}</td>
                 <td>{{ build.likesCount }}</td>
                 <td>{{ build.savesCount }}</td>

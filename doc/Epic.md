@@ -105,8 +105,8 @@
 - **When :** j'ouvre sa page
 - **Then :** je vois galerie, description, catégories, tags, matériaux, stats, note, commentaires et ressources
 
-### Scénario 2 - Build masqué
-- **Given :** un build est masqué
+### Scénario 2 - Build supprimé
+- **Given :** un build est supprimé
 - **When :** je ne suis ni auteur ni modérateur
 - **Then :** le build n'est pas accessible publiquement
 
@@ -240,7 +240,7 @@
 - **Then :** je suis redirigé vers “Connexion” (ou je vois une invite à me connecter)
 
 ## US8.2 - Supprimer un build (P1)
-**En tant que** modérateur/admin, je veux masquer un build avec un motif afin de retirer un contenu non conforme.
+**En tant que** modérateur/admin, je veux supprimer un build avec un motif afin de retirer un contenu non conforme.
 
 ### Scénario 1 - Build Supprimé
 - **Given :** je suis modérateur/admin
