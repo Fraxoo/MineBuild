@@ -26,9 +26,9 @@ final class ReportController extends AbstractController
     }
 
 
-    #[Route('/comment/new/{id}', name: 'app_report_new_comment', defaults: ['targetType' => 'comment'], methods: ['GET', 'POST'])]
-    #[Route('/build/new/{id}', name: 'app_report_new_build', defaults: ['targetType' => 'build'], methods: ['GET', 'POST'])]
-    #[Route('/user/new/{id}', name: 'app_report_new_user', defaults: ['targetType' => 'user'], methods: ['GET', 'POST'])]
+    #[Route('/new/comment/{id}', name: 'app_report_new_comment', defaults: ['targetType' => 'comment'], methods: ['GET', 'POST'])]
+    #[Route('/new/build/{id}', name: 'app_report_new_build', defaults: ['targetType' => 'build'], methods: ['GET', 'POST'])]
+    #[Route('/new/user/{id}', name: 'app_report_new_user', defaults: ['targetType' => 'user'], methods: ['GET', 'POST'])]
     public function new(
         int $id,
         string $targetType,
