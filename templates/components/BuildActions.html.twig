@@ -42,10 +42,10 @@
 				<i class="fa-solid fa-star {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				<p>Favoris</p>
 			</button>
-			{# <button class="container-button">
+			<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
 				<i class="fa-solid fa-flag"></i>
 				Signaler
-			</button> #}
+			</a>
 
 			{% else %}
 			<a href="{{ path('app_login') }}" class="container-button">
@@ -61,6 +61,10 @@
 			<a href="{{ path('app_login') }}" class="container-button">
 				<i class="fa-solid fa-star {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				<p>Favoris</p>
+			</a>
+			<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
+				<i class="fa-solid fa-flag"></i>
+				Signaler
 			</a>
 			{% endif %}
 		</div>
@@ -86,6 +90,5 @@
 		<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
 				href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>
 		{% endif %}
-
 	</div>
 </div>

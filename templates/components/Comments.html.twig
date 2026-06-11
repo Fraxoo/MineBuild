@@ -4,20 +4,37 @@
         alt="Avatar de {{ comment.author.username }}">
     <div class="flex gap-1 flex-col">
         <div class="flex items-center gap-2 ">
-            <a href="{{ path('app_user_show', {'id': comment.author.id}) }}" class="font-bold hover:underline text-(--title-color)">{{
+            <a href="{{ path('app_user_show', {'id': comment.author.id}) }}"
+                class="font-bold hover:underline text-(--title-color)">{{
                 comment.author.username }}</a>
             </a>
             <p class="text-xs text-(--secondary-color)">{{ comment.createdAt|date('d/m/Y') }}</p>
         </div>
         <p class="text-(--secondary-color)">{{ comment.content }}</p>
         {% if app.user %}
-        <button type="button" data-action="live#action" data-live-action-param="Like"
-            class="w-fit {{ isLikedByUser ? 'text-(--primary-color)' : 'text-(--secondary-color)' }} text-xs">
-            <i class="fa-solid fa-thumbs-up transition-colors duration-200 "></i>
-            {{ comment.commentLikes|length }}
-
-        </button>
+        <div class="flex items-center text-sm gap-4 ">
+            <button type="button" data-action="live#action" data-live-action-param="Like"
+                class="w-fit  flex items-center {{ isLikedByUser ? 'text-(--primary-color)' : 'text-(--secondary-color)' }} ">
+                <i class="ti ti-thumb-up transition-colors duration-200 "></i>
+                <p>{{ comment.commentLikes|length }}</p>
+            </button>
+            <a href="{{ path('app_report_new_comment' , { id : comment.id})}}"
+                class="w-fit flex items-center text-(--secondary-color) ">
+                <i class="ti ti-flag"></i>
+                <p>Signaler</p>
+            </a>
+        </div>
+        {% else %}
+        <div class="flex items-center text-sm gap-4">
+            <a href="{{ path('app_login')}}" class="w-fit flex items-center text-(--secondary-color)">
+                <i class="ti ti-thumb-up transition-colors duration-200 "></i>
+                <p> {{ comment.commentLikes|length }}</p>
+            </a>
+            <a href="{{ path('app_login')}}" class="w-fit flex items-center text-(--secondary-color) ">
+                <i class="ti ti-flag"></i>
+                <p>Signaler</p>
+            </a>
+        </div>
         {% endif %}
-
     </div>
 </div>
