@@ -29,6 +29,10 @@ class Report
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Comment $comment = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $user = null;
+
     #[ORM\Column(length: 255)]
     private ?string $reason_code = null;
 
@@ -102,6 +106,17 @@ class Report
     public function setComment(?Comment $comment): static
     {
         $this->comment = $comment;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
         return $this;
     }
 

@@ -1,0 +1,19 @@
+{{ form_start(form , { 'attr' : { 'class' : 'build-form' } }) }}
+
+
+
+<div class="flex flex-col gap-2">
+    <p class="text-(--title-color) fon-bold text-xl">Raison du signalement :</p>
+    {{ form_widget(form.reason_code)}}
+</div>
+<div class="flex flex-col gap-2">
+    <p class="text-(--title-color) fon-bold text-xl">Details :</p>
+    {{ form_widget(form.message)}}
+</div>
+
+
+<button class="btn primary-button text-lg w-full">
+    <i class="ti ti-flag"></i>
+    <span>Signaler</span>
+</button>
+{{ form_end(form) }}
