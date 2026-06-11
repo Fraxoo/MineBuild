@@ -21,6 +21,7 @@
 						<i class="fa-regular fa-pen-to-square"></i>
 						<p>Modifier mon profil</p>
 					</a>
+
 					{% endif %}
 				</div>
 				<p class="text-(--secondary-color)">{{ user.bio ? user.bio : 'Aucune bio pour le moment' }}</p>
@@ -30,11 +31,13 @@
 						<p>Inscrit depuis le
 							{{ user.createdAt|date('d/m/Y') }}</p>
 					</div>
-					<div class="flex items-center gap-2">
-						<i class="fa-solid fa-table-cells"></i>
-						<p>{{ user.builds|length }}
-							{{ user.builds|length > 1 ? 'builds' : 'build' }}</p>
-					</div>
+					{% if app.user and app.user.id !== user.id %}
+					<a href="{{ path('app_report_new_user' , { id : user.id})}}"
+						class="container-color-button px-2! py-1! ">
+						<i class="ti ti-flag"></i>
+						<p>Signaler</p>
+					</a>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -111,8 +114,8 @@
 
 		{% if items|length > 0 %}
 		{% if isFollow %}
-		<twig:PaginationComponent :items="items" :isFollow="true" :followType="followType" :totalPages="totalPages" :totalItems="totalItems"
-			:user="user" :currentPage="currentPage" />
+		<twig:PaginationComponent :items="items" :isFollow="true" :followType="followType" :totalPages="totalPages"
+			:totalItems="totalItems" :user="user" :currentPage="currentPage" />
 		{% else %}
 		<twig:PaginationComponent :items="items" :isFollow="false" :totalPages="totalPages" :totalItems="totalItems"
 			:user="user" :currentPage="currentPage" />
