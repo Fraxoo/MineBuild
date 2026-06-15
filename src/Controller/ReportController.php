@@ -14,11 +14,27 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/report')]
+#[Route('/dashboard')]
 final class ReportController extends AbstractController
 {
     #[Route(name: 'app_report_index', methods: ['GET'])]
     public function index(ReportRepository $reportRepository): Response
+    {
+        return $this->render('report/index.html.twig', [
+            'reports' => $reportRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/history', name: 'app_report_history', methods: ['GET'])]
+    public function history(ReportRepository $reportRepository): Response
+    {
+        return $this->render('report/index.html.twig', [
+            'reports' => $reportRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/users', name: 'app_report_users', methods: ['GET'])]
+    public function users(ReportRepository $reportRepository): Response
     {
         return $this->render('report/index.html.twig', [
             'reports' => $reportRepository->findAll(),
