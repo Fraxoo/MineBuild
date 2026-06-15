@@ -31,7 +31,7 @@ input {
     font-size: 1rem;
 }
 
-.ti{
+.ti {
     font-size: 1.25rem;
 }
 
@@ -195,7 +195,7 @@ body {
     cursor: pointer;
 }
 
-.nav-button:hover{
+.nav-button:hover {
     background-color: var(--container-color-secondary);
     transition: background-color 0.2s;
 }
@@ -212,8 +212,8 @@ body {
     gap: 0.5rem;
 }
 
-.nav-selected{
-    background-color: rgb(74, 222, 128,0.1);
+.nav-selected {
+    background-color: rgb(74, 222, 128, 0.1);
     color: var(--primary-color);
 }
 
@@ -237,7 +237,7 @@ body {
     border-radius: 0.25rem;
 }
 
-.user-box div{
+.user-box div {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -245,7 +245,7 @@ body {
 
 .check {
     accent-color: var(--primary-color);
-    
+
 }
 
 .user-filter-container {
@@ -703,4 +703,12 @@ body {
 .filter-select:focus {
     outline: none;
     border-color: var(--primary-color);
+}
+
+.dashboard-info {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    background-color: var(--container-color-secondary);
+    border-radius: 0.25rem;
 }

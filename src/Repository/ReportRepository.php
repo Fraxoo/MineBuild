@@ -21,16 +21,28 @@ class ReportRepository extends ServiceEntityRepository
         $offset = ($page - 1) * $limit;
 
         $queryBuilder = $this->createQueryBuilder('r')
+            ->addSelect('COUNT(DISTINCT targetReports.id) AS targetReportsCount')
             ->leftJoin('r.reporter', 'reporter')->addSelect('reporter')
             ->leftJoin('r.user', 'target')->addSelect('target')
             ->leftJoin('r.build', 'build')->addSelect('build')
             ->leftJoin('r.comment', 'comment')->addSelect('comment')
+            ->leftJoin(Report::class, 'targetReports', 'WITH', 'targetReports.user = target')
+            ->groupBy('r.id')
+            ->addGroupBy('reporter.id')
+            ->addGroupBy('target.id')
+            ->addGroupBy('build.id')
+            ->addGroupBy('comment.id')
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
+            ->setMaxResults($limit);
 
+        $rows = $queryBuilder->getQuery()->getResult();
 
-        return $queryBuilder->getQuery()->getResult();
+        return array_map(static function (array $row): Report {
+            $report = $row[0];
+            $report->setTargetReportsCount((int) $row['targetReportsCount']);
 
+            return $report;
+        }, $rows);
     }
 
     public function countReportByUser($user)
