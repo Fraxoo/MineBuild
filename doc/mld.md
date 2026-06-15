@@ -179,6 +179,7 @@ erDiagram
     INT moderator_id FK
     VARCHAR target_type
     INT build_id FK
+    INT target_user_id FK 
     INT comment_id FK
     VARCHAR action
     TEXT reason
