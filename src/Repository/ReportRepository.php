@@ -15,4 +15,21 @@ class ReportRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Report::class);
     }
+
+    public function findAllWithIncludeAndPagination($limit, $page)
+    {
+        $offset = ($page - 1) * $limit;
+
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->leftJoin('r.reporter', 'reporter')->addSelect('reporter')
+            ->leftJoin('r.user', 'target')->addSelect('target')
+            ->leftJoin('r.build', 'build')->addSelect('build')
+            ->leftJoin('r.comment', 'comment')->addSelect('comment')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
 }

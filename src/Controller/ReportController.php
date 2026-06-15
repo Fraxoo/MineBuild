@@ -17,11 +17,14 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/dashboard')]
 final class ReportController extends AbstractController
 {
-    #[Route(name: 'app_report_index', methods: ['GET'])]
-    public function index(ReportRepository $reportRepository): Response
+    #[Route('/{page}', name: 'app_report_index', defaults: ['page' => 1], methods: ['GET'])]
+    public function index(ReportRepository $reportRepository, int $page): Response
     {
+        $page = max(1, $page);
+
+
         return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findAll(),
+            'reports' => $reportRepository->findAllWithIncludeAndPagination(5, $page),
         ]);
     }
 
