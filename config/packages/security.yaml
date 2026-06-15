@@ -41,7 +41,7 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: /build/new, roles: ROLE_USER }
         - { path: /report , roles: ROLE_USER }
-        - { path: /dashboard , roles: ROLE_ADMIN}
+        # - { path: /dashboard , roles: ROLE_ADMIN}
         
 
 when@test:

@@ -26,10 +26,20 @@ class ReportRepository extends ServiceEntityRepository
             ->leftJoin('r.build', 'build')->addSelect('build')
             ->leftJoin('r.comment', 'comment')->addSelect('comment')
             ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setMaxResults($limit)
+
 
         return $queryBuilder->getQuery()->getResult();
 
     }
 
+    public function countReportByUser($user)
+    {
+        return (int) $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->andWhere('r.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }
