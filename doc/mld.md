@@ -257,5 +257,6 @@ erDiagram
 
   USER ||--o{ MODERATION_ACTION : moderates
   BUILD ||--o{ MODERATION_ACTION : moderated_build
+  USER ||--o{ MODERATION_ACTION : receives_moderation_action
   COMMENT ||--o{ MODERATION_ACTION : moderated_comment
 ```
