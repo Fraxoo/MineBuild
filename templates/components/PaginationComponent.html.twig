@@ -26,7 +26,7 @@
 
 			{% if currentPage > 1 %}
 				<a href="{{ path( app.current_route , app.current_route_parameters|merge(app.request.query.all)|merge({ page: currentPage - 1 })) }}" class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
-					<i class="fa-solid fa-angle-left text-white"></i>
+					<i class="ti ti-chevron-left text-white"></i>
 				</a>
 			{% endif %}
 
@@ -38,7 +38,7 @@
 
 			{% if currentPage < totalPages %}
 				<a href="{{ path( app.current_route , app.current_route_parameters|merge(app.request.query.all)|merge({ page: currentPage + 1 })) }}" class="px-3 py-2 bg-(--container-color) border border-(--border-color) rounded">
-					<i class="fa-solid fa-angle-right text-white"></i>
+					<i class="ti ti-chevron-right text-white"></i>
 				</a>
 			{% endif %}
 

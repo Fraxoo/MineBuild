@@ -1,50 +1,50 @@
 <div{{ attributes }} class="flex-1 h-100% bg-(--background-color-secondary) p-4 border-r border-(--border-color) flex flex-col gap-4">
     <a class="primary-button " href="{{path('app_build_new')}}">
-        <i class="fa-solid w-fit fa-arrow-up-from-bracket"></i>
+        <i class="ti ti-upload"></i>
         <p class="w-fit">Nouveau Build</p>
     </a>
     <div class="nav-block">
         <a class="nav-button" href="">
-            <i class="fa-solid fa-arrow-trend-up"></i>
+            <i class="ti ti-trending-up"></i>
             <p>Populaire</p>
         </a>
         <a class="nav-button" href="">
-            <i class="fa-solid fa-clock"></i>
+            <i class="ti ti-clock"></i>
             <p>Récent</p>
         </a>
     </div>
     <div class="nav-block">
         <h3 class="nav-title">Catégories</h3>
         <a class="nav-button {{ app.current_route === "app_home" and app.request.query.get('category') === null ? "nav-selected" : ""}}" href="{{ path('app_home')}}">
-            <i class="fa-solid fa-table-cells"></i>
+            <i class="ti ti-blocks"></i>
             <p>Tout les builds</p>
         </a>
         <a class="nav-button {{ app.request.query.get('category') === "1" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{1 }}">
-            <i class="fa-solid fa-house"></i>
+            <i class="ti ti-home-2"></i>
             <p>Maisons</p>
         </a>
         <a class="nav-button {{ app.request.query.get('category') === "2" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{2 }}">
-            <i class="fa-brands fa-fort-awesome"></i>
+            <i class="ti ti-building-castle"></i>
             <p>Chateaux</p>
         </a>
         <a class="nav-button {{ app.request.query.get('category') === "3" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{3 }}">
-            <i class="fa-solid fa-tree"></i>
+            <i class="ti ti-tree"></i>
             <p>Nature</p>
         </a>
         <a class="nav-button {{ app.request.query.get('category') === "4" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{4 }}">
-            <i class="fa-solid fa-bolt"></i>
+            <i class="ti ti-bolt"></i>
             <p>Redstone</p>
         </a>
         <a class="nav-button {{ app.request.query.get('category') === "5" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{5 }}">
-            <i class="fa-solid fa-ship"></i>
+            <i class="ti ti-speedboat"></i>
             <p>Bateaux</p>
         </a>
         <a class="nav-button {{ app.request.query.get('category') === "6" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{6 }}">
-            <i class="fa-solid fa-hammer"></i>
+            <i class="ti ti-hammer"></i>
             <p>Médieval</p>
         </a>
         <a class="nav-button {{ app.request.query.get('category') === "7" ? "nav-selected" : "" }}"  href="{{ path('app_home') }}?category={{7 }}">
-            <i class="fa-solid fa-building"></i>
+            <i class="ti ti-building"></i>
             <p>Moderne</p>
         </a>
     </div>
