@@ -11,6 +11,16 @@
             consulter l’historique des actions.</p>
         <h1 class="text-(--title-color) text-xl font-bold">Paramétre du compte </h1>
         <twig:DashboardNav />
+        {% if app.request.attributes.get('_route') === 'app_report_index' %}
+        <twig:ReportsComponent :reports="reports"/>
+
+        {% elseif app.request.attributes.get('_route') === 'app_report_history' %}
+        <twig:ReportHistoryComponent />
+
+        {% elseif app.request.attributes.get('_route') === 'app_report_users' %}
+        <twig:ReportUsersComponent />
+        {% endif %}
+
     </div>
 
 
