@@ -18,7 +18,7 @@
 					{% if app.user and app.user.id == user.id %}
 					<a class="flex text-(--title-color) font-bold gap-2 px-2 py-1 text-xs rounded items-center border border-(--border-color)"
 						href="{{ path('app_user_edit', {id: user.id}) }}">
-						<i class="fa-regular fa-pen-to-square"></i>
+						<i class="ti ti-edit"></i>
 						<p>Modifier mon profil</p>
 					</a>
 
@@ -27,7 +27,7 @@
 				<p class="text-(--secondary-color)">{{ user.bio ? user.bio : 'Aucune bio pour le moment' }}</p>
 				<div class="flex items-center gap-4 text-(--secondary-color)">
 					<div class="flex items-center gap-2">
-						<i class="fa-regular fa-calendar"></i>
+						<i class="ti ti-calendar-event"></i>
 						<p>Inscrit depuis le
 							{{ user.createdAt|date('d/m/Y') }}</p>
 					</div>
@@ -54,28 +54,28 @@
 	</div>
 	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
 		<div class="user-box">
-			<i class="fa-solid  bg-[#28372d]  text-[#4ae583] fa-table-cells"></i>
+			<i class=" bg-[#28372d]  text-[#4ae583] ti ti-blocks"></i>
 			<div>
 				<p class="text-(--title-color) font-bold">{{ user.builds|length }}</p>
 				<p class="text-(--secondary-color)">Total builds</p>
 			</div>
 		</div>
 		<div class="user-box">
-			<i class="fa-solid  bg-[#242d3a]  text-[#2a85fd] fa-users"></i>
+			<i class="ti ti-users  bg-[#242d3a]  text-[#2a85fd]"></i>
 			<div>
 				<p class="text-(--title-color) font-bold">{{ totalViews }}</p>
 				<p class="text-(--secondary-color)">Total vues</p>
 			</div>
 		</div>
 		<div class="user-box">
-			<i class="fa-solid  bg-[#3a2426]  text-[#ff2b36] fa-heart"></i>
+			<i class="bg-[#3a2426]  text-[#ff2b36] ti ti-heart"></i>
 			<div>
 				<p class="text-(--title-color) font-bold">{{ totalLikes }}</p>
 				<p class="text-(--secondary-color)">Total J'aimes</p>
 			</div>
 		</div>
 		<div class="user-box">
-			<i class="fa-solid  bg-[#203428]  text-[#00c84e] fa-star"></i>
+			<i class="ti ti-star  bg-[#203428]  text-[#00c84e]"></i>
 			<div>
 				<p class="text-(--title-color) font-bold">{{ totalSaves }}</p>
 				<p class="text-(--secondary-color)">Total Sauvegarde</p>
@@ -85,27 +85,27 @@
 	<div class="user-filter-container">
 		<a href="{{ path('app_user_show', {id: user.id}) }}"
 			class="user-filter {{ app.request.attributes.get('_route') === 'app_user_show' ? 'user-selected-filter' : '' }}">
-			<i class="fa-solid   fa-table-cells"></i>
+			<i class="ti ti-blocks"></i>
 			{# <p>Builds ({{ user.builds|length }})</p> #}
 			<p>Builds</p>
 		</a>
 		<a href="{{ path('app_user_favorites', {id: user.id}) }}"
 			class="user-filter {{ app.request.attributes.get('_route') === 'app_user_favorites' ? 'user-selected-filter' : '' }}">
-			<i class="fa-solid   fa-heart"></i>
+			<i class="ti ti-heart"></i>
 			{# <p>Favoris ({{ user.buildSaves|length }})</p> #}
 			<p>Favoris</p>
 
 		</a>
 		<a href="{{ path('app_user_followers', {id: user.id}) }}"
 			class="user-filter {{ app.request.attributes.get('_route') === 'app_user_followers' ? 'user-selected-filter' : '' }}">
-			<i class="fa-solid   fa-users"></i>
+			<i class="ti ti-users"></i>
 			{# <p>Followers ({{ user.followerRelations|length }})</p> #}
 			<p>Followers</p>
 
 		</a>
 		<a href="{{ path('app_user_following', {id: user.id}) }}"
 			class="user-filter {{ app.request.attributes.get('_route') === 'app_user_following' ? 'user-selected-filter' : '' }}">
-			<i class="fa-solid fa-user-plus"></i>
+			<i class="ti ti-user-plus"></i>
 			{# <p>Following ({{ user.followingRelations|length }})</p> #}
 			<p>Following</p>
 		</a>

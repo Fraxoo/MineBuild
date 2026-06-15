@@ -5,7 +5,7 @@
                     src="{{ asset('uploads/build_images/' ~ build.images|first.url) }}" alt="{{ build.title }}" />
                 <div
                     class="absolute top-2 right-2 flex items-center text-(--title-color) text-xs bg-(--background-color-transparent) gap-1 rounded p-1">
-                    <i class="fa-regular fa-eye"></i>
+                    <i class="ti ti-eye"></i>
                     <p>{{build.viewsCount}}</p>
                 </div>
             </div>
@@ -23,11 +23,11 @@
                     </div>
                     <div class="flex items-center gap-2 text-(--secondary-color) text-xs">
                         <div class="flex items-center gap-1">
-                            <i class="fa-regular fa-heart"></i>
+                            <i class="ti ti-heart"></i>
                             <p>{{ build.likesCount }}</p>
                         </div>
                         <div class="flex items-center gap-1">
-                            <i class="fa-solid fa-download"></i>
+                            <i class="ti ti-download"></i>
                             <p>{{ build.downloadsCount }}</p>
                         </div>
                     </div>

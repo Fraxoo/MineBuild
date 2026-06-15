@@ -13,7 +13,7 @@
         <div class="build-dropzone" data-controller="image-preview">
             <label class="build-dropzone__label">
                 <div class="build-dropzone__inner">
-                    <i class="fa-regular fa-image build-dropzone__icon"></i>
+                    <i class="ti ti-photo build-dropzone__icon"></i>
                     <p class="build-dropzone__title">Déposez vos images ici</p>
                     <p class="build-dropzone__subtitle">ou cliquez pour parcourir</p>
                 </div>
@@ -31,7 +31,7 @@
                         <div class="build-images-preview__item">
                             <button type="button" class="build-images-preview__remove" aria-label="Supprimer"
                                 data-action="image-preview#removeExisting" data-image-preview-id-param="{{ image.id }}">
-                                <i class="fa-solid fa-xmark"></i>
+                                <i class="ti ti-x"></i>
                             </button>
                             <img class="build-images-preview__img" src="{{ asset('uploads/build_images/' ~ image.url) }}"
                                 alt="{{ image.alt ?: build.title }}" loading="lazy">
@@ -165,7 +165,7 @@
                     data-tags-input-target="input" />
                 <button type="button" class="container-button build-tags__add" data-action="click->tags-input#add"
                     aria-label="Ajouter un tag">
-                    <i class="fa-solid fa-plus"></i>
+                    <i class="ti ti-plus"></i>
                 </button>
             </div>
 
@@ -189,7 +189,7 @@
                 }) }}</div>
             <button type="button" class="container-button build-materials__remove" data-action="click->collection#remove"
                 aria-label="Supprimer">
-                <i class="fa-solid fa-xmark"></i>
+                <i class="ti ti-x"></i>
             </button>
         </div>
         {% endset %}
@@ -205,14 +205,14 @@
                     <div class="build-materials__color">{{ form_widget(material.color) }}</div>
                     <button type="button" class="container-button build-materials__remove"
                         data-action="click->collection#remove" aria-label="Supprimer">
-                        <i class="fa-solid fa-xmark"></i>
+                        <i class="ti ti-x"></i>
                     </button>
                 </div>
                 {% endfor %}
             </div>
 
             <button type="button" class="container-button build-materials__add" data-action="click->collection#add">
-                <i class="fa-solid fa-plus"></i>
+                <i class="ti text-2xl! ti-plus"></i>
                 Ajouter un matériau
             </button>
         </div>
@@ -240,7 +240,7 @@
                     <div class="build-images-preview__item">
                         <button type="button" class="build-images-preview__remove" aria-label="Supprimer"
                             data-action="file-preview#removeExisting">
-                            <i class="fa-solid fa-xmark"></i>
+                            <i class="ti ti-x"></i>
                         </button>
                         <a class="build-images-preview__file text-(--secondary-color)" href="{{ asset('uploads/build_assets/' ~ worldAsset.url) }}" target="_blank" rel="noopener">
                             {{ worldAsset.filename ?: worldAsset.url }}
@@ -254,8 +254,8 @@
         <div class="build-dropzone" data-controller="file-preview">
             <label class="build-dropzone__label build-dropzone__label--compact">
                 <div class="build-dropzone__inner">
-                    <i class="fa-regular fa-file build-dropzone__icon"></i>
-                    <p class="build-dropzone__title">Upload world file</p>
+                    <i class="ti ti-file build-dropzone__icon"></i>
+                    <p class="build-dropzone__title">Ajoutez fichier monde</p>
                     <p class="build-dropzone__subtitle">.zip, .schematic, .nbt (max 50MB)</p>
                 </div>
                 {{ form_widget(form.world_file, { attr: {
@@ -273,7 +273,7 @@
 
 <footer class="build-footer">
     <div class="build-footer__hint">
-        <i class="fa-solid fa-circle-info"></i>
+        <i class="ti ti-info-circle"></i>
         <p>Les champs marqués par * sont obligatoires.</p>
     </div>
     <div class="build-footer__actions">

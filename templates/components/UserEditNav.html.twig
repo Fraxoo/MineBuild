@@ -2,15 +2,15 @@
     <h1 class="text-(--title-color) text-xl font-bold">Paramétre du compte </h1>
     <div class="user-filter-container w-full! justify-between">
         <a href="{{ path('app_user_edit', {id: user.id}) }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') === 'app_user_edit' ? 'user-selected-filter' : '' }}">
-            <i class="fa-solid fa-user"></i>
+            <i class="ti ti-user"></i>
             <p>Profil</p>
         </a>
         <a href="{{ path('app_user_edit_password', {id: user.id}) }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') === 'app_user_edit_password' ? 'user-selected-filter' : '' }}">
-            <i class="fa-solid fa-lock"></i>
+            <i class="ti ti-lock"></i>
             <p>Sécurité</p>
         </a>
         <a href="{{ path('app_user_edit_privacy', {id: user.id}) }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') === 'app_user_edit_privacy' ? 'user-selected-filter' : '' }}">
-            <i class="fa-solid fa-shield"></i>
+            <i class="ti ti-shield"></i>
             <p>confidentialité</p>
         </a>
     </div>
