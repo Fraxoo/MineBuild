@@ -24,7 +24,7 @@ final class ReportController extends AbstractController
 
 
         return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findAllWithIncludeAndPagination(5, $page),
+            'reports' => $reportRepository->findAllWithIncludeAndPagination(10, $page),
         ]);
     }
 
@@ -79,8 +79,8 @@ final class ReportController extends AbstractController
             }
 
             match ($targetType) {
-                'comment' => $report->setComment($target),
-                'build' => $report->setBuild($target),
+                'comment' => $report->setComment($target)->setUser($target->getAuthor()),
+                'build' => $report->setBuild($target)->setUser($target->getAuthor()),
                 'user' => $report->setUser($target),
             };
 

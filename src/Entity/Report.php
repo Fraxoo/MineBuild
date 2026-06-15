@@ -55,6 +55,7 @@ class Report
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
 
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -196,4 +197,5 @@ class Report
         $this->updated_at = $updated_at;
         return $this;
     }
+
 }
