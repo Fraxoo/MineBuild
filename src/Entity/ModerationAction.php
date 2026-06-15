@@ -18,6 +18,10 @@ class ModerationAction
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $moderator = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'target_user_id', nullable: true, onDelete: 'SET NULL')]
+    private ?User $target_user = null;
+
     #[ORM\Column(length: 255)]
     private ?string $target_type = null;
 
@@ -56,6 +60,17 @@ class ModerationAction
     public function setModerator(User $moderator): static
     {
         $this->moderator = $moderator;
+        return $this;
+    }
+
+    public function getTargetUser(): ?User
+    {
+        return $this->target_user;
+    }
+
+    public function setTargetUser(?User $target_user): static
+    {
+        $this->target_user = $target_user;
         return $this;
     }
 

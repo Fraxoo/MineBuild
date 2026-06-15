@@ -179,6 +179,7 @@ erDiagram
     INT moderator_id FK
     VARCHAR target_type
     INT build_id FK
+    INT target_user_id FK 
     INT comment_id FK
     VARCHAR action
     TEXT reason
@@ -256,5 +257,6 @@ erDiagram
 
   USER ||--o{ MODERATION_ACTION : moderates
   BUILD ||--o{ MODERATION_ACTION : moderated_build
+  USER ||--o{ MODERATION_ACTION : receives_moderation_action
   COMMENT ||--o{ MODERATION_ACTION : moderated_comment
 ```

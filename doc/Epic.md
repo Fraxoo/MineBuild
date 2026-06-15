@@ -239,18 +239,32 @@
 - **When :** je tente de signaler un build, un commentaire ou un utilisateur
 - **Then :** je suis redirigé vers “Connexion” (ou je vois une invite à me connecter)
 
-## US8.2 - Supprimer un build (P1)
-**En tant que** modérateur/admin, je veux supprimer un build avec un motif afin de retirer un contenu non conforme.
+## US8.2 - Modérer un build, un commentaire ou un utilisateur (P1)
+**En tant que** modérateur/admin, je veux pouvoir modérer un build, un commentaire ou un utilisateur avec un motif afin de retirer les contenus non conformes et maintenir un espace sain.
 
-### Scénario 1 - Build Supprimé
+### Scénario 1 - Build modéré
 - **Given :** je suis modérateur/admin
-- **When :** je supprime un build avec une raison
-- **Then :** un avertissement est envoyer 
+- **When :** je masque ou supprime un build avec une raison
+- **Then :** le build n’est plus visible publiquement
+- **And :** un avertissement est envoyé à l’auteur avec le motif
 
-### Scénario 2 - Motif obligatoire
+### Scénario 2 - Commentaire modéré
 - **Given :** je suis modérateur/admin
-- **When :** je tente de supprimer un build sans raison
-- **Then :** l'action est refusée et un message indique que le motif est obligatoire
+- **When :** je masque ou supprime un commentaire avec une raison
+- **Then :** le commentaire n’est plus visible publiquement
+- **And :** un avertissement est envoyé à l’auteur du commentaire avec le motif
+
+### Scénario 3 - Utilisateur sanctionné
+- **Given :** je suis modérateur/admin
+- **When :** je sanctionne un utilisateur avec une raison
+- **Then :** l’utilisateur reçoit un avertissement ou voit son compte désactivé selon la sanction choisie
+- **And :** le motif est enregistré
+
+### Scénario 4 - Motif obligatoire
+- **Given :** je suis modérateur/admin
+- **When :** je tente de modérer un build, un commentaire ou un utilisateur sans raison
+- **Then :** l’action est refusée
+- **And :** un message indique que le motif est obligatoire
 
 ## US8.3 - Historiser une action de modération (P1)
 **En tant que** système, je veux conserver les actions de modération afin de garder une trace.
