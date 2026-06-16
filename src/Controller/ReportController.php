@@ -93,8 +93,12 @@ final class ReportController extends AbstractController
                 return $this->redirectToRoute('app_build_show', [
                     'id' => $id
                 ], Response::HTTP_SEE_OTHER);
+            } elseif ($targetType === "comment") {
+                return $this->redirectToRoute('app_build_show', [
+                    'id' => $commentRepo->find($id)->getBuild()->getId()
+                ], Response::HTTP_SEE_OTHER);
             }
-            return $this->redirectToRoute('app_build_show', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
 
         }
 
