@@ -152,6 +152,9 @@ body {
 .modal-content {
     position: relative;
     width: 100%;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
     pointer-events: auto;
     border-radius: 0.5rem;
 }
@@ -169,6 +172,16 @@ body {
 
 .modal-backdrop.show {
     opacity: 0.5;
+}
+
+.modal-title{
+    font-weight: bold;
+}
+
+.modal-header{
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
 }
 
 .container-color-button {

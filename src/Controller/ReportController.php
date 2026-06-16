@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\ModerationAction;
 use App\Entity\Report;
 use App\Form\ReportType;
 use App\Repository\BuildRepository;
@@ -130,12 +131,28 @@ final class ReportController extends AbstractController
             $report->setHandledAt(new DateTimeImmutable());
             $report->setHandledBy($this->getUser());
             $report->setStatus("Confirmed");
+            $action = new ModerationAction();
+            $action->setAction("Delete");
 
             if ($report->getTargetType() === "comment") {
                 $comment = $report->getComment();
-                $entityManager->remove($comment);
-                $entityManager->flush();
+                $action->setComment($comment);
+                
+            } elseif($report->getTargetType() === "build"){
+                $build = $report->getBuild();
+                $build->setVisibility("HIDDEN");
+                $action->setBuild($build);
+            } elseif($report->getTargetType() === "user"){
+                $user = $report->getUser();
+                $user->setIsActive(false);
             }
+
+
+            $action->setCreatedAt(new DateTimeImmutable());
+            $action->setTargetType($report->getTargetType());
+            $action->setModerator($this->getUser());
+            $action->setTargetUser($report->getUser());
+            $action->setReason($request->request->get('reason'));
 
             $entityManager->persist($report);
             $entityManager->flush();

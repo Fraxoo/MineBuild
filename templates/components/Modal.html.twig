@@ -3,7 +3,7 @@
 		<div class="modal-content p-4 bg-(--container-color) text-(--title-color)">
 			<div class="modal-header">
 				<h5 class="modal-title">Confirmer la suppression</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"><i class="ti ti-x"></i></button>
 			</div>
 
 			<div class="modal-body">
@@ -11,15 +11,24 @@
 			</div>
 
 			<div class="modal-footer">
-				<form class="flex items-center gap-4" method="post" action="{{ path('app_report_delete', {'id': report.id}) }}">
+				<form class="flex flex-col gap-4" method="post" action="{{ path('app_report_delete', {'id': report.id}) }}">
 					<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ report.id) }}">
-					<button class="btn flex gap-4  items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2" type="submit">
-						<i class="ti text-[1rem] ti-trash"></i>
-						<p>Supprimer</p>
-					</button>
-					<button type="button" class="container-color-button" data-bs-dismiss="modal">
-						Annuler
-					</button>
+                    <div>
+                        <p class="text-(--title-color)">Raison :</p>
+                        <div class="input-input">
+                            <i class="ti ti-pencil"></i>
+                            <input type="text" name="reason" id="" class="input">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button class="btn flex gap-4  items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2" type="submit">
+                            <i class="ti text-[1rem] ti-trash"></i>
+                            <p>Supprimer</p>
+                        </button>
+                        <button type="button" class="container-color-button" data-bs-dismiss="modal">
+                            Annuler
+                        </button>
+                    </div>
 				</form>
 			</div>
 		</div>
