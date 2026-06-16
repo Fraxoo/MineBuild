@@ -28,6 +28,8 @@ class ReportRepository extends ServiceEntityRepository
             ->leftJoin('r.comment', 'comment')->addSelect('comment')
             ->leftJoin(Report::class, 'targetReports', 'WITH', 'targetReports.user = target')
             ->groupBy('r.id')
+            ->andWhere('r.status = :status')
+            ->setParameter('status' , 'Pending')
             ->addGroupBy('reporter.id')
             ->addGroupBy('target.id')
             ->addGroupBy('build.id')

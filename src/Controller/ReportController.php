@@ -8,6 +8,7 @@ use App\Repository\BuildRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -132,4 +133,21 @@ final class ReportController extends AbstractController
 
         return $this->redirectToRoute('app_report_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/reject/{id}', name: 'app_report_reject', methods: ['POST'])]
+    public function reject(Request $request, Report $report, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('reject' . $report->getId(), $request->getPayload()->getString('_token'))) {
+            $report->setHandledAt(new DateTimeImmutable());
+            $report->setHandledBy($this->getUser());
+            $report->setStatus("Rejected");
+
+            $entityManager->persist($report);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_report_index', [], Response::HTTP_SEE_OTHER);
+    }
+
 }
