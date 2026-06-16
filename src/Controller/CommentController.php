@@ -30,6 +30,7 @@ final class CommentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setVisibility("PUBLIC");
             $entityManager->persist($comment);
             $entityManager->flush();
 
