@@ -89,7 +89,13 @@ final class ReportController extends AbstractController
             $entityManager->persist($report);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+            if ($targetType === "build") {
+                return $this->redirectToRoute('app_build_show', [
+                    'id' => $id
+                ], Response::HTTP_SEE_OTHER);
+            }
+            return $this->redirectToRoute('app_build_show', [], Response::HTTP_SEE_OTHER);
+
         }
 
         return $this->render('report/new.html.twig', [
@@ -154,6 +160,7 @@ final class ReportController extends AbstractController
             $action->setTargetUser($report->getUser());
             $action->setReason($request->request->get('reason'));
 
+            $entityManager->persist($action);
             $entityManager->persist($report);
             $entityManager->flush();
         }
