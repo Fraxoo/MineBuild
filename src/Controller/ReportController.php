@@ -137,12 +137,12 @@ final class ReportController extends AbstractController
             if ($report->getTargetType() === "comment") {
                 $comment = $report->getComment();
                 $action->setComment($comment);
-                
-            } elseif($report->getTargetType() === "build"){
+                $comment->setVisibility("HIDDEN");
+            } elseif ($report->getTargetType() === "build") {
                 $build = $report->getBuild();
                 $build->setVisibility("HIDDEN");
                 $action->setBuild($build);
-            } elseif($report->getTargetType() === "user"){
+            } elseif ($report->getTargetType() === "user") {
                 $user = $report->getUser();
                 $user->setIsActive(false);
             }

@@ -42,6 +42,9 @@ class Comment
     #[ORM\OneToMany(targetEntity: CommentLike::class, mappedBy: 'comment_id')]
     private Collection $commentLikes;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $visibility = null;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -149,6 +152,18 @@ class Comment
                 $commentLike->setCommentId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVisibility(): ?string
+    {
+        return $this->visibility;
+    }
+
+    public function setVisibility(?string $visibility): static
+    {
+        $this->visibility = $visibility;
 
         return $this;
     }
