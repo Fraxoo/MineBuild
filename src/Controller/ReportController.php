@@ -127,7 +127,17 @@ final class ReportController extends AbstractController
     public function delete(Request $request, Report $report, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $report->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($report);
+            $report->setHandledAt(new DateTimeImmutable());
+            $report->setHandledBy($this->getUser());
+            $report->setStatus("Confirmed");
+
+            if ($report->getTargetType() === "comment") {
+                $comment = $report->getComment();
+                $entityManager->remove($comment);
+                $entityManager->flush();
+            }
+
+            $entityManager->persist($report);
             $entityManager->flush();
         }
 

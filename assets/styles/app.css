@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-@plugin "../vendor/daisyui/daisyui.index.js" {
-    themes: false;
-}
-
 
 
 
@@ -123,6 +119,56 @@ body {
     gap: 0.5rem;
     align-items: center;
     justify-content: center;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1055;
+    display: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 1.75rem auto;
+    max-width: 500px;
+    pointer-events: none;
+}
+
+.modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 3.5rem);
+}
+
+.modal-content {
+    position: relative;
+    width: 100%;
+    pointer-events: auto;
+    border-radius: 0.5rem;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    background-color: #000;
+}
+
+.modal-backdrop.fade {
+    opacity: 0;
+}
+
+.modal-backdrop.show {
+    opacity: 0.5;
 }
 
 .container-color-button {
@@ -711,4 +757,9 @@ body {
     color: var(--secondary-color);
     background-color: var(--container-color-secondary);
     border-radius: 0.25rem;
+}
+
+.modal-div{
+    flex-direction: column;
+    gap: 1rem;
 }
