@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ModerationAction{% endblock %}
+
+{% block body %}
+    <h1>ModerationAction</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ moderation_action.id }}</td>
+            </tr>
+            <tr>
+                <th>Target_type</th>
+                <td>{{ moderation_action.targetType }}</td>
+            </tr>
+            <tr>
+                <th>Action</th>
+                <td>{{ moderation_action.action }}</td>
+            </tr>
+            <tr>
+                <th>Reason</th>
+                <td>{{ moderation_action.reason }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ moderation_action.createdAt ? moderation_action.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_moderation_action_index') }}">back to list</a>
+
+    <a href="{{ path('app_moderation_action_edit', {'id': moderation_action.id}) }}">edit</a>
+
+    {{ include('moderation_action/_delete_form.html.twig') }}
+{% endblock %}

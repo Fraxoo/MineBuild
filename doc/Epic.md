@@ -244,13 +244,13 @@
 
 ### Scénario 1 - Build modéré
 - **Given :** je suis modérateur/admin
-- **When :** je masque ou supprime un build avec une raison
+- **When :** supprime un build avec une raison
 - **Then :** le build n’est plus visible publiquement
 - **And :** un avertissement est envoyé à l’auteur avec le motif
 
 ### Scénario 2 - Commentaire modéré
 - **Given :** je suis modérateur/admin
-- **When :** je masque ou supprime un commentaire avec une raison
+- **When :** supprime un commentaire avec une raison
 - **Then :** le commentaire n’est plus visible publiquement
 - **And :** un avertissement est envoyé à l’auteur du commentaire avec le motif
 

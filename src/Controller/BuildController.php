@@ -258,6 +258,7 @@ final class BuildController extends AbstractController
                 $comment->setAuthor($user);
             }
             $comment->setBuild($build);
+            $comment->setVisibility("PUBLIC");
 
             if ($form->isValid()) {
                 $em->persist($comment);

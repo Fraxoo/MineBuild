@@ -2,14 +2,26 @@
     <img class="w-12 h-12 rounded-full"
         src="{{ comment.author.avatarUrl ? asset('uploads/avatars/' ~ comment.author.avatarUrl) : asset('images/default-avatar.jpg') }}"
         alt="Avatar de {{ comment.author.username }}">
-    <div class="flex gap-1 flex-col">
-        <div class="flex items-center gap-2 ">
-            <a href="{{ path('app_user_show', {'id': comment.author.id}) }}"
-                class="font-bold hover:underline text-(--title-color)">{{
-                comment.author.username }}</a>
-            </a>
-            <p class="text-xs text-(--secondary-color)">{{ comment.createdAt|date('d/m/Y') }}</p>
+    <div class="flex gap-1 flex-col w-full">
+
+        <div {{stimulus_controller('modal-form')}} class="flex items-center justify-between  w-full">
+            <div class="flex items-center gap-2 ">
+                <a href="{{ path('app_user_show', {'id': comment.author.id}) }}"
+                    class="font-bold hover:underline text-(--title-color)">{{
+                    comment.author.username }}</a>
+                </a>
+                <p class="text-xs text-(--secondary-color)">{{ comment.createdAt|date('d/m/Y') }}</p>
+            </div>
+            {% if is_granted('ROLE_ADMIN') %}
+            <button data-action="click->modal-form#openModal"
+                class="btn flex gap-4  items-center border-0 text-white cursor-pointer transition-colors hover:text-red-600 font-bold rounded-lg text-sm! "
+                type="button">
+                Supprimer
+            </button>
+            <twig:DeleteModal :id="comment.id" type="comment" />
+            {% endif %}
         </div>
+
         <p class="text-(--secondary-color)">{{ comment.content }}</p>
         {% if app.user %}
         <div class="flex items-center text-sm gap-4 ">
