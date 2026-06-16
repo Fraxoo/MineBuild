@@ -1,0 +1,11 @@
+report:
+  reason:
+    spam: "Spam / publicité"
+    harassment: "Harcèlement / intimidation"
+    hate_speech: "Discours haineux"
+    nudity: "Contenu sexuel / nudité"
+    violence: "Violence / contenu choquant"
+    illegal: "Contenu illégal / dangereux"
+    impersonation: "Usurpation d’identité"
+    copyright: "Droits d’auteur / contenu volé"
+    other: "Autre"

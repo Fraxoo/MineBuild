@@ -9,7 +9,6 @@
         <h3 class="text-4xl text-(--title-color) font-bold">Panneau de Modération</h3>
         <p class="text-(--secondary-color) text-xl">Traiter les signalements, masquer les contenus non conformes et
             consulter l’historique des actions.</p>
-        <h1 class="text-(--title-color) text-xl font-bold">Paramétre du compte </h1>
         <twig:DashboardNav />
         {% if app.request.attributes.get('_route') === 'app_report_index' %}
         <twig:ReportsComponent :reports="reports"/>

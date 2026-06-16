@@ -5,7 +5,7 @@
         <div class="flex items-center gap-3">
             <div
                 class="text-(--secondary-color)  px-2 py-1 rounded border border-(--border-color) flex items-center gap-1">
-                <i class="ti text-sm! {{ report.targetType === " user" ? " ti-user" : (report.targetType===" build"
+                <i class="ti text-lg! {{ report.targetType === " user" ? " ti-user" : (report.targetType===" build"
                     ? " ti-blocks" : " ti-message-circle" ) }}"></i>
                 <p>{{ report.targetType}}</p>
             </div>
@@ -13,7 +13,7 @@
                 <span class="text-(--title-color)">{{ report.user.username }}</span>
             </p>
             <div class="flex items-center gap-1 text-red-500 font-bold">
-                <i class="fa-solid fa-circle-exclamation"></i>
+                <i class="fa-solid text-[1rem] fa-circle-exclamation"></i>
                 <p>{{ report.targetReportsCount }}
                     signalement{{ report.targetReportsCount > 1 ? 's' : '' }}</p>
             </div>
@@ -28,11 +28,11 @@
 
     <div class="flex items-center text-sm gap-4">
         <div class="flex items-center text-red-500 font-semibold">
-            <i class="ti ti-flag text-sm!"></i>
-            {{ report.reasonCode}}
+            <i class="ti ti-flag text-lg!"></i>
+            {{ ('report.reason.' ~ report.reasonCode)|trans }}
         </div>
         <div class="flex items-center text-(--secondary-color)">
-            <i class="ti ti-history text-sm!"></i>
+            <i class="ti ti-history text-lg!"></i>
             <p>{{report.createdAt|date('d/m/Y')}} {{report.createdAt|date('h:m')}}</p>
         </div>
         <p class="text-(--secondary-color)">Signalement fait par <span class="text-(--title-color)">{{
@@ -43,11 +43,11 @@
         <button
             class="btn flex gap-4 items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2"
             type="submit">
-            <i class="ti text-sm! ti-trash"></i>
+            <i class="ti text-lg! ti-trash"></i>
             <p>Supprimer</p>
         </button>
         <button class="container-color-button text-sm!">
-            <i class="ti text-sm! ti-x"></i>
+            <i class="ti text-lg! ti-x"></i>
             <p>Rejeter</p>
         </button>
 
