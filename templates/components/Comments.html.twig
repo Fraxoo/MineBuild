@@ -4,24 +4,38 @@
         alt="Avatar de {{ comment.author.username }}">
     <div class="flex gap-1 flex-col w-full">
 
-        <div {{stimulus_controller('modal-form')}} class="flex items-center justify-between  w-full">
+        <div class="flex items-center justify-between  w-full">
             <div class="flex items-center gap-2 ">
                 <a href="{{ path('app_user_show', {'id': comment.author.id}) }}"
                     class="font-bold hover:underline text-(--title-color)">{{
                     comment.author.username }}</a>
                 </a>
                 {% if comment.author === build.author %}
-                    <i class="ti text-(--primary-color) ti-crown"></i>
+                <i class="ti text-(--primary-color) ti-crown"></i>
                 {% endif %}
                 <p class="text-xs text-(--secondary-color)">{{ comment.createdAt|date('d/m/Y') }}</p>
             </div>
-            {% if is_granted('ROLE_ADMIN') %}
-            <button data-action="click->modal-form#openModal"
-                class="btn flex gap-4  items-center border-0 text-white cursor-pointer transition-colors hover:text-red-600 font-bold rounded-lg text-sm! "
-                type="button">
-                Supprimer
-            </button>
-            <twig:DeleteModal :id="comment.id" type="comment" />
+            {% if is_granted('ROLE_ADMIN') and comment.author != app.user %}
+            <div {{stimulus_controller('modal-form')}}>
+                <button data-action="click->modal-form#openModal"
+                    class="btn flex gap-4  items-center border-0 text-white cursor-pointer transition-colors hover:text-red-600 font-bold rounded-lg text-sm! "
+                    type="button">
+                    Supprimer
+                </button>
+                <twig:DeleteModal :id="comment.id" type="comment" />
+            </div>
+
+            {% elseif comment.author === app.user %}
+
+            <div {{stimulus_controller('modal-form')}}>
+                <button data-action="click->modal-form#openModal"
+                    class="btn flex gap-4  items-center border-0 text-white cursor-pointer transition-colors hover:text-red-600 font-bold rounded-lg text-sm! "
+                    type="button">
+                    <i class="ti ti-x"></i>
+                </button>
+                <twig:Modal :id="comment.id" type="comment" isCommentModal="true" :comment="comment" />
+            </div>
+
             {% endif %}
         </div>
 
