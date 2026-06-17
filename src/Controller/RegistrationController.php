@@ -26,6 +26,7 @@ class RegistrationController extends AbstractController
             
             $userRole = $entityManager->getRepository('App\Entity\Role')->findOneBy(['code' => 'ROLE_USER']);
             $user->setRole($userRole);
+            $user->setIsActive(true);
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));

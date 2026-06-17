@@ -23,15 +23,14 @@
 					</a>
 
 					{% endif %}
-								{% if is_granted('ROLE_ADMIN') %}
-            <button data-action="click->modal-form#openModal"
-                class="red-button px-2! py-1! text-sm!"
-                type="button">
-				<i class="ti ti-trash"></i>
-                Supprimer
-            </button>
-            <twig:DeleteModal :id="user.id" type="user" />
-            {% endif %}
+					{% if is_granted('ROLE_ADMIN') %}
+					<button data-action="click->modal-form#openModal" class="red-button px-2! py-1! text-sm!"
+						type="button">
+						<i class="ti ti-trash"></i>
+						Supprimer
+					</button>
+					<twig:DeleteModal :id="user.id" type="user" />
+					{% endif %}
 				</div>
 				<p class="text-(--secondary-color)">{{ user.bio ? user.bio : 'Aucune bio pour le moment' }}</p>
 				<div class="flex items-center gap-4 text-(--secondary-color)">
