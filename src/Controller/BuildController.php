@@ -64,7 +64,7 @@ final class BuildController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($build);
 
-            
+
 
             $category = $form->get('category')->getData();
             if ($category) {
@@ -227,8 +227,9 @@ final class BuildController extends AbstractController
     public function show(Request $request, Build $build, EntityManagerInterface $em, BuildSaveRepository $buildSaveRepository, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
     {
         $build = $buildRepository->getBuildWithJoinByUser($build);
-        if (!$build) {
-            throw $this->createNotFoundException('Build introuvable.');
+
+        if ($build->getVisibility() === "HIDDEN" or !$build ) {
+            return $this->redirectToRoute('app_build_not_found', [], Response::HTTP_SEE_OTHER);
         }
 
         $user = $this->getUser();
