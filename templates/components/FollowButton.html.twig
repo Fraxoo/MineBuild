@@ -1,0 +1,9 @@
+<div{{ attributes }}>
+          {% if isFollowedByUser %}
+        <button class="primary-button w-full" data-action="live#action" data-live-action-param="follow"><i
+                class="fa-solid fa-user-check"></i>Désaboner</button>
+        {% else %}
+        <button class="primary-button w-full" data-action="live#action" data-live-action-param="follow"><i
+                class="fa-solid fa-user-plus"></i> Suivre</button>
+        {% endif %}
+</div>
