@@ -43,7 +43,6 @@ final class CommentSection
     {
         $user = $this->security->getUser();
         if (!$user instanceof User) {
-            // soit tu retournes un form "désactivé", soit tu bloques
             throw new AccessDeniedHttpException();
         }
 
@@ -57,9 +56,8 @@ final class CommentSection
     #[LiveAction]
     public function comment(): void
     {
-        $this->submitForm(); // valide + hydrate l'entité (sinon 422)
+        $this->submitForm();
 
-        /** @var Comment $comment */
         $comment = $this->getForm()->getData();
         
         
@@ -67,7 +65,7 @@ final class CommentSection
         $this->em->persist($comment);
         $this->em->flush();
 
-        $this->resetForm(); // remet le formulaire à zéro
+        $this->resetForm(); 
         $this->commentEntity = null;
     }
 

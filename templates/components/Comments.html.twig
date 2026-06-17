@@ -10,6 +10,9 @@
                     class="font-bold hover:underline text-(--title-color)">{{
                     comment.author.username }}</a>
                 </a>
+                {% if comment.author === build.author %}
+                    <i class="ti text-(--primary-color) ti-crown"></i>
+                {% endif %}
                 <p class="text-xs text-(--secondary-color)">{{ comment.createdAt|date('d/m/Y') }}</p>
             </div>
             {% if is_granted('ROLE_ADMIN') %}

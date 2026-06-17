@@ -82,7 +82,7 @@
                 {% endif %}
 
                 {% for comment in build.comments %}
-                <twig:Comments :comment="comment" />
+                <twig:Comments :comment="comment" :build="build" />
                 {% endfor %}
             </div>
 

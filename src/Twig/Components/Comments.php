@@ -2,6 +2,7 @@
 
 namespace App\Twig\Components;
 
+use App\Entity\Build;
 use App\Entity\Comment;
 use App\Entity\CommentLike;
 use App\Entity\User;
@@ -21,6 +22,8 @@ final class Comments
 
     #[LiveProp()]
     public Comment $comment;
+
+    public Build $build;
 
     public bool $isLikedByUser = false;
 
