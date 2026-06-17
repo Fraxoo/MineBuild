@@ -7,9 +7,9 @@
 		</button>
 		<input name="search" class="w-full" placeholder="Rechercher des builds, auteur..." type="search">
 	</form>
-	{# <div class="flex items-center text-(--title-color) text-xl gap-4">
+	<div class="flex items-center text-(--title-color) text-xl gap-4">
 		<i class="ti text-2xl! ti-bell"></i>
-		<div class="dropdown  dropdown-bottom bg-(--background-color) dropdown-end">
+		<div class="dropdown bg-(--background-color) ">
 			<div tabindex="0" role="button" class=" cursor-pointer border-0 shadow-none bg-(--background-color)! m-1">
 				{% if app.user %}
 				<img class="w-10 h-10 rounded-full border-4 border-(--border-color-secondary) object-cover"
@@ -21,32 +21,43 @@
 				<i class="text-2xl! ti ti-user"></i>
 				{% endif %}
 			</div>
-			<ul tabindex="-1"
-				class="dropdown-content font-bold bg-(--container-color)! menu  rounded-box z-1 w-52 p-2 shadow-sm">
+			<div class="dropdown-content">
 				{% if app.user %}
-				<li>
-					<a class="flex gap-2 px-4 py-2  items-center"
-						href="{{ path('app_user_show', {'id': app.user.id})}}">
-						<i class="ti ti-user"></i>
-						<p>Mon Profil</p>
-					</a>
-
-				</li>
-				<li>
-					<a class="flex gap-2 px-4 py-2  items-center" href="{{ logout_path() }}">
-						<i class="ti ti-arrow-bar-right"></i>
-						<p class="text-red-600">Déconnexion</p>
-					</a>
-				</li>
+				<a href="{{ path('app_user_show', { id: app.user.id }) }}" class="dropdown-link border-b border-(--border-color)">
+					<img class="w-10 h-10 rounded-full border-4 border-(--border-color-secondary) object-cover"
+						data-avatar-preview-target="image"
+						src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
+						alt="Avatar de {{ app.user.username }}">
+					<h3>{{app.user.username}}</h3>
+				</a>
+				<a class="dropdown-link" href="{{ path('app_user_show', { id: app.user.id }) }}">
+					<i class="ti ti-user"></i>
+					<p>Mon profil</p>
+				</a>
+				<a class="dropdown-link" href="{{ path('app_user_favorites', { id: app.user.id }) }}">
+					<i class="ti ti-heart"></i>
+					<p>Mes favoris</p>
+				</a>
+				<a class="dropdown-link" href="{{ path('app_user_edit', { id: app.user.id }) }}">
+					<i class="ti ti-settings"></i>
+					<p>Paramétres</p>
+				</a>
+				<a class="border-t border-(--border-color)  dropdown-link" href="{{ path('app_logout') }}">
+					<i class="ti ti-arrow-bar-right"></i>
+					<p class="text-red-500!">Déconnexion</p>
+				</a>
 				{% else %}
-				<li>
-					<a href="{{ path( 'app_login')}}">Se connecter</a>
-				</li>
-				<li>
-					<a href="{{ path( 'app_register' )}}">S'inscrire</a>
-				</li>
+					<a class="dropdown-link" href="{{ path('app_login') }}">
+						<i class="ti ti-login"></i>
+						<p>Se connecter</p>
+					</a>
+					<a class="dropdown-link" href="{{ path('app_register') }}">
+						<i class="ti ti-user-plus"></i>
+						<p>S'enregistrer</p>
+					</a>
 				{% endif %}
-			</ul>
-		</div> #}
+			</div>
+
+		</div>
 	</div>
 	</div>
