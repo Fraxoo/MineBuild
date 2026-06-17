@@ -71,6 +71,7 @@ final class UserController extends AbstractController
         $section = $request->attributes->get('_route');
         $isFollow = false;
         $followType = null;
+        $actualUser = $this->getUser();
 
         if ($section === 'app_user_favorites') {
             $items = $items = $buildRepository->findPaginatedOnlineBuilds($page, $limit, [], $user, true);
@@ -96,6 +97,10 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('app_user_not_found', [], Response::HTTP_SEE_OTHER);
         }
 
+        $isFollowedByUser = $actualUser instanceof User
+            ? $user->getFollowerRelations()->exists(fn($i, $rel) => $rel->getFollower()->getId() === $actualUser->getId())
+            : false;
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'totalLikes' => $buildRepository->getAllLikeForAllBuildsByUser($user),
@@ -107,6 +112,7 @@ final class UserController extends AbstractController
             'currentPage' => $page,
             'isFollow' => $isFollow,
             'followType' => $followType,
+            'isFollowedByUser' => $isFollowedByUser
         ]);
     }
 
