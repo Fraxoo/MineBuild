@@ -14,7 +14,7 @@
                     {% for image in build.images %}
                     <div class="min-w-full">
                         <img src="{{ asset('uploads/build_images/' ~ image.url) }}" alt="{{ build.title }}"
-                            class="w-full h-[600px] object-cover">
+                            class="w-full h-[600px] object-contain">
                     </div>
                     {% endfor %}
                 </div>
