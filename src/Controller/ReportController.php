@@ -2,23 +2,44 @@
 
 namespace App\Controller;
 
+use App\Entity\ModerationAction;
 use App\Entity\Report;
 use App\Form\ReportType;
 use App\Repository\BuildRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/report')]
+#[Route('/dashboard')]
 final class ReportController extends AbstractController
 {
-    #[Route(name: 'app_report_index', methods: ['GET'])]
-    public function index(ReportRepository $reportRepository): Response
+    #[Route('/{page}', name: 'app_report_index', defaults: ['page' => 1], methods: ['GET'])]
+    public function index(ReportRepository $reportRepository, int $page): Response
+    {
+        $page = max(1, $page);
+
+
+        return $this->render('report/index.html.twig', [
+            'reports' => $reportRepository->findAllWithIncludeAndPagination(10, $page),
+        ]);
+    }
+
+    #[Route('/history', name: 'app_report_history', methods: ['GET'])]
+    public function history(ReportRepository $reportRepository): Response
+    {
+        return $this->render('report/index.html.twig', [
+            'reports' => $reportRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/users', name: 'app_report_users', methods: ['GET'])]
+    public function users(ReportRepository $reportRepository): Response
     {
         return $this->render('report/index.html.twig', [
             'reports' => $reportRepository->findAll(),
@@ -60,15 +81,25 @@ final class ReportController extends AbstractController
             }
 
             match ($targetType) {
-                'comment' => $report->setComment($target),
-                'build' => $report->setBuild($target),
+                'comment' => $report->setComment($target)->setUser($target->getAuthor()),
+                'build' => $report->setBuild($target)->setUser($target->getAuthor()),
                 'user' => $report->setUser($target),
             };
 
             $entityManager->persist($report);
             $entityManager->flush();
 
+            if ($targetType === "build") {
+                return $this->redirectToRoute('app_build_show', [
+                    'id' => $id
+                ], Response::HTTP_SEE_OTHER);
+            } elseif ($targetType === "comment") {
+                return $this->redirectToRoute('app_build_show', [
+                    'id' => $commentRepo->find($id)->getBuild()->getId()
+                ], Response::HTTP_SEE_OTHER);
+            }
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+
         }
 
         return $this->render('report/new.html.twig', [
@@ -107,10 +138,54 @@ final class ReportController extends AbstractController
     public function delete(Request $request, Report $report, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $report->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($report);
+            $report->setHandledAt(new DateTimeImmutable());
+            $report->setHandledBy($this->getUser());
+            $report->setStatus("Confirmed");
+            // $action = new ModerationAction();
+            // $action->setAction("Delete");
+
+            if ($report->getTargetType() === "comment") {
+                $comment = $report->getComment();
+                // $action->setComment($comment);
+                $comment->setVisibility("HIDDEN");
+            } elseif ($report->getTargetType() === "build") {
+                $build = $report->getBuild();
+                $build->setVisibility("HIDDEN");
+                // $action->setBuild($build);
+            } elseif ($report->getTargetType() === "user") {
+                $user = $report->getUser();
+                $user->setIsActive(false);
+            }
+
+
+            // $action->setCreatedAt(new DateTimeImmutable());
+            // $action->setTargetType($report->getTargetType());
+            // $action->setModerator($this->getUser());
+            // $action->setTargetUser($report->getUser());
+            // $action->setReason($request->request->get('reason'));
+
+            // $entityManager->persist($action);
+            $entityManager->persist($report);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_report_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/reject/{id}', name: 'app_report_reject', methods: ['POST'])]
+    public function reject(Request $request, Report $report, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('reject' . $report->getId(), $request->getPayload()->getString('_token'))) {
+            $report->setHandledAt(new DateTimeImmutable());
+            $report->setHandledBy($this->getUser());
+            $report->setStatus("Rejected");
+
+            $entityManager->persist($report);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_report_index', [], Response::HTTP_SEE_OTHER);
+    }
+
 }

@@ -18,7 +18,7 @@ class ReportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('message' , TextareaType::class , [
+            ->add('message', TextareaType::class, [
                 'attr' => [
                     'placeholder' => 'Veuillez décrire la raison du report',
 
@@ -26,16 +26,17 @@ class ReportType extends AbstractType
             ])
             ->add('reason_code', ChoiceType::class, [
                 'choices' => [
-                    'Spam / publicité' => 'spam',
-                    'Harcèlement / intimidation' => 'harassment',
-                    'Discours haineux' => 'hate_speech',
-                    'Contenu sexuel / nudité' => 'nudity',
-                    'Violence / contenu choquant' => 'violence',
-                    'Contenu illégal / dangereux' => 'illegal',
-                    'Usurpation d’identité' => 'impersonation',
-                    'Droits d’auteur / contenu volé' => 'copyright',
-                    'Autre' => 'other',
+                    'report.reason.spam' => 'spam',
+                    'report.reason.harassment' => 'harassment',
+                    'report.reason.hate_speech' => 'hate_speech',
+                    'report.reason.nudity' => 'nudity',
+                    'report.reason.violence' => 'violence',
+                    'report.reason.illegal' => 'illegal',
+                    'report.reason.impersonation' => 'impersonation',
+                    'report.reason.copyright' => 'copyright',
+                    'report.reason.other' => 'other',
                 ],
+                'choice_translation_domain' => 'messages',
                 'placeholder' => 'Choisir un motif',
             ])
 

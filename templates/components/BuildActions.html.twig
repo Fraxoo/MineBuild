@@ -24,7 +24,7 @@
 					({{build.ratings|length}})</p>
 			</div>
 		</div>
-		<div class="flex items-center gap-4">
+		<div {{stimulus_controller('modal-form')}} class="flex  items-center gap-4">
 			{% if app.user %}
 			<button type="button" data-action="live#action" data-live-action-param="like" class="container-button">
 				<i
@@ -46,6 +46,15 @@
 				<i class="ti ti-flag"></i>
 				Signaler
 			</a>
+			{% if is_granted('ROLE_ADMIN') %}
+            <button data-action="click->modal-form#openModal"
+                class="red-button"
+                type="button">
+				<i class="ti ti-trash"></i>
+                Supprimer
+            </button>
+            <twig:DeleteModal :id="build.id" type="build" />
+            {% endif %}
 
 			{% else %}
 			<a href="{{ path('app_login') }}" class="container-button">
@@ -66,6 +75,7 @@
 				<i class="ti ti-flag"></i>
 				Signaler
 			</a>
+			
 			{% endif %}
 		</div>
 	</div>

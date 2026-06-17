@@ -110,6 +110,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: BuildDownload::class, mappedBy: 'user_id')]
     private Collection $buildDownloads;
 
+
+    
+
+
     public function __construct()
     {
         $this->is_active = true;
@@ -389,4 +393,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
 }

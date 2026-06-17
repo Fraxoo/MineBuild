@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-@plugin "../vendor/daisyui/daisyui.index.js" {
-    themes: false;
-}
-
 
 
 
@@ -31,7 +27,7 @@ input {
     font-size: 1rem;
 }
 
-.ti{
+.ti {
     font-size: 1.25rem;
 }
 
@@ -125,6 +121,87 @@ body {
     justify-content: center;
 }
 
+.red-button {
+    display: flex;
+    padding: 0.5rem 1rem;
+    background-color: #fb2c36;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    align-items: center;
+    gap: 1rem;
+    transition-duration: 0.2s;
+    border-radius: 0.25rem;
+}
+
+.red-button:hover {
+    background-color: #fc0f1a;
+    transition-duration: 0.2s;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1055;
+    display: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 1.75rem auto;
+    max-width: 500px;
+    pointer-events: none;
+}
+
+.modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 3.5rem);
+}
+
+.modal-content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    pointer-events: auto;
+    border-radius: 0.5rem;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    background-color: #000;
+}
+
+.modal-backdrop.fade {
+    opacity: 0;
+}
+
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-header {
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+}
+
 .container-color-button {
     background-color: var(--container-color);
     color: var(--title-color);
@@ -195,7 +272,7 @@ body {
     cursor: pointer;
 }
 
-.nav-button:hover{
+.nav-button:hover {
     background-color: var(--container-color-secondary);
     transition: background-color 0.2s;
 }
@@ -212,8 +289,8 @@ body {
     gap: 0.5rem;
 }
 
-.nav-selected{
-    background-color: rgb(74, 222, 128,0.1);
+.nav-selected {
+    background-color: rgb(74, 222, 128, 0.1);
     color: var(--primary-color);
 }
 
@@ -237,7 +314,7 @@ body {
     border-radius: 0.25rem;
 }
 
-.user-box div{
+.user-box div {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -245,7 +322,7 @@ body {
 
 .check {
     accent-color: var(--primary-color);
-    
+
 }
 
 .user-filter-container {
@@ -703,4 +780,21 @@ body {
 .filter-select:focus {
     outline: none;
     border-color: var(--primary-color);
+}
+
+.dashboard-info {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    background-color: var(--container-color-secondary);
+    border-radius: 0.25rem;
+}
+
+.modal-div {
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-close {
+    cursor: pointer;
 }

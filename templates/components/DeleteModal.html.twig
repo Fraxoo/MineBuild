@@ -1,0 +1,39 @@
+<div class="modal modal-div fade" tabindex="-1" data-modal-form-target="modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content p-4 bg-(--container-color) text-(--title-color)">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="ti ti-x"></i></button>
+            </div>
+
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer ce contenu ?</p>
+            </div>
+
+            <div class="modal-footer">
+                <form class="flex flex-col gap-4" method="post"
+                    action="{{ path('app_moderation_action_delete', {'id': id , "type" : type}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
+                    <div>
+                        <p class="text-(--title-color)">Raison :</p>
+                        <div class="input-input">
+                            <i class="ti ti-pencil"></i>
+                            <input minlength="3" required maxlength="120" type="text" name="reason" id="" class="input">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button
+                            class="btn flex gap-4  items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2"
+                            type="submit">
+                            <i class="ti text-[1rem] ti-trash"></i>
+                            <p>Supprimer</p>
+                        </button>
+                        <button type="button" class="container-color-button" data-bs-dismiss="modal">
+                            Annuler
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

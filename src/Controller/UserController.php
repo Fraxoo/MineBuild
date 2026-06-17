@@ -92,6 +92,10 @@ final class UserController extends AbstractController
 
         $totalPages = ceil($totalItems / $limit);
 
+        if($user->isActive() === false){
+            return $this->redirectToRoute('app_user_not_found', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'totalLikes' => $buildRepository->getAllLikeForAllBuildsByUser($user),
