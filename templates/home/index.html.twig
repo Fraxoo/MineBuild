@@ -12,7 +12,7 @@
             <input type="hidden" name="sort" value="{{ filters.sort }}">
             <p class="text-(--secondary-color)">Filtres :</p>
 
-            
+
             <select onchange="this.form.submit()" class="filter-select" name="version">
                 <option value="">Toutes les versions</option>
 
@@ -51,8 +51,13 @@
             </select>
         </div>
     </form>
-    <twig:PaginationComponent :items="items" :totalPages="totalPages" :totalItems="totalItems"
-        :currentPage="currentPage"  />
+
+    <div class=" flex flex-col md:grid md:grid-cols-4 gap-4">
+        {% for item in items %}
+        <twig:BuildCard :build="item" />
+        {% endfor %}
+    </div>
+    <twig:PaginationComponent  :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
 </div>
 
 

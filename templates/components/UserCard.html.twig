@@ -1,0 +1,21 @@
+{% set followUser = followType == 'followers' ? item.follower : item.following %}
+<a href="{{ path('app_user_show', {id: followUser.id}) }}" class="flex gap-4 rounded-lg items-center border-2 border-(--border-color) rounded p-4 bg-(--container-color) duration-200 transition-colors  hover:border-(--primary-color-muted)">
+    <img class="w-28 h-28 rounded-full border-4 border-(--border-color-secondary) object-cover"
+        data-avatar-preview-target="image"
+        src="{{ followUser.avatarUrl ? asset('uploads/avatars/' ~ followUser.avatarUrl) : asset('images/default-avatar.jpg') }}"
+        alt="Avatar de {{ followUser.username }}">
+    <div {{stimulus_controller('modal-form')}} class="flex flex-wrap flex-col gap-2 justify-between">
+        <div class="flex items-center gap-2">
+            <h2 class="font-bold text-2xl text-(--title-color)">{{followUser.username}}</h2>
+        </div>
+        <p class="text-(--secondary-color)">{{ followUser.bio ? followUser.bio : 'Aucune bio pour le moment' }}</p>
+        <div class="flex items-center gap-4 text-(--secondary-color)">
+            <div class="flex items-center gap-2">
+                <i class="ti ti-calendar-event"></i>
+                <p>Inscrit depuis le
+                    {{ followUser.createdAt|date('d/m/Y') }}</p>
+            </div>
+
+        </div>
+    </div>
+</a>

@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\User;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
@@ -11,7 +10,6 @@ final class PaginationComponent
 {
     use DefaultActionTrait;
 
-    public $items = [];
 
     public int $totalItems = 0;
 
@@ -19,10 +17,7 @@ final class PaginationComponent
 
     public int $currentPage = 1;
 
-    public ?User $user;
 
-    public ?bool $isFollow = false;
 
-    public ?string $followType = null;
 
 }
