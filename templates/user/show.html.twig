@@ -65,21 +65,31 @@
 			<p>Following</p>
 		</a>
 	</div>
-	<div>
-
+	<div class=" flex flex-col md:grid md:grid-cols-4 gap-4">
 		{% if items|length > 0 %}
+
 		{% if isFollow %}
-		<twig:PaginationComponent :items="items" :isFollow="true" :followType="followType" :totalPages="totalPages"
-			:totalItems="totalItems" :user="user" :currentPage="currentPage" />
+
+		{% for item in items %}
+
+		{% set followUser = followType == 'followers' ? item.follower : item.following %}
+		<twig:UserCard :item="item" />
+		{% endfor %}
+
 		{% else %}
-		<twig:PaginationComponent :items="items" :isFollow="false" :totalPages="totalPages" :totalItems="totalItems"
-			:user="user" :currentPage="currentPage" />
+		{% for item in items %}
+		<twig:BuildCard :build="item" />
+		{% endfor %}
+
 		{% endif %}
 
 		{% else %}
+
 		<p class="text-(--secondary-color)">Aucun contenu à afficher.</p>
+
 		{% endif %}
 	</div>
+	<twig:PaginationComponent :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
 </div>
 
 
