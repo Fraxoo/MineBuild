@@ -18,7 +18,7 @@
         <twig:ReportHistoryComponent :items="items" />
 
         {% elseif app.request.attributes.get('_route') === 'app_report_users' %}
-        <twig:ReportUsersComponent />
+        <twig:ReportUsersComponent :items="items" />
         {% endif %}
         <twig:PaginationComponent :totalitems="totalItems" :currentpage="currentPage" :totalpages="totalPages" />
 

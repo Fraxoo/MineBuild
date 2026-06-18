@@ -23,7 +23,7 @@ final class ReportController extends AbstractController
 #[Route('/{page<\d+>}', name: 'app_report_index', defaults: ['page' => 1 , 'targetType' => 'dashboard'], methods: ['GET'])]
 #[Route('/users/{page<\d+>}', name: 'app_report_users', defaults: ['page' => 1 , 'targetType' => 'users'], methods: ['GET'])]
 #[Route('/history/{page<\d+>}', name: 'app_report_history', defaults: ['page' => 1, 'targetType' => 'history'], methods: ['GET'])]
-    public function index(string $targetType,ModerationActionRepository $maRepository, ReportRepository $reportRepository,Request $request, int $page): Response
+    public function index(string $targetType,UserRepository $userRepository,ModerationActionRepository $maRepository, ReportRepository $reportRepository,Request $request, int $page): Response
     {
         $page = max(1, $page);
         $limit = 10;
@@ -31,7 +31,8 @@ final class ReportController extends AbstractController
         $items = 0;
 
         if($targetType === 'users'){
-            $totalItems = $reportRepository->countReportByUser($this->getUser());
+            $totalItems = $userRepository->countUsers();
+            $items = $userRepository->findBy([], ['created_at' => 'DESC'], $limit, ($page - 1) * $limit);
         }elseif ($targetType === 'history') {
             $totalItems = $maRepository->countHistoryReport();
             $items = $maRepository->findAllWithIncludeAndPagination($limit, $page);
