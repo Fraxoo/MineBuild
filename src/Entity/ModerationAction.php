@@ -45,6 +45,11 @@ class ModerationAction
     #[ORM\Column(length: 255)]
     private ?string $reason_code = null;
 
+    #[ORM\OneToOne(inversedBy: 'moderationAction', cascade: ['persist', 'remove'])]
+    private ?Report $report = null;
+
+    private int $target_reports_count = 0;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -151,6 +156,30 @@ class ModerationAction
     public function setReasonCode(string $reason_code): static
     {
         $this->reason_code = $reason_code;
+
+        return $this;
+    }
+
+    public function getReport(): ?Report
+    {
+        return $this->report;
+    }
+
+    public function setReport(?Report $report): static
+    {
+        $this->report = $report;
+
+        return $this;
+    }
+
+    public function getTargetReportsCount(): int
+    {
+        return $this->target_reports_count;
+    }
+
+    public function setTargetReportsCount(int $target_reports_count): static
+    {
+        $this->target_reports_count = $target_reports_count;
 
         return $this;
     }

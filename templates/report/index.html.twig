@@ -12,10 +12,10 @@
             consulter l’historique des actions.</p>
         <twig:DashboardNav />
         {% if app.request.attributes.get('_route') === 'app_report_index' %}
-        <twig:ReportsComponent :reports="reports" />
+        <twig:ReportsComponent :reports="items" />
 
         {% elseif app.request.attributes.get('_route') === 'app_report_history' %}
-        <twig:ReportHistoryComponent />
+        <twig:ReportHistoryComponent :items="items" />
 
         {% elseif app.request.attributes.get('_route') === 'app_report_users' %}
         <twig:ReportUsersComponent />

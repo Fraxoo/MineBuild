@@ -7,6 +7,7 @@ use App\Entity\Report;
 use App\Form\ReportType;
 use App\Repository\BuildRepository;
 use App\Repository\CommentRepository;
+use App\Repository\ModerationActionRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -22,22 +23,25 @@ final class ReportController extends AbstractController
 #[Route('/{page<\d+>}', name: 'app_report_index', defaults: ['page' => 1 , 'targetType' => 'dashboard'], methods: ['GET'])]
 #[Route('/users/{page<\d+>}', name: 'app_report_users', defaults: ['page' => 1 , 'targetType' => 'users'], methods: ['GET'])]
 #[Route('/history/{page<\d+>}', name: 'app_report_history', defaults: ['page' => 1, 'targetType' => 'history'], methods: ['GET'])]
-    public function index(string $targetType, ReportRepository $reportRepository,Request $request, int $page): Response
+    public function index(string $targetType,ModerationActionRepository $maRepository, ReportRepository $reportRepository,Request $request, int $page): Response
     {
         $page = max(1, $page);
         $limit = 10;
         $totalItems = $reportRepository->countPendingReport();
+        $items = 0;
 
         if($targetType === 'users'){
             $totalItems = $reportRepository->countReportByUser($this->getUser());
         }elseif ($targetType === 'history') {
-            $totalItems = $reportRepository->countHistoryReport();
+            $totalItems = $maRepository->countHistoryReport();
+            $items = $maRepository->findAllWithIncludeAndPagination($limit, $page);
         } else {
             $totalItems = $reportRepository->countPendingReport();
+            $items = $reportRepository->findPendingWithIncludeAndPagination($limit, $page);
         }
 
         return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findPendingWithIncludeAndPagination($limit, $page),
+            'items' => $items,
             'totalItems' => $totalItems,
             'currentPage' => $page,
             'totalPages' => ceil($totalItems / $limit),
@@ -193,6 +197,7 @@ final class ReportController extends AbstractController
             $action->setTargetUser($report->getUser());
             $action->setReason($request->request->get('reason'));
             $action->setReasonCode($report->getReasonCode() ?? 'other');
+            $action->setReport($report);
 
             $entityManager->persist($action);
             $entityManager->persist($report);
