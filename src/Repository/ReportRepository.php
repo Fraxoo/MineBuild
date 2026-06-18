@@ -16,7 +16,7 @@ class ReportRepository extends ServiceEntityRepository
         parent::__construct($registry, Report::class);
     }
 
-    public function findAllWithIncludeAndPagination($limit, $page)
+    public function findPendingWithIncludeAndPagination($limit, $page)
     {
         $offset = ($page - 1) * $limit;
 
@@ -56,4 +56,15 @@ class ReportRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    public function countPendingReport(){
+        return (int) $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->andWhere('r.status = :status')
+            ->setParameter('status', 'Pending')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    
 }

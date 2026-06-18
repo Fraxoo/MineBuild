@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Report index{% endblock %}
+{% block title %}Report index
+{% endblock %}
 
 {% block body %}
 <div class="flex flex-col items-center gap-4">
@@ -11,7 +12,7 @@
             consulter l’historique des actions.</p>
         <twig:DashboardNav />
         {% if app.request.attributes.get('_route') === 'app_report_index' %}
-        <twig:ReportsComponent :reports="reports"/>
+        <twig:ReportsComponent :reports="reports" />
 
         {% elseif app.request.attributes.get('_route') === 'app_report_history' %}
         <twig:ReportHistoryComponent />
@@ -19,6 +20,7 @@
         {% elseif app.request.attributes.get('_route') === 'app_report_users' %}
         <twig:ReportUsersComponent />
         {% endif %}
+        <twig:PaginationComponent :totalitems="totalItems" :currentpage="currentPage" :totalpages="totalPages" />
 
     </div>
 

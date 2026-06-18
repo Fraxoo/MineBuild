@@ -19,32 +19,61 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/dashboard')]
 final class ReportController extends AbstractController
 {
-    #[Route('/{page}', name: 'app_report_index', defaults: ['page' => 1], methods: ['GET'])]
-    public function index(ReportRepository $reportRepository, int $page): Response
+#[Route('/{page<\d+>}', name: 'app_report_index', defaults: ['page' => 1 , 'targetType' => 'dashboard'], methods: ['GET'])]
+#[Route('/users/{page<\d+>}', name: 'app_report_users', defaults: ['page' => 1 , 'targetType' => 'users'], methods: ['GET'])]
+#[Route('/history/{page<\d+>}', name: 'app_report_history', defaults: ['page' => 1, 'targetType' => 'history'], methods: ['GET'])]
+    public function index(string $targetType, ReportRepository $reportRepository,Request $request, int $page): Response
     {
         $page = max(1, $page);
+        $limit = 10;
+        $totalItems = $reportRepository->countPendingReport();
 
+        if($targetType === 'users'){
+            $totalItems = $reportRepository->countReportByUser($this->getUser());
+        }elseif ($targetType === 'history') {
+            $totalItems = $reportRepository->countHistoryReport();
+        } else {
+            $totalItems = $reportRepository->countPendingReport();
+        }
 
         return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findAllWithIncludeAndPagination(10, $page),
+            'reports' => $reportRepository->findPendingWithIncludeAndPagination($limit, $page),
+            'totalItems' => $totalItems,
+            'currentPage' => $page,
+            'totalPages' => ceil($totalItems / $limit),
         ]);
     }
 
-    #[Route('/history', name: 'app_report_history', methods: ['GET'])]
-    public function history(ReportRepository $reportRepository): Response
-    {
-        return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findAll(),
-        ]);
-    }
+    // public function history(ReportRepository $reportRepository, int $page): Response
+    // {
+    //     $page = max(1, $page);
+    //     $limit = 10;
+    //     $totalItems = $reportRepository->countPendingReport();
 
-    #[Route('/users', name: 'app_report_users', methods: ['GET'])]
-    public function users(ReportRepository $reportRepository): Response
-    {
-        return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findAll(),
-        ]);
-    }
+
+
+    //     return $this->render('report/index.html.twig', [
+    //         'reports' => $reportRepository->findAllWithIncludeAndPagination($limit, $page),
+    //         'totalItems' => $totalItems,
+    //         'currentPage' => $page,
+    //         'totalPages' => ceil($totalItems / $limit),
+    //     ]);
+    // }
+
+    // public function users(ReportRepository $reportRepository, int $page): Response
+    // {
+    //     $page = max(1, $page);
+    //     $limit = 10;
+    //     $totalItems = $reportRepository->countPendingReport();
+
+
+    //     return $this->render('report/index.html.twig', [
+    //         'reports' => $reportRepository->findAllWithIncludeAndPagination($limit, $page),
+    //         'totalItems' => $totalItems,
+    //         'currentPage' => $page,
+    //         'totalPages' => ceil($totalItems / $limit),
+    //     ]);
+    // }
 
 
     #[Route('/new/comment/{id}', name: 'app_report_new_comment', defaults: ['targetType' => 'comment'], methods: ['GET', 'POST'])]
