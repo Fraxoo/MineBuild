@@ -13,4 +13,6 @@ final class DeleteModal
     public int $id;
 
     public string $type;
+
+
 }

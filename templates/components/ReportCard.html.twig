@@ -46,7 +46,7 @@
                 <i class="ti text-[1rem] ti-trash"></i>
                 <p>Supprimer</p>
             </button>
-            <twig:Modal :report="report" />
+            <twig:Modal :report="report"  />
         <form method="post" action="{{ path('app_report_reject', {'id': report.id}) }}">
             <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ report.id) }}">
             <button class="container-color-button  text-sm!">

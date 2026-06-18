@@ -64,7 +64,7 @@ final class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report->setCreatedAt(new \DateTimeImmutable());
+            $report->setCreatedAt(new DateTimeImmutable());
             $report->setReporter($this->getUser());
             $report->setStatus('Pending');
             $report->setTargetType($targetType);
@@ -141,30 +141,30 @@ final class ReportController extends AbstractController
             $report->setHandledAt(new DateTimeImmutable());
             $report->setHandledBy($this->getUser());
             $report->setStatus("Confirmed");
-            // $action = new ModerationAction();
-            // $action->setAction("Delete");
+            $action = new ModerationAction();
+            $action->setAction("Delete");
 
             if ($report->getTargetType() === "comment") {
                 $comment = $report->getComment();
-                // $action->setComment($comment);
+                $action->setComment($comment);
                 $comment->setVisibility("HIDDEN");
             } elseif ($report->getTargetType() === "build") {
                 $build = $report->getBuild();
                 $build->setVisibility("HIDDEN");
-                // $action->setBuild($build);
+                $action->setBuild($build);
             } elseif ($report->getTargetType() === "user") {
                 $user = $report->getUser();
                 $user->setIsActive(false);
             }
 
 
-            // $action->setCreatedAt(new DateTimeImmutable());
-            // $action->setTargetType($report->getTargetType());
-            // $action->setModerator($this->getUser());
-            // $action->setTargetUser($report->getUser());
-            // $action->setReason($request->request->get('reason'));
+            $action->setCreatedAt(new DateTimeImmutable());
+            $action->setTargetType($report->getTargetType());
+            $action->setModerator($this->getUser());
+            $action->setTargetUser($report->getUser());
+            $action->setReason($request->request->get('reason'));
 
-            // $entityManager->persist($action);
+            $entityManager->persist($action);
             $entityManager->persist($report);
             $entityManager->flush();
         }
