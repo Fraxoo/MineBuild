@@ -805,11 +805,11 @@ body {
     cursor: pointer;
 }
 
-.dropdown{
+.dropdown {
     position: relative;
 }
 
-.dropdown-content{
+.dropdown-content {
     display: none;
     position: absolute;
     background-color: var(--container-color);
@@ -822,7 +822,7 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.dropdown-link{
+.dropdown-link {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -830,15 +830,22 @@ body {
     font-size: 1.125rem;
 }
 
-.dropdown-link:hover{
+.dropdown-link:hover {
     background-color: var(--container-color-secondary);
     transition: background-color 0.2s;
 }
 
-.dropdown-link i{
+.dropdown-link i {
     color: var(--secondary-color)
 }
 
 .dropdown:hover .dropdown-content {
-  display: block;
+    display: block;
+}
+
+.select {
+    width: 100%;
+    background-color: var(--container-color-secondary);
+    color: var(--title-color);
+
 }

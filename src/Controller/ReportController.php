@@ -192,6 +192,7 @@ final class ReportController extends AbstractController
             $action->setModerator($this->getUser());
             $action->setTargetUser($report->getUser());
             $action->setReason($request->request->get('reason'));
+            $action->setReasonCode($report->getReasonCode() ?? 'other');
 
             $entityManager->persist($action);
             $entityManager->persist($report);

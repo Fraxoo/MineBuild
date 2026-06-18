@@ -42,6 +42,9 @@ class ModerationAction
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $reason_code = null;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -137,6 +140,18 @@ class ModerationAction
     public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
+        return $this;
+    }
+
+    public function getReasonCode(): ?string
+    {
+        return $this->reason_code;
+    }
+
+    public function setReasonCode(string $reason_code): static
+    {
+        $this->reason_code = $reason_code;
+
         return $this;
     }
 }

@@ -59,6 +59,8 @@ final class ModerationActionController extends AbstractController
             $action->setModerator($this->getUser());
             $action->setTargetUser($user);
             $action->setReason($request->request->get('reason'));
+            $reasonCode = trim((string) $request->request->get('reason_code', 'other'));
+            $action->setReasonCode($reasonCode !== '' ? $reasonCode : 'other');
 
             $entityManager->persist($action);
             $entityManager->flush();
