@@ -27,6 +27,16 @@
     {% else %}
     <twig:ReportUserInfo :user="user" />
 
+    {% if app.request.attributes.get('_route') == 'app_report_users_reports' %}
+    {% if items is empty %}
+    <div class="bg-(--container-color) p-8 rounded text-center text-(--secondary-color)">
+        Aucun signalement en attente pour cet utilisateur.
+    </div>
+    {% else %}
+    <twig:ReportsComponent :reports="items" />
+    {% endif %}
+    {% endif %}
+
     {% endif %}
 
     </div>

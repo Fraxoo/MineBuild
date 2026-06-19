@@ -61,6 +61,10 @@ final class ReportController extends AbstractController
         $items = 0;
         $user = $userRepository->find($id);
 
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
         if ($targetType === "builds") {
             $totalItems = $userRepository->countUsers();
             $items = $userRepository->findBy([], ['created_at' => 'DESC'], $limit, ($page - 1) * $limit);
@@ -68,8 +72,8 @@ final class ReportController extends AbstractController
             $totalItems = $maRepository->countHistoryReport();
             $items = $maRepository->findAllWithIncludeAndPagination($limit, $page);
         } elseif ($targetType === "reports") {
-            $totalItems = $reportRepository->countPendingReport();
-            $items = $reportRepository->findPendingWithIncludeAndPagination($limit, $page);
+            $totalItems = $reportRepository->countPendingReportByUser($user);
+            $items = $reportRepository->findPendingByUserWithIncludeAndPagination($user, $limit, $page);
         }
 
             return $this->render('report/index.html.twig', [

@@ -13,5 +13,5 @@ final class ReportUsersComponent
 
     public array $items = [];
 
-    public ?User $user;
+    public ?User $user = null;
 }
