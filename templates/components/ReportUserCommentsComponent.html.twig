@@ -1,0 +1,46 @@
+<div{{ attributes }} class="flex flex-col gap-4">
+    {% for comment in comments %}
+    <div class="flex flex-col gap-4 p-4 bg-(--container-color) rounded">
+        <div class="flex flex-wrap items-center gap-3 text-xs">
+            <div class="text-(--secondary-color) px-2 py-1 rounded border border-(--border-color) flex items-center gap-1">
+                <i class="ti text-[1rem] ti-message-circle"></i>
+                <p>commentaire</p>
+            </div>
+            <p class="text-(--secondary-color)">
+                Posté par <span class="text-(--title-color)">{{ comment.author.username }}</span>
+            </p>
+            <div class="flex items-center gap-1 text-(--secondary-color)">
+                <i class="ti ti-calendar-event text-[1rem]"></i>
+                <p>{{ comment.createdAt|date('d/m/Y') }}</p>
+            </div>
+        </div>
+
+        <i class="dashboard-info rounded">{{ comment.content }}</i>
+
+        <div class="flex flex-wrap items-center text-sm gap-4">
+            <a href="{{ path('app_build_show', {'id': comment.build.id}) }}" class="flex items-center text-(--secondary-color) hover:text-(--primary-color)">
+                <i class="ti ti-blocks text-[1rem]"></i>
+                <p>{{ comment.build.title }}</p>
+            </a>
+            <div class="flex items-center text-(--secondary-color)">
+                <i class="ti ti-thumb-up text-[1rem]"></i>
+                <p>{{ comment.commentLikes|length }} like{{ comment.commentLikes|length > 1 ? 's' : '' }}</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 border-t border-(--border-color) py-2" {{ stimulus_controller('modal-form') }}>
+            <button data-action="click->modal-form#openModal"
+                class="btn flex gap-4 items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2"
+                type="button">
+                <i class="ti text-[1rem] ti-trash"></i>
+                <p>Supprimer</p>
+            </button>
+            <twig:DeleteModal :id="comment.id" type="comment" />
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-(--container-color) p-8 rounded text-center text-(--secondary-color)">
+        Aucun commentaire visible pour cet utilisateur.
+    </div>
+    {% endfor %}
+</div>

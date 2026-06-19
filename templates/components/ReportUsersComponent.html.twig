@@ -27,7 +27,11 @@
     {% else %}
     <twig:ReportUserInfo :user="user" />
 
-    {% if app.request.attributes.get('_route') == 'app_report_users_reports' %}
+    {% if app.request.attributes.get('_route') == 'app_report_users_builds' %}
+    <twig:ReportUserBuildsComponent :builds="items" />
+    {% elseif app.request.attributes.get('_route') == 'app_report_users_comments' %}
+    <twig:ReportUserCommentsComponent :comments="items" />
+    {% elseif app.request.attributes.get('_route') == 'app_report_users_reports' %}
     {% if items is empty %}
     <div class="bg-(--container-color) p-8 rounded text-center text-(--secondary-color)">
         Aucun signalement en attente pour cet utilisateur.

@@ -53,7 +53,7 @@ final class ReportController extends AbstractController
     #[Route('/users/show/comments/{id<\d+>}/{page<\d+>}', name: 'app_report_users_comments', defaults: ['page' => 1, 'targetType' => 'comments'], methods: ['GET'])]
     #[Route('/users/show/reports/{id<\d+>}/{page<\d+>}', name: 'app_report_users_reports', defaults: ['page' => 1, 'targetType' => 'reports'], methods: ['GET'])]
 
-    public function showUser(string $targetType, UserRepository $userRepository, ModerationActionRepository $maRepository, ReportRepository $reportRepository, Request $request, int $page , int $id): Response
+    public function showUser(string $targetType, UserRepository $userRepository, BuildRepository $buildRepository, CommentRepository $commentRepository, ReportRepository $reportRepository, int $page , int $id): Response
     {
         $page = max(1, $page);
         $limit = 10;
@@ -66,11 +66,11 @@ final class ReportController extends AbstractController
         }
 
         if ($targetType === "builds") {
-            $totalItems = $userRepository->countUsers();
-            $items = $userRepository->findBy([], ['created_at' => 'DESC'], $limit, ($page - 1) * $limit);
+            $totalItems = $buildRepository->countVisibleByUser($user);
+            $items = $buildRepository->findVisibleByUserWithPagination($user, $limit, $page);
         } elseif ($targetType === "comments") {
-            $totalItems = $maRepository->countHistoryReport();
-            $items = $maRepository->findAllWithIncludeAndPagination($limit, $page);
+            $totalItems = $commentRepository->countVisibleByUser($user);
+            $items = $commentRepository->findVisibleByUserWithPagination($user, $limit, $page);
         } elseif ($targetType === "reports") {
             $totalItems = $reportRepository->countPendingReportByUser($user);
             $items = $reportRepository->findPendingByUserWithIncludeAndPagination($user, $limit, $page);
