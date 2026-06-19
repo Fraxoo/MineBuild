@@ -1,0 +1,51 @@
+{% set actionPath = type == 'build'
+    ? path('app_build_delete', {'id': id})
+    : (type == 'comment'
+        ? path('app_comment_delete', {'id': id})
+        : path('app_user_delete', {'id': id})
+    )
+%}
+
+{% set typeLabel = type == 'build'
+    ? 'ce build'
+    : (type == 'comment' ? 'votre commentaire' : 'votre compte')
+%}
+
+<div class="modal modal-div fade" tabindex="-1" data-modal-form-target="modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content p-4 bg-(--container-color) text-(--title-color)">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="ti ti-x"></i></button>
+            </div>
+
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer {{ typeLabel }} ?</p>
+                {% if title %}
+                <p class="text-(--secondary-color) mt-2">{{ title }}</p>
+                {% endif %}
+            </div>
+
+            <div class="modal-footer">
+                <form class="flex flex-col gap-4" method="post" action="{{ actionPath }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
+                    {% if type == 'comment' %}
+                    <input type="hidden" name="_redirect_to" value="{{ app.request.requestUri }}">
+                    {% endif %}
+
+                    <div class="flex items-center gap-4">
+                        <button
+                            class="btn flex gap-4 items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2"
+                            type="submit">
+                            <i class="ti text-[1rem] ti-trash"></i>
+                            <p>Supprimer</p>
+                        </button>
+                        <button type="button" class="container-color-button" data-bs-dismiss="modal">
+                            Annuler
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
