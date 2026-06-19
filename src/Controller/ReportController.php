@@ -20,20 +20,20 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/dashboard')]
 final class ReportController extends AbstractController
 {
-#[Route('/{page<\d+>}', name: 'app_report_index', defaults: ['page' => 1 , 'targetType' => 'dashboard'], methods: ['GET'])]
-#[Route('/users/{page<\d+>}', name: 'app_report_users', defaults: ['page' => 1 , 'targetType' => 'users'], methods: ['GET'])]
-#[Route('/history/{page<\d+>}', name: 'app_report_history', defaults: ['page' => 1, 'targetType' => 'history'], methods: ['GET'])]
-    public function index(string $targetType,UserRepository $userRepository,ModerationActionRepository $maRepository, ReportRepository $reportRepository,Request $request, int $page): Response
+    #[Route('/{page<\d+>}', name: 'app_report_index', defaults: ['page' => 1, 'targetType' => 'dashboard'], methods: ['GET'])]
+    #[Route('/users/{page<\d+>}', name: 'app_report_users', defaults: ['page' => 1, 'targetType' => 'users'], methods: ['GET'])]
+    #[Route('/history/{page<\d+>}', name: 'app_report_history', defaults: ['page' => 1, 'targetType' => 'history'], methods: ['GET'])]
+    public function index(string $targetType, UserRepository $userRepository, ModerationActionRepository $maRepository, ReportRepository $reportRepository, Request $request, int $page): Response
     {
         $page = max(1, $page);
         $limit = 10;
         $totalItems = $reportRepository->countPendingReport();
         $items = 0;
 
-        if($targetType === 'users'){
+        if ($targetType === 'users') {
             $totalItems = $userRepository->countUsers();
             $items = $userRepository->findBy([], ['created_at' => 'DESC'], $limit, ($page - 1) * $limit);
-        }elseif ($targetType === 'history') {
+        } elseif ($targetType === 'history') {
             $totalItems = $maRepository->countHistoryReport();
             $items = $maRepository->findAllWithIncludeAndPagination($limit, $page);
         } else {
@@ -48,6 +48,37 @@ final class ReportController extends AbstractController
             'totalPages' => ceil($totalItems / $limit),
         ]);
     }
+
+    #[Route('/users/{id<\d+>}/{page<\d+>}', name: 'app_report_user_builds', defaults: ['page' => 1, 'targetType' => 'builds'], methods: ['GET'])]
+    #[Route('/users/{id<\d+>}/{page<\d+>}', name: 'app_report_user_comments', defaults: ['page' => 1, 'targetType' => 'comments'], methods: ['GET'])]
+    #[Route('/users/{id<\d+>}/{page<\d+>}', name: 'app_report_user_reports', defaults: ['page' => 1, 'targetType' => 'reports'], methods: ['GET'])]
+
+    public function showUser(string $targetType, UserRepository $userRepository, ModerationActionRepository $maRepository, ReportRepository $reportRepository, Request $request, int $page , int $id): Response
+    {
+        $page = max(1, $page);
+        $limit = 10;
+        $totalItems = $reportRepository->countPendingReport();
+        $items = 0;
+
+        if ($targetType === "builds") {
+            $totalItems = $userRepository->countUsers();
+            $items = $userRepository->findBy([], ['created_at' => 'DESC'], $limit, ($page - 1) * $limit);
+        } elseif ($targetType === "comments") {
+            $totalItems = $maRepository->countHistoryReport();
+            $items = $maRepository->findAllWithIncludeAndPagination($limit, $page);
+        } elseif ($targetType === "reports") {
+            $totalItems = $reportRepository->countPendingReport();
+            $items = $reportRepository->findPendingWithIncludeAndPagination($limit, $page);
+        }
+
+            return $this->render('report/index.html.twig', [
+                'items' => $items,
+                'totalItems' => $totalItems,
+                'currentPage' => $page,
+                'totalPages' => ceil($totalItems / $limit),
+            ]);
+    }
+
 
     // public function history(ReportRepository $reportRepository, int $page): Response
     // {
