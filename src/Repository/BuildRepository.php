@@ -101,6 +101,35 @@ class BuildRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function findVisibleByUserWithPagination(User $user, int $limit, int $page): array
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.author', 'author')->addSelect('author')
+            ->andWhere('b.author = :user')
+            ->andWhere('b.visibility = :visibility')
+            ->andWhere('b.deleted_at IS NULL')
+            ->setParameter('user', $user)
+            ->setParameter('visibility', 'PUBLIC')
+            ->orderBy('b.created_at', 'DESC')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countVisibleByUser(User $user): int
+    {
+        return (int) $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->andWhere('b.author = :user')
+            ->andWhere('b.visibility = :visibility')
+            ->andWhere('b.deleted_at IS NULL')
+            ->setParameter('user', $user)
+            ->setParameter('visibility', 'PUBLIC')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function countOnlineBuildsWithFilters(array $filters = [], $user = null, $isFavorite = false): int
     {
         $queryBuilder = $this->createQueryBuilder('b')

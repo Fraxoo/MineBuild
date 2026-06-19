@@ -7,7 +7,7 @@
 		<i class="ti ti-history"></i>
 		<p>Historique</p>
 	</a>
-	<a href="{{ path('app_report_users') }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') === 'app_report_users' ? 'user-selected-filter' : '' }}">
+	<a href="{{ path('app_report_users') }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') starts with 'app_report_user' ? 'user-selected-filter' : '' }}">
 		<i class="ti ti-users"></i>
 		<p>Utilisateurs</p>
 	</a>

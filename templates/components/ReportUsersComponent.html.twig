@@ -1,3 +1,46 @@
-<div{{ attributes }}>
-    <!-- component HTML -->
-</div>
+<div{{ attributes }} class="flex flex-col gap-4 flex-wrap ">
+    {% if app.request.attributes.get('_route') == 'app_report_users' %}
+
+    {% for item in items %}
+    <a href="{{ path('app_report_users_builds', { id: item.id, page: 1 }) }}"
+        class="flex flex-wrap gap-4 items-center bg-(--container-color) p-8 rounded  w-full">
+        <img class="w-28 h-28 rounded-full border-4 border-(--primary-color) object-cover"
+            data-avatar-preview-target="image"
+            src="{{ item.avatarUrl ? asset('uploads/avatars/' ~ item.avatarUrl) : asset('images/default-avatar.jpg') }}"
+            alt="Avatar de {{ item.username }}">
+        <div {{stimulus_controller('modal-form')}} class="flex flex-wrap flex-col gap-2 justify-between">
+            <div class="flex items-center gap-2">
+                <h2 class="font-bold text-2xl text-(--title-color)">{{item.username}}</h2>
+            </div>
+            <p class="text-(--secondary-color)">{{ item.bio ? item.bio : 'Aucune bio pour le moment' }}</p>
+            <div class="flex items-center gap-4 text-(--secondary-color)">
+                <div class="flex items-center gap-2">
+                    <i class="ti ti-calendar-event"></i>
+                    <p>Inscrit depuis le
+                        {{ item.createdAt|date('d/m/Y') }}</p>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+
+    {% else %}
+    <twig:ReportUserInfo :user="user" />
+
+    {% if app.request.attributes.get('_route') == 'app_report_users_builds' %}
+    <twig:ReportUserBuildsComponent :builds="items" />
+    {% elseif app.request.attributes.get('_route') == 'app_report_users_comments' %}
+    <twig:ReportUserCommentsComponent :comments="items" />
+    {% elseif app.request.attributes.get('_route') == 'app_report_users_reports' %}
+    {% if items is empty %}
+    <div class="bg-(--container-color) p-8 rounded text-center text-(--secondary-color)">
+        Aucun signalement en attente pour cet utilisateur.
+    </div>
+    {% else %}
+    <twig:ReportsComponent :reports="items" />
+    {% endif %}
+    {% endif %}
+
+    {% endif %}
+
+    </div>

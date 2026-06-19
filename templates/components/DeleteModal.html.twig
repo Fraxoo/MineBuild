@@ -14,6 +14,25 @@
                 <form class="flex flex-col gap-4" method="post"
                     action="{{ path('app_moderation_action_delete', {'id': id , "type" : type}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
+                    <input type="hidden" name="_redirect_to" value="{{ app.request.requestUri }}">
+                    <div>
+                        <p class="text-(--title-color)">Motif :</p>
+                        <div class="input-input">
+                            <i class="ti ti-list"></i>
+                            <select name="reason_code" class=" select" required>
+                                <option value="">Choisir un motif</option>
+                                <option value="spam">{{ 'report.reason.spam'|trans }}</option>
+                                <option value="harassment">{{ 'report.reason.harassment'|trans }}</option>
+                                <option value="hate_speech">{{ 'report.reason.hate_speech'|trans }}</option>
+                                <option value="nudity">{{ 'report.reason.nudity'|trans }}</option>
+                                <option value="violence">{{ 'report.reason.violence'|trans }}</option>
+                                <option value="illegal">{{ 'report.reason.illegal'|trans }}</option>
+                                <option value="impersonation">{{ 'report.reason.impersonation'|trans }}</option>
+                                <option value="copyright">{{ 'report.reason.copyright'|trans }}</option>
+                                <option value="other">{{ 'report.reason.other'|trans }}</option>
+                            </select>
+                        </div>
+                    </div>
                     <div>
                         <p class="text-(--title-color)">Raison :</p>
                         <div class="input-input">

@@ -7,6 +7,7 @@ use App\Entity\Report;
 use App\Form\ReportType;
 use App\Repository\BuildRepository;
 use App\Repository\CommentRepository;
+use App\Repository\ModerationActionRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -19,32 +20,102 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/dashboard')]
 final class ReportController extends AbstractController
 {
-    #[Route('/{page}', name: 'app_report_index', defaults: ['page' => 1], methods: ['GET'])]
-    public function index(ReportRepository $reportRepository, int $page): Response
+    #[Route('/{page<\d+>}', name: 'app_report_index', defaults: ['page' => 1, 'targetType' => 'dashboard'], methods: ['GET'])]
+    #[Route('/users/{page<\d+>}', name: 'app_report_users', defaults: ['page' => 1, 'targetType' => 'users'], methods: ['GET'])]
+    #[Route('/history/{page<\d+>}', name: 'app_report_history', defaults: ['page' => 1, 'targetType' => 'history'], methods: ['GET'])]
+    public function index(string $targetType, UserRepository $userRepository, ModerationActionRepository $maRepository, ReportRepository $reportRepository, Request $request, int $page): Response
     {
         $page = max(1, $page);
+        $limit = 10;
+        $totalItems = $reportRepository->countPendingReport();
+        $items = 0;
 
+        if ($targetType === 'users') {
+            $totalItems = $userRepository->countUsers();
+            $items = $userRepository->findBy([], ['created_at' => 'DESC'], $limit, ($page - 1) * $limit);
+        } elseif ($targetType === 'history') {
+            $totalItems = $maRepository->countHistoryReport();
+            $items = $maRepository->findAllWithIncludeAndPagination($limit, $page);
+        } else {
+            $totalItems = $reportRepository->countPendingReport();
+            $items = $reportRepository->findPendingWithIncludeAndPagination($limit, $page);
+        }
 
         return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findAllWithIncludeAndPagination(10, $page),
+            'items' => $items,
+            'totalItems' => $totalItems,
+            'currentPage' => $page,
+            'totalPages' => ceil($totalItems / $limit),
         ]);
     }
 
-    #[Route('/history', name: 'app_report_history', methods: ['GET'])]
-    public function history(ReportRepository $reportRepository): Response
+    #[Route('/users/show/{id<\d+>}/{page<\d+>}', name: 'app_report_users_builds', defaults: ['page' => 1, 'targetType' => 'builds'], methods: ['GET'])]
+    #[Route('/users/show/comments/{id<\d+>}/{page<\d+>}', name: 'app_report_users_comments', defaults: ['page' => 1, 'targetType' => 'comments'], methods: ['GET'])]
+    #[Route('/users/show/reports/{id<\d+>}/{page<\d+>}', name: 'app_report_users_reports', defaults: ['page' => 1, 'targetType' => 'reports'], methods: ['GET'])]
+
+    public function showUser(string $targetType, UserRepository $userRepository, BuildRepository $buildRepository, CommentRepository $commentRepository, ReportRepository $reportRepository, int $page , int $id): Response
     {
-        return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findAll(),
-        ]);
+        $page = max(1, $page);
+        $limit = 10;
+        $totalItems = $reportRepository->countPendingReport();
+        $items = 0;
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        if ($targetType === "builds") {
+            $totalItems = $buildRepository->countVisibleByUser($user);
+            $items = $buildRepository->findVisibleByUserWithPagination($user, $limit, $page);
+        } elseif ($targetType === "comments") {
+            $totalItems = $commentRepository->countVisibleByUser($user);
+            $items = $commentRepository->findVisibleByUserWithPagination($user, $limit, $page);
+        } elseif ($targetType === "reports") {
+            $totalItems = $reportRepository->countPendingReportByUser($user);
+            $items = $reportRepository->findPendingByUserWithIncludeAndPagination($user, $limit, $page);
+        }
+
+            return $this->render('report/index.html.twig', [
+                'user' => $user,
+                'items' => $items,
+                'totalItems' => $totalItems,
+                'currentPage' => $page,
+                'totalPages' => ceil($totalItems / $limit),
+            ]);
     }
 
-    #[Route('/users', name: 'app_report_users', methods: ['GET'])]
-    public function users(ReportRepository $reportRepository): Response
-    {
-        return $this->render('report/index.html.twig', [
-            'reports' => $reportRepository->findAll(),
-        ]);
-    }
+
+    // public function history(ReportRepository $reportRepository, int $page): Response
+    // {
+    //     $page = max(1, $page);
+    //     $limit = 10;
+    //     $totalItems = $reportRepository->countPendingReport();
+
+
+
+    //     return $this->render('report/index.html.twig', [
+    //         'reports' => $reportRepository->findAllWithIncludeAndPagination($limit, $page),
+    //         'totalItems' => $totalItems,
+    //         'currentPage' => $page,
+    //         'totalPages' => ceil($totalItems / $limit),
+    //     ]);
+    // }
+
+    // public function users(ReportRepository $reportRepository, int $page): Response
+    // {
+    //     $page = max(1, $page);
+    //     $limit = 10;
+    //     $totalItems = $reportRepository->countPendingReport();
+
+
+    //     return $this->render('report/index.html.twig', [
+    //         'reports' => $reportRepository->findAllWithIncludeAndPagination($limit, $page),
+    //         'totalItems' => $totalItems,
+    //         'currentPage' => $page,
+    //         'totalPages' => ceil($totalItems / $limit),
+    //     ]);
+    // }
 
 
     #[Route('/new/comment/{id}', name: 'app_report_new_comment', defaults: ['targetType' => 'comment'], methods: ['GET', 'POST'])]
@@ -64,7 +135,7 @@ final class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report->setCreatedAt(new \DateTimeImmutable());
+            $report->setCreatedAt(new DateTimeImmutable());
             $report->setReporter($this->getUser());
             $report->setStatus('Pending');
             $report->setTargetType($targetType);
@@ -141,30 +212,32 @@ final class ReportController extends AbstractController
             $report->setHandledAt(new DateTimeImmutable());
             $report->setHandledBy($this->getUser());
             $report->setStatus("Confirmed");
-            // $action = new ModerationAction();
-            // $action->setAction("Delete");
+            $action = new ModerationAction();
+            $action->setAction("Delete");
 
             if ($report->getTargetType() === "comment") {
                 $comment = $report->getComment();
-                // $action->setComment($comment);
+                $action->setComment($comment);
                 $comment->setVisibility("HIDDEN");
             } elseif ($report->getTargetType() === "build") {
                 $build = $report->getBuild();
                 $build->setVisibility("HIDDEN");
-                // $action->setBuild($build);
+                $action->setBuild($build);
             } elseif ($report->getTargetType() === "user") {
                 $user = $report->getUser();
                 $user->setIsActive(false);
             }
 
 
-            // $action->setCreatedAt(new DateTimeImmutable());
-            // $action->setTargetType($report->getTargetType());
-            // $action->setModerator($this->getUser());
-            // $action->setTargetUser($report->getUser());
-            // $action->setReason($request->request->get('reason'));
+            $action->setCreatedAt(new DateTimeImmutable());
+            $action->setTargetType($report->getTargetType());
+            $action->setModerator($this->getUser());
+            $action->setTargetUser($report->getUser());
+            $action->setReason($request->request->get('reason'));
+            $action->setReasonCode($report->getReasonCode() ?? 'other');
+            $action->setReport($report);
 
-            // $entityManager->persist($action);
+            $entityManager->persist($action);
             $entityManager->persist($report);
             $entityManager->flush();
         }

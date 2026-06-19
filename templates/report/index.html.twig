@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Report index{% endblock %}
+{% block title %}Report index
+{% endblock %}
 
 {% block body %}
 <div class="flex flex-col items-center gap-4">
@@ -10,15 +11,16 @@
         <p class="text-(--secondary-color) text-xl">Traiter les signalements, masquer les contenus non conformes et
             consulter l’historique des actions.</p>
         <twig:DashboardNav />
-        {% if app.request.attributes.get('_route') === 'app_report_index' %}
-        <twig:ReportsComponent :reports="reports"/>
+        {% if app.request.attributes.get('_route') == 'app_report_index' %}
+        <twig:ReportsComponent :reports="items" />
 
-        {% elseif app.request.attributes.get('_route') === 'app_report_history' %}
-        <twig:ReportHistoryComponent />
+        {% elseif app.request.attributes.get('_route') == 'app_report_history' %}
+        <twig:ReportHistoryComponent :items="items" />
 
-        {% elseif app.request.attributes.get('_route') === 'app_report_users' %}
-        <twig:ReportUsersComponent />
+        {% elseif app.request.attributes.get('_route') starts with 'app_report_users' %}
+        <twig:ReportUsersComponent :items="items" :user="user|default(null)" />
         {% endif %}
+        <twig:PaginationComponent :totalitems="totalItems" :currentpage="currentPage"  :totalpages="totalPages" />
 
     </div>
 

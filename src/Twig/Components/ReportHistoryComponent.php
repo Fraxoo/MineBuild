@@ -9,4 +9,6 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 final class ReportHistoryComponent
 {
     use DefaultActionTrait;
+
+    public array $items = [];
 }

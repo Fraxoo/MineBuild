@@ -57,6 +57,9 @@ class Report
 
     private int $target_reports_count = 0;
 
+    #[ORM\OneToOne(mappedBy: 'report', cascade: ['persist', 'remove'])]
+    private ?ModerationAction $moderationAction = null;
+
 
     public function __construct()
     {
@@ -208,6 +211,28 @@ class Report
     public function setTargetReportsCount(int $target_reports_count): static
     {
         $this->target_reports_count = $target_reports_count;
+        return $this;
+    }
+
+    public function getModerationAction(): ?ModerationAction
+    {
+        return $this->moderationAction;
+    }
+
+    public function setModerationAction(?ModerationAction $moderationAction): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($moderationAction === null && $this->moderationAction !== null) {
+            $this->moderationAction->setReport(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($moderationAction !== null && $moderationAction->getReport() !== $this) {
+            $moderationAction->setReport($this);
+        }
+
+        $this->moderationAction = $moderationAction;
+
         return $this;
     }
 

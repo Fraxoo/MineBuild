@@ -39,17 +39,29 @@ final class ModerationActionController extends AbstractController
 
             if ($type === "comment") {
                 $comment = $commentRepo->find($id);
+                if (!$comment) {
+                    throw $this->createNotFoundException('Comment not found');
+                }
+
                 $action->setComment($comment);
                 $comment->setVisibility("HIDDEN");
                 $user = $comment->getAuthor();
                 $build = $comment->getBuild();
             } elseif ($type === "build") {
                 $build = $buildRepo->find($id);
+                if (!$build) {
+                    throw $this->createNotFoundException('Build not found');
+                }
+
                 $build->setVisibility("HIDDEN");
                 $action->setBuild($build);
                 $user = $build->getAuthor();
             } elseif ($type === "user") {
                 $user = $userRepo->find($id);
+                if (!$user) {
+                    throw $this->createNotFoundException('User not found');
+                }
+
                 $user->setIsActive(false);
             }
 
@@ -59,12 +71,19 @@ final class ModerationActionController extends AbstractController
             $action->setModerator($this->getUser());
             $action->setTargetUser($user);
             $action->setReason($request->request->get('reason'));
+            $reasonCode = trim((string) $request->request->get('reason_code', 'other'));
+            $action->setReasonCode($reasonCode !== '' ? $reasonCode : 'other');
 
             $entityManager->persist($action);
             $entityManager->flush();
         }
 
-        if ($type === "comment") {
+        $redirectTo = $request->request->get('_redirect_to');
+        if (is_string($redirectTo) && str_starts_with($redirectTo, '/') && !str_starts_with($redirectTo, '//')) {
+            return $this->redirect($redirectTo, Response::HTTP_SEE_OTHER);
+        }
+
+        if ($type === "comment" && $build) {
             return $this->redirectToRoute('app_build_show', [
                 'id' => $build->getId()
             ], Response::HTTP_SEE_OTHER);
