@@ -7,11 +7,9 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent]
-final class ReportUsersComponent
+final class ReportUserInfo
 {
     use DefaultActionTrait;
 
-    public array $items = [];
-
-    public ?User $user;
+    public User $user;
 }

@@ -49,9 +49,9 @@ final class ReportController extends AbstractController
         ]);
     }
 
-    #[Route('/users/{id<\d+>}/{page<\d+>}', name: 'app_report_user_builds', defaults: ['page' => 1, 'targetType' => 'builds'], methods: ['GET'])]
-    #[Route('/users/{id<\d+>}/{page<\d+>}', name: 'app_report_user_comments', defaults: ['page' => 1, 'targetType' => 'comments'], methods: ['GET'])]
-    #[Route('/users/{id<\d+>}/{page<\d+>}', name: 'app_report_user_reports', defaults: ['page' => 1, 'targetType' => 'reports'], methods: ['GET'])]
+    #[Route('/users/show/{id<\d+>}/{page<\d+>}', name: 'app_report_users_builds', defaults: ['page' => 1, 'targetType' => 'builds'], methods: ['GET'])]
+    #[Route('/users/show/comments/{id<\d+>}/{page<\d+>}', name: 'app_report_users_comments', defaults: ['page' => 1, 'targetType' => 'comments'], methods: ['GET'])]
+    #[Route('/users/show/reports/{id<\d+>}/{page<\d+>}', name: 'app_report_users_reports', defaults: ['page' => 1, 'targetType' => 'reports'], methods: ['GET'])]
 
     public function showUser(string $targetType, UserRepository $userRepository, ModerationActionRepository $maRepository, ReportRepository $reportRepository, Request $request, int $page , int $id): Response
     {
@@ -59,6 +59,7 @@ final class ReportController extends AbstractController
         $limit = 10;
         $totalItems = $reportRepository->countPendingReport();
         $items = 0;
+        $user = $userRepository->find($id);
 
         if ($targetType === "builds") {
             $totalItems = $userRepository->countUsers();
@@ -72,6 +73,7 @@ final class ReportController extends AbstractController
         }
 
             return $this->render('report/index.html.twig', [
+                'user' => $user,
                 'items' => $items,
                 'totalItems' => $totalItems,
                 'currentPage' => $page,

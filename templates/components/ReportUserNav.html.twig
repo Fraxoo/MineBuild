@@ -1,0 +1,14 @@
+<div {{attributes}} class="user-filter-container w-full! justify-between">
+	<a href="{{ path('app_report_users_builds' , { 'id': user.id }) }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') === 'app_report_users_builds' ? 'user-selected-filter' : '' }}">
+		<i class="ti ti-blocks"></i>
+		<p>Builds</p>
+	</a>
+	<a href="{{ path('app_report_users_comments' , { 'id': user.id }) }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') === 'app_report_users_comments' ? 'user-selected-filter' : '' }}">
+		<i class="ti ti-message-circle"></i>
+		<p>Commentaires</p>
+	</a>
+	<a href="{{ path('app_report_users_reports' , { 'id': user.id }) }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') == 'app_report_users_reports' ? 'user-selected-filter' : '' }}">
+		<i class="ti ti-flag"></i>
+		<p>Signalements</p>
+	</a>
+</div>

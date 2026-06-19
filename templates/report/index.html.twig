@@ -11,16 +11,16 @@
         <p class="text-(--secondary-color) text-xl">Traiter les signalements, masquer les contenus non conformes et
             consulter l’historique des actions.</p>
         <twig:DashboardNav />
-        {% if app.request.attributes.get('_route') === 'app_report_index' %}
+        {% if app.request.attributes.get('_route') == 'app_report_index' %}
         <twig:ReportsComponent :reports="items" />
 
-        {% elseif app.request.attributes.get('_route') === 'app_report_history' %}
+        {% elseif app.request.attributes.get('_route') == 'app_report_history' %}
         <twig:ReportHistoryComponent :items="items" />
 
-        {% elseif app.request.attributes.get('_route') === 'app_report_users' %}
-        <twig:ReportUsersComponent :items="items" />
+        {% elseif app.request.attributes.get('_route') starts with 'app_report_users' %}
+        <twig:ReportUsersComponent :items="items" :user="user|default(null)" />
         {% endif %}
-        <twig:PaginationComponent :totalitems="totalItems" :currentpage="currentPage" :totalpages="totalPages" />
+        <twig:PaginationComponent :totalitems="totalItems" :currentpage="currentPage"  :totalpages="totalPages" />
 
     </div>
 

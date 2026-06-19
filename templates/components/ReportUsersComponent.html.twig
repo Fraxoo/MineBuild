@@ -1,6 +1,9 @@
 <div{{ attributes }} class="flex flex-col gap-4 flex-wrap ">
+    {% if app.request.attributes.get('_route') == 'app_report_users' %}
+
     {% for item in items %}
-    <a href="{{ path('app_report_user_builds', { id: item.id, page: 1 }) }}" class="flex flex-wrap gap-4 items-center bg-(--container-color) p-8 rounded  w-full">
+    <a href="{{ path('app_report_users_builds', { id: item.id, page: 1 }) }}"
+        class="flex flex-wrap gap-4 items-center bg-(--container-color) p-8 rounded  w-full">
         <img class="w-28 h-28 rounded-full border-4 border-(--primary-color) object-cover"
             data-avatar-preview-target="image"
             src="{{ item.avatarUrl ? asset('uploads/avatars/' ~ item.avatarUrl) : asset('images/default-avatar.jpg') }}"
@@ -20,4 +23,10 @@
         </div>
     </a>
     {% endfor %}
+
+    {% else %}
+    <twig:ReportUserInfo :user="user" />
+
+    {% endif %}
+
     </div>
