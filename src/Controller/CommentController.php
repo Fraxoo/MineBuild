@@ -72,9 +72,21 @@ final class CommentController extends AbstractController
     #[Route('/{id}', name: 'app_comment_delete', methods: ['POST'])]
     public function delete(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        if (!$user instanceof \App\Entity\User || $comment->getAuthor()?->getId() !== $user->getId()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez supprimer que vos propres commentaires.');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($comment);
             $entityManager->flush();
+        }
+
+        $redirectTo = $request->request->get('_redirect_to');
+        if (is_string($redirectTo) && str_starts_with($redirectTo, '/') && !str_starts_with($redirectTo, '//')) {
+            return $this->redirect($redirectTo, Response::HTTP_SEE_OTHER);
         }
 
         $referer = $request->headers->get('referer');

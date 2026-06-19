@@ -33,7 +33,7 @@
                     type="button">
                     <i class="ti ti-x"></i>
                 </button>
-                <twig:Modal :id="comment.id" type="comment" isCommentModal="true" :comment="comment" />
+                <twig:UserDeleteModal :id="comment.id" type="comment" />
             </div>
 
             {% endif %}

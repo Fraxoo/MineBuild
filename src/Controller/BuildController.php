@@ -527,18 +527,25 @@ final class BuildController extends AbstractController
     #[Route('/{id}', name: 'app_build_delete', methods: ['POST'])]
     public function delete(Request $request, Build $build, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        if (!$user instanceof \App\Entity\User || $build->getAuthor()?->getId() !== $user->getId()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez supprimer que vos propres builds.');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $build->getId(), $request->getPayload()->getString('_token'))) {
             $build->setDeletedAt(new \DateTimeImmutable());
-
-            $user = $this->getUser();
-            if ($user instanceof \App\Entity\User) {
-                $build->setDeletedBy($user);
-            }
-
+            $build->setDeletedBy($user);
             $deletedReason = trim($request->getPayload()->getString('deleted_reason'));
             $build->setDeletedReason($deletedReason !== '' ? $deletedReason : null);
 
             $entityManager->flush();
+        }
+
+        $redirectTo = $request->request->get('_redirect_to');
+        if (is_string($redirectTo) && str_starts_with($redirectTo, '/') && !str_starts_with($redirectTo, '//')) {
+            return $this->redirect($redirectTo, Response::HTTP_SEE_OTHER);
         }
 
         return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);

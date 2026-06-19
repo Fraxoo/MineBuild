@@ -42,19 +42,17 @@
 				<i class="ti ti-star {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				<p>Favoris</p>
 			</button>
-			<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
-				<i class="ti ti-flag"></i>
-				Signaler
-			</a>
-			{% if is_granted('ROLE_ADMIN') %}
-            <button data-action="click->modal-form#openModal"
-                class="red-button"
-                type="button">
-				<i class="ti ti-trash"></i>
-                Supprimer
-            </button>
-            <twig:DeleteModal :id="build.id" type="build" />
-            {% endif %}
+				<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
+					<i class="ti ti-flag"></i>
+					Signaler
+				</a>
+				{% if is_granted('ROLE_ADMIN') and app.user.id != build.author.id %}
+				<button data-action="click->modal-form#openModal" class="red-button" type="button">
+					<i class="ti ti-trash"></i>
+					Supprimer
+				</button>
+				<twig:DeleteModal :id="build.id" type="build" />
+				{% endif %}
 
 			{% else %}
 			<a href="{{ path('app_login') }}" class="container-button">
