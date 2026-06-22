@@ -6,12 +6,10 @@ export default class extends Controller {
     toggle() {
         const isHidden = this.panelTarget.classList.toggle('hidden')
         const form = this.panelTarget.querySelector('form')
-        console.log(form);
 
 
         this.buttonTarget.setAttribute('aria-expanded', String(!isHidden));
         const logo = this.buttonTarget.querySelector('i')
-        console.log(logo);
         
         logo.classList.toggle('ti-chevron-up')
         logo.classList.toggle('ti-chevron-down')
