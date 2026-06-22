@@ -6,7 +6,7 @@
             src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.jpg') }}"
             alt="Avatar de {{ user.username }}">
         <div {{stimulus_controller('modal-form')}} class="flex flex-wrap flex-col gap-2 justify-between">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center flex-wrap gap-2">
                 <h2 class="font-bold text-2xl text-(--title-color)">{{user.username}}</h2>
                 {% if app.user and app.user.id == user.id %}
 

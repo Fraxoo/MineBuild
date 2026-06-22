@@ -20,7 +20,7 @@
     --red-background: #2e2626;
     --primary-color-muted: rgb(74, 222, 128, 0.7);
     --background-color-transparent: rgb(26, 26, 26, 0.5);
-    --search: rgb(51, 51, 51,0.3);
+    --search: rgb(51, 51, 51, 0.3);
 }
 
 
@@ -38,6 +38,21 @@ input {
     scrollbar-color: var(--background-color);
     scrollbar-width: thin;
     scrollbar-color: var(--primary-color) var(--container-color);
+}
+
+i {
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+button:has(i) {
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+a:has(i) {
+    line-height: 1;
+    flex-shrink: 0;
 }
 
 
@@ -116,7 +131,7 @@ body {
 
 .input-title {
     color: var(--title-color);
-    font-weight:500
+    font-weight: 500
 }
 
 .input {
@@ -848,5 +863,17 @@ body {
     .middle-container {
         width: 100%;
         padding: 1.25rem;
+    }
+
+    .user-filter-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+    }
+
+    .user-filter {
+        width: 100%;
+        justify-content: start;
     }
 }
