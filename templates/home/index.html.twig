@@ -6,48 +6,50 @@
 <div class="flex flex-col gap-4">
 
     <form method="get" action="{{ path('app_home', { page: 1 }) }}"
-        class="container w-full max-w-none! flex flex-row! justify-between items-center">
-        <div class="flex items-center gap-4">
+        class="container w-full max-w-none! flex-wrap flex flex-row! justify-between items-center">
+        <div class="flex flex-wrap md:flex-row flex-col md:items-center gap-4">
             <input type="hidden" name="search" value="{{ filters.search }}">
             <input type="hidden" name="sort" value="{{ filters.sort }}">
             <p class="text-(--secondary-color)">Filtres :</p>
 
+            <div class="flex flex-col gap-4">
 
-            <select onchange="this.form.submit()" class="filter-select" name="version">
-                <option value="">Toutes les versions</option>
+                <select onchange="this.form.submit()" class="filter-select" name="version">
+                    <option value="">Toutes les versions</option>
 
-                {% for version in versions %}
-                <option value="{{ version.id }}" {{ filters.versions==version.id ? 'selected' : '' }}>
-                    {{ version.number }}
-                </option>
-                {% endfor %}
-            </select>
+                    {% for version in versions %}
+                    <option value="{{ version.id }}" {{ filters.versions==version.id ? 'selected' : '' }}>
+                        {{ version.number }}
+                    </option>
+                    {% endfor %}
+                </select>
 
-            <select onchange="this.form.submit()" class="filter-select" name="category">
-                <option value="">Toutes les catégories</option>
+                <select onchange="this.form.submit()" class="filter-select" name="category">
+                    <option value="">Toutes les catégories</option>
 
-                {% for categorie in categories %}
-                <option value="{{ categorie.id }}" {{ filters.category==categorie.id ? 'selected' : '' }}>
-                    {{ categorie.nameFr }}
-                </option>
-                {% endfor %}
-            </select>
+                    {% for categorie in categories %}
+                    <option value="{{ categorie.id }}" {{ filters.category==categorie.id ? 'selected' : '' }}>
+                        {{ categorie.nameFr }}
+                    </option>
+                    {% endfor %}
+                </select>
 
-            <select onchange="this.form.submit()" class="filter-select" name="difficulty">
-                <option value="">Toutes les difficultés</option>
-                <option {{ filters.difficulty=='easy' ? 'selected' : '' }} value="easy">Facile</option>
-                <option {{ filters.difficulty=='medium' ? 'selected' : '' }} value="medium">Moyen</option>
-                <option {{ filters.difficulty=='hard' ? 'selected' : '' }} value="hard">Difficile</option>
-            </select>
+                <select onchange="this.form.submit()" class="filter-select" name="difficulty">
+                    <option value="">Toutes les difficultés</option>
+                    <option {{ filters.difficulty=='easy' ? 'selected' : '' }} value="easy">Facile</option>
+                    <option {{ filters.difficulty=='medium' ? 'selected' : '' }} value="medium">Moyen</option>
+                    <option {{ filters.difficulty=='hard' ? 'selected' : '' }} value="hard">Difficile</option>
+                </select>
+            </div>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex md:items-center md:flex-row flex-col gap-2">
             <p class="text-(--secondary-color)">Filtrer par :</p>
 
             <select onchange="this.form.submit()" class="filter-select" name="sort">
-                <option {{ filters.sort=='DESC' ? 'selected' : '' }} value="DESC">Nouveau</option>
-                <option {{ filters.sort=='POPULAR' ? 'selected' : '' }} value="POPULAR">Populaire</option>
-                <option {{ filters.sort=='ASC' ? 'selected' : '' }} value="ASC">Ancien</option>
+                <option {{ filters.sort=='DESC' ? 'selected' : '' }} value="DESC">Nouveauté</option>
+                <option {{ filters.sort=='POPULAR' ? 'selected' : '' }} value="POPULAR">Popularité</option>
+                <option {{ filters.sort=='ASC' ? 'selected' : '' }} value="ASC">Ancienneté</option>
             </select>
         </div>
     </form>
@@ -57,7 +59,7 @@
         <twig:BuildCard :build="item" />
         {% endfor %}
     </div>
-    <twig:PaginationComponent  :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
+    <twig:PaginationComponent :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
 </div>
 
 
