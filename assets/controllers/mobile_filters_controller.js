@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['panel']
+    static targets = ['panel', 'button']
 
     toggle() {
         const isHidden = this.panelTarget.classList.toggle('hidden')
@@ -10,5 +10,10 @@ export default class extends Controller {
 
 
         this.buttonTarget.setAttribute('aria-expanded', String(!isHidden));
+        const logo = this.buttonTarget.querySelector('i')
+        console.log(logo);
+        
+        logo.classList.toggle('ti-chevron-up')
+        logo.classList.toggle('ti-chevron-down')
     }
 }
