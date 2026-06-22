@@ -2,10 +2,10 @@
            transition-opacity md:hidden" data-mobile-menu-target="overlay" data-action="click->mobile-menu#close">
 </div>
 
-<aside id="mobile-navigation" class="fixed inset-y-0 left-0 z-50 w-[85vw] max-w-80
+<aside id="mobile-navigation" class="fixed inset-y-0 left-0 z-50 w-[85vw] max-w-80 h-dvh overflow-hidden
            bg-(--background-color-secondary)
            -translate-x-full transition-transform duration-300
-           md:hidden" data-mobile-menu-target="panel">
+           md:hidden flex flex-col" data-mobile-menu-target="panel">
 	<div class="flex items-center justify-between p-4">
 		<twig:WebsiteTitle />
 
@@ -15,7 +15,7 @@
 		</button>
 	</div>
 	<div
-		class="flex-1 h-100% bg-(--background-color-secondary) justify-between p-4 border-r border-(--border-color) flex flex-col gap-4">
+		class="flex-1 min-h-0 bg-(--background-color-secondary)  justify-between p-4 border-r border-(--border-color) flex flex-col gap-4">
 		<div class="flex flex-col gap-4">
 			<a class="primary-button " href="{{path('app_build_new')}}">
 				<i class="ti ti-upload"></i>
@@ -78,12 +78,12 @@
 			</div>
 		</div>
 		{% if is_granted('ROLE_ADMIN') %}
-
-		<a class="primary-button" href="{{ path('app_report_index')}}">
-			<i class="ti ti-shield"></i>
-			<p>Modération</p>
-		</a>
-
+		<div class="shrink-0 pt-4 border-t border-(--border-color)">
+			<a class="primary-button" href="{{ path('app_report_index') }}">
+				<i class="ti ti-shield"></i>
+				<p>Modération</p>
+			</a>
+		</div>
 		{% endif %}
 	</div>
 
@@ -159,11 +159,11 @@
 		</div>
 	</div>
 	{% if is_granted('ROLE_ADMIN') %}
-
-	<a class="primary-button" href="{{ path('app_report_index')}}">
-		<i class="ti ti-shield"></i>
-		<p>Modération</p>
-	</a>
-
+	<div class="pt-4 border-t border-(--border-color)">
+		<a class="primary-button" href="{{ path('app_report_index')}}">
+			<i class="ti ti-shield"></i>
+			<p>Modération</p>
+		</a>
+	</div>
 	{% endif %}
 </div>
