@@ -34,7 +34,6 @@ erDiagram
     INT dimensions_z
     VARCHAR difficulty
     INT time_estimated_min
-    VARCHAR game_version
     VARCHAR game_mode
     VARCHAR visibility
     INT views_count
@@ -106,6 +105,7 @@ erDiagram
     DATETIME created_at
     DATETIME updated_at
     DATETIME deleted_at
+    VARCHAR visibility
   }
 
   COMMENT_LIKE {
@@ -165,6 +165,7 @@ erDiagram
     VARCHAR target_type
     INT build_id FK
     INT comment_id FK
+    INT user_id FK
     VARCHAR reason_code
     TEXT message
     VARCHAR status
@@ -181,8 +182,10 @@ erDiagram
     INT build_id FK
     INT target_user_id FK 
     INT comment_id FK
+    INT report_id FK,UK
     VARCHAR action
     TEXT reason
+    VARCHAR reason_code
     DATETIME created_at
   }
 
@@ -252,6 +255,7 @@ erDiagram
 
   USER ||--o{ REPORT : reports
   USER ||--o{ REPORT : handles
+  USER ||--o{ REPORT : is_reported
   BUILD ||--o{ REPORT : reported_build
   COMMENT ||--o{ REPORT : reported_comment
 
@@ -259,4 +263,5 @@ erDiagram
   BUILD ||--o{ MODERATION_ACTION : moderated_build
   USER ||--o{ MODERATION_ACTION : receives_moderation_action
   COMMENT ||--o{ MODERATION_ACTION : moderated_comment
+  REPORT o|--o| MODERATION_ACTION : produces
 ```
