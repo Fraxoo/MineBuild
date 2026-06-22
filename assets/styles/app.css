@@ -115,7 +115,7 @@ body {
 
 .input-title {
     color: var(--title-color);
-    font-weight: bold;
+    font-weight:500
 }
 
 .input {
@@ -136,7 +136,7 @@ body {
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     border: none;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     gap: 0.5rem;
@@ -371,7 +371,6 @@ body {
 
 
 
-
 .user-selected-filter {
     background-color: var(--container-color-third);
     color: var(--title-color);
@@ -388,23 +387,6 @@ body {
     border-radius: 0.5rem;
     border: 1px solid var(--border-color);
     background-color: var(--container-color);
-}
-
-
-
-
-@media (max-width: 640px) {
-    .middle-container-div {
-        min-height: 100dvh;
-        height: auto;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-    }
-
-    .middle-container {
-        width: 100%;
-        padding: 1.25rem;
-    }
 }
 
 
@@ -848,4 +830,22 @@ body {
     background-color: var(--container-color-secondary);
     color: var(--title-color);
 
+}
+
+
+
+
+
+
+@media (max-width: 640px) {
+    .middle-container-div {
+        min-height: 100dvh;
+        height: auto;
+        padding: 0rem;
+    }
+
+    .middle-container {
+        width: 100%;
+        padding: 1.25rem;
+    }
 }

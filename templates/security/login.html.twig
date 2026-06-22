@@ -18,12 +18,12 @@
 				method="post" class="form-div w-full">
 
 				{# {% if app.user %}
-				            <div class="mb-3">
-				                You are logged in as
-				                {{ app.user.userIdentifier }},
-				                <a href="{{ logout_path() }}">Logout</a>
-				            </div>
-				            {% endif %} #}
+												            <div class="mb-3">
+												                You are logged in as
+												                {{ app.user.userIdentifier }},
+												                <a href="{{ logout_path() }}">Logout</a>
+												            </div>
+												            {% endif %} #}
 
 				<div class="input-div">
 					<label class="input-title" for="email">Email</label>
@@ -54,11 +54,13 @@
 				<button class="btn btn-lg btn-primary primary-button" type="submit">
 					Se connecter
 				</button>
+				<div class="border-t border-(--border-color) w-full pt-4">
+					<p class="text-(--secondary-color) text-center">Vous n'avez pas de compte ?
+						<a href="{{ path('app_register') }}" class="text-(--primary-color) hover:underline">S'inscrire</a>
+					</p>
+				</div>
 			</form>
 
-			<p class="text-(--secondary-color) text-center">Vous n'avez pas de compte ?
-				<a href="{{ path('app_register') }}" class="text-(--primary-color) hover:underline">S'inscrire</a>
-			</p>
 		</div>
 	</div>
 {% endblock %}

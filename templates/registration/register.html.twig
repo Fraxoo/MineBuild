@@ -81,15 +81,18 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
         </div>
         <div class="flex check items-center gap-2 text-(--title-color)">
             {{ form_widget(registrationForm.agreeTerms) }}
-            <p>J'accepte <a class="text-(--primary-color) hover:underline"  href="">les conditions d'utilisation</a></p>
+            <p>J'accepte <a class="text-(--primary-color) hover:underline" href="">les conditions d'utilisation</a></p>
         </div>
         <div class="error-message">
             {{ form_errors(registrationForm) }}
         </div>
         <button type="submit" class="btn  primary-button">Créer un compte</button>
-        {{ form_end(registrationForm) }}        
-        <p class="text-(--secondary-color) text-center">Déja un compte ? <a href="{{ path('app_login') }}"
-                class="text-(--primary-color) hover:underline">Se connecter</a></p>
+        <div class="border-t border-(--border-color) w-full pt-4">
+            <p class="text-(--secondary-color)  text-center">Déja un compte ? <a
+                    href="{{ path('app_login') }}" class="text-(--primary-color) hover:underline">Se connecter</a></p>
+
+        </div>
+        {{ form_end(registrationForm) }}
     </div>
 </div>
 {% endblock %}
