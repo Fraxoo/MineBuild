@@ -101,7 +101,7 @@ body {
 .input-div {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
 
 }
 
@@ -875,5 +875,8 @@ body {
     .user-filter {
         width: 100%;
         justify-content: start;
+    }
+    .user-edit-container{
+        padding: 1.25rem;
     }
 }

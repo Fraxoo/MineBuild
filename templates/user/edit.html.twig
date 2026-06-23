@@ -3,7 +3,7 @@
 {% block title %}Edit User{% endblock %}
 
 {% block body %}
-<div class="flex flex-col mx-auto w-full max-w-4xl px-4  gap-4 ">
+<div class="flex flex-col mx-auto w-full max-w-4xl md:px-4  gap-4 ">
     <twig:UserEditNav :user="user" />
     {{ form_start(form , {
     'attr' : {'class' : 'user-edit-container'}}
@@ -39,7 +39,7 @@
             {{ form_errors(form.avatar_url) }}
         </div>
     </div>
-    <div>
+    <div class="input-div">
         <p class="input-title">Nom d'utilisateur</p>
         {{ form_widget(form.username , {
         'attr' : {'class' : 'input input-input'}}
@@ -47,8 +47,9 @@
         {{ form_errors(form.username , {
         'attr' : {'class' : 'error-message'}}
         ) }}
+        <p class="text-(--secondary-color) text-xs">Votre nom d'utilisateur unique. Il sera visible par tout les utilisateurs</p>
     </div>
-    <div>
+    <div class="input-div">
         <p class="input-title">Email</p>
         {{ form_widget(form.email , {
         'attr' : {'class' : 'input input-input'}}
@@ -57,7 +58,7 @@
         'attr' : {'class' : 'error-message'}}
         ) }}
     </div>
-    <div>
+    <div class="input-div">
         <p class="input-title">Bio</p>
         {{ form_widget(form.bio , {
         'attr' : {'class' : 'input input-input h-32'}}
@@ -65,11 +66,12 @@
         {{ form_errors(form.bio , {
         'attr' : {'class' : 'error-message'}}
         ) }}
+        <p class="text-(--secondary-color) text-xs">Une petite description a propos de vous ( facultatif )</p>
     </div>
     <div class="error-message">
         {{ form_errors(form) }}
     </div>
-    <div class="flex gap-4 justify-end">
+    <div class="flex gap-4 flex-wrap justify-end">
         <a class="container-color-button" href="{{ path('app_home')}}">Annuler</a>
         <button class="btn btn-primary primary-button" type="submit">Sauvegarder</button>
     </div>
