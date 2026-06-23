@@ -112,7 +112,7 @@
 
             <twig:BuildUserAction :build="build" :isFollowedByUser="isFollowedByUser"  />
 
-            <div class="container">
+            <div class="container md:p-8! p-4!">
                 <h3 class="title">Détails</h3>
                 <div class="build-info-gap">
                     <div class="build-info-gap-title">
@@ -159,7 +159,7 @@
             </div>
 
             {% if build.materials|length > 0 %}
-            <div class="container">
+            <div class="container md:p-8! p-4!">
                 <h3 class="title">Matériaux Requis</h3>
                 <div class="flex flex-col gap-2">
                     {% for material in build.materials %}
@@ -173,7 +173,7 @@
             {% endif %}
 
             {% if build.buildTags|length > 0 %}
-            <div class="container">
+            <div class="container md:p-8! p-4!">
                 <h3 class="title">Tags</h3>
                 <div class="flex flex-wrap gap-2">
                     {% for tag in build.buildTags %}
