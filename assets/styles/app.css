@@ -369,7 +369,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     padding: 0.25rem;
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     border: 1px solid var(--border-color);
     background-color: var(--container-color);
     width: fit-content;
