@@ -3,7 +3,7 @@
 
     {% for item in items %}
     <a href="{{ path('app_report_users_builds', { id: item.id, page: 1 }) }}"
-        class="flex flex-wrap gap-4 items-center bg-(--container-color) p-8 rounded  w-full">
+        class="flex flex-wrap gap-4 items-center bg-(--container-color) p-4 md:p-8 rounded  w-full">
         <img class="w-28 h-28 rounded-full border-4 border-(--primary-color) object-cover"
             data-avatar-preview-target="image"
             src="{{ item.avatarUrl ? asset('uploads/avatars/' ~ item.avatarUrl) : asset('images/default-avatar.jpg') }}"
