@@ -9,10 +9,10 @@
     <div class="flex gap-4 flex-wrap flex-3">
         <div class="flex overflow-auto flex-col gap-4 md:flex-2">
             <div class="relative w-full h-full  overflow-hidden rounded-xl" data-carousel>
-                <div class="flex transition-transform duration-300 ease-in-out" data-carousel-track>
+                <div class="flex  transition-transform duration-300 ease-in-out" data-carousel-track>
 
                     {% for image in build.images %}
-                    <div class="min-w-full flex  items-center">
+                    <div class="min-w-full bg-black flex  items-center">
                         <img src="{{ asset('uploads/build_images/' ~ image.url) }}" alt="{{ build.title }}"
                             class="w-full md:h-[600px] object-contain">
                     </div>
