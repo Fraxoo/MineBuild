@@ -6,7 +6,11 @@ export default class extends Controller {
     toggle() {
         const isHidden = this.panelTarget.classList.toggle('hidden')
         const form = this.panelTarget.querySelector('form')
+        const comment = this.panelTarget.querySelector('#comment')
 
+        if(comment){
+            comment.classList.toggle('flex')
+        }
 
         this.buttonTarget.setAttribute('aria-expanded', String(!isHidden));
         const logo = this.buttonTarget.querySelector('i')
