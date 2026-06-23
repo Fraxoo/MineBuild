@@ -1,30 +1,26 @@
-<div {{attributes}} class="flex flex-col gap-4">
+<div {{attributes}} class="flex flex-col flex-wrap gap-4">
 	<div class="flex flex-wrap gap-4 items-center justify-between  rounded p-4 bg-(--container-color)">
-		<div class="flex items-center gap-4">
+		<div class="flex md:justify-start justify-between w-full md:w-fit flex-wrap items-center gap-4">
 			<div class="build-stats">
 				<i class="ti ti-eye"></i>
-				<p>{{build.viewsCount}}
-					Vues</p>
+				<p>{{build.viewsCount}} <span class="md:flex hidden">Vues</span></p>
 			</div>
 			<div class="build-stats">
 				<button class="h-fit">
 					<i class="ti ti-thumb-up"></i>
 				</button>
-				<p>{{ build.likesCount}}
-					J'aime</p>
+				<p>{{ build.likesCount}} <span class="md:flex hidden">J'aime</span></p>
 			</div>
 			<div class="build-stats">
 				<i class="ti ti-download"></i>
-				<p>{{ build.downloadsCount }}
-					Téléchargements</p>
+				<p>{{ build.downloadsCount }} <span class="md:flex hidden">Téléchargements</span></p>
 			</div>
 			<div class="build-stats text-yellow-400!">
 				<i class="ti ti-star"></i>
-				<p>{{build.ratingAvg}}
-					({{build.ratings|length}})</p>
+				<p>{{build.ratingAvg}} <span class="md:flex hidden">({{build.ratings|length}})</span></p>
 			</div>
 		</div>
-		<div {{stimulus_controller('modal-form')}} class="flex  items-center gap-4">
+		<div {{stimulus_controller('modal-form')}} class="md:flex md:flex-wrap grid w-full md:w-fit grid-cols-2 [&>button]:flex-1 [&>a]:flex-1 items-center gap-4">
 			{% if app.user %}
 			<button type="button" data-action="live#action" data-live-action-param="like" class="container-button">
 				<i
