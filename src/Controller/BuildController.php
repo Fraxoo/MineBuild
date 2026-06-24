@@ -300,15 +300,7 @@ final class BuildController extends AbstractController
                 $form->get('Mcversion')->setData($existingBuildVersion->getVersion());
             }
 
-            $existingTags = [];
-            foreach ($build->getBuildTags() as $buildTag) {
-                if ($buildTag->getTag() && $buildTag->getTag()->getName()) {
-                    $existingTags[] = $buildTag->getTag()->getName();
-                }
-            }
-            if ($existingTags) {
-                $form->get('tags')->setData(implode(',', $existingTags));
-            }
+            $form->get('tags')->setData('');
         }
 
         $form->handleRequest($request);

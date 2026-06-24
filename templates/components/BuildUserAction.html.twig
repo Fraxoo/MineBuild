@@ -15,24 +15,24 @@
     <div class="flex items-center flex-wrap gap-2">
         {% if app.user %}
         {% if app.user.id === build.author.id %}
-        <a class="primary-button w-full" href="{{ path('app_build_edit', {'id': build.id}) }}"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+        <a class="primary-button w-full md:flex-1" href="{{ path('app_build_edit', {'id': build.id}) }}"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
         {% else %}
         {% if isFollowedByUser %}
-        <button class="primary-button w-full" data-action="live#action" data-live-action-param="follow"><i
+        <button class="primary-button w-full md:flex-1" data-action="live#action" data-live-action-param="follow"><i
                 class="fa-solid fa-user-check"></i>Désaboner</button>
         {% else %}
-        <button class="primary-button w-full" data-action="live#action" data-live-action-param="follow"><i
+        <button class="primary-button w-full md:flex-1" data-action="live#action" data-live-action-param="follow"><i
                 class="fa-solid fa-user-plus"></i> Suivre</button>
         {% endif %}
 
         {% endif %}
         {% else %}
-        <a href="{{ path('app_login') }}" class="primary-button w-full">
+        <a href="{{ path('app_login') }}" class="primary-button w-full md:flex-1">
             <i class="fa-solid fa-user-plus"></i> Suivre
         </a>
         {% endif %}
 
-        <a class="container-button w-full   " href="{{ path('app_user_show' , { 'id' : build.author.id })}}">Profile</a>
+        <a class="container-button w-full md:flex-1  " href="{{ path('app_user_show' , { 'id' : build.author.id })}}"><p class="">Profile</p></a>
 
     </div>
     </div>
