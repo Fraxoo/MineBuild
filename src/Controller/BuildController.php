@@ -54,9 +54,7 @@ final class BuildController extends AbstractController
 
         $build = new Build();
         $user = $this->getUser();
-        if ($user instanceof \App\Entity\User) {
-            $build->setAuthor($user);
-        }
+        $build->setAuthor($user);
 
         $form = $this->createForm(BuildType::class, $build);
         $form->handleRequest($request);
@@ -65,36 +63,35 @@ final class BuildController extends AbstractController
             $entityManager->persist($build);
 
 
-
+            // create category ( only one )
             $category = $form->get('category')->getData();
             if ($category) {
                 $buildCategory = new BuildCategory($build, $category);
                 $entityManager->persist($buildCategory);
             }
 
-            $rawTags = (string) $form->get('tags')->getData();
-            $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
-            $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
-            foreach ($tagNames as $tagName) {
-                if ($tagName === '') {
-                    continue;
-                }
+            // create tags
+            $tags = $form->get('tags')->getData();
 
-                $existing = $tagRepository->findOneBy(['name' => $tagName]);
+            $tags = array_filter(array_map('trim', explode(',', $tags)));
+
+            foreach ($tags as $tag) {
+
+                $existing = $tagRepository->findOneBy(['name' => $tag]);
                 if (!$existing) {
-                    $tag = new Tag();
-                    $tag->setName($tagName);
+                    $newTag = new Tag();
+                    $newTag->setName($tag);
 
-                    $baseSlug = strtolower((string) $slugger->slug($tagName));
+                    $baseSlug = strtolower((string) $slugger->slug($tag));
                     $baseSlug = $baseSlug ?: strtolower(bin2hex(random_bytes(6)));
                     $slug = $baseSlug;
                     if ($tagRepository->findOneBy(['slug' => $slug])) {
                         $slug = $baseSlug . '-' . strtolower(bin2hex(random_bytes(3)));
                     }
 
-                    $tag->setSlug($slug);
-                    $entityManager->persist($tag);
-                    $existing = $tag;
+                    $newTag->setSlug($slug);
+                    $entityManager->persist($newTag);
+                    $existing = $newTag;
                 }
 
                 $buildTag = new BuildTag($build, $existing);
@@ -228,7 +225,7 @@ final class BuildController extends AbstractController
     {
         $build = $buildRepository->getBuildWithJoinByUser($build);
 
-        if ($build->getVisibility() === "HIDDEN" or !$build ) {
+        if ($build->getVisibility() === "HIDDEN" or !$build) {
             return $this->redirectToRoute('app_build_not_found', [], Response::HTTP_SEE_OTHER);
         }
 
