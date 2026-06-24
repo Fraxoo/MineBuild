@@ -1,48 +1,17 @@
 <div{{ attributes }} class="flex flex-col gap-4">
     {% for build in builds %}
     <div class="flex flex-col gap-4 p-4 bg-(--container-color) rounded">
-        <div class="flex items-center justify-between gap-4 text-xs">
-            <div class="flex flex-wrap items-center gap-3">
-                <div class="text-(--secondary-color) px-2 py-1 rounded border border-(--border-color) flex items-center gap-1">
-                    <i class="ti text-[1rem] ti-blocks"></i>
-                    <p>build</p>
-                </div>
-                <p class="text-(--secondary-color)">
-                    Posté par <span class="text-(--title-color)">{{ build.author.username }}</span>
-                </p>
-                <div class="flex items-center gap-1 text-(--secondary-color)">
-                    <i class="ti ti-calendar-event text-[1rem]"></i>
-                    <p>{{ build.createdAt|date('d/m/Y') }}</p>
-                </div>
+        <a href="{{ path('app_build_show' , {id : build.id})}}" class="flex gap-4 items-center">
+            <img src="{{ asset('uploads/build_images/' ~ build.images[0].url) }}" alt="{{ build.title }}"
+                class="w-full rounded flex-1/5 object-contain">
+            <div class="flex flex-col flex-4/5">
+                <p class="text-(--title-color)">{{ build.title}}</p>
+                <p class="text-(--secondary-color)">{{build.description ? build.description : "Aucun description" }}</p>
             </div>
-            <a href="{{ path('app_build_show', {'id': build.id}) }}" class="container-color-button text-sm!">
-                <i class="ti text-[1rem] ti-eye"></i>
-                <p>Voir</p>
-            </a>
-        </div>
-
-        <a href="{{ path('app_build_show', {'id': build.id}) }}" class="dashboard-info hover:text-(--primary-color)">
-            {{ build.title }}
         </a>
 
-        <p class="text-(--secondary-color)">{{ build.description ?: 'Aucune description pour ce build.' }}</p>
-
-        <div class="flex flex-wrap items-center text-sm gap-4">
-            <div class="flex items-center text-(--secondary-color)">
-                <i class="ti ti-eye text-[1rem]"></i>
-                <p>{{ build.viewsCount }} vue{{ build.viewsCount > 1 ? 's' : '' }}</p>
-            </div>
-            <div class="flex items-center text-(--secondary-color)">
-                <i class="ti ti-heart text-[1rem]"></i>
-                <p>{{ build.likesCount }} like{{ build.likesCount > 1 ? 's' : '' }}</p>
-            </div>
-            <div class="flex items-center text-(--secondary-color)">
-                <i class="ti ti-download text-[1rem]"></i>
-                <p>{{ build.downloadsCount }} téléchargement{{ build.downloadsCount > 1 ? 's' : '' }}</p>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-4 border-t border-(--border-color) py-2" {{ stimulus_controller('modal-form') }}>
+        <div class="flex items-center gap-4 border-t border-(--border-color) py-2" {{ stimulus_controller('modal-form')
+            }}>
             <button data-action="click->modal-form#openModal"
                 class="btn flex gap-4 items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2"
                 type="button">
@@ -57,4 +26,4 @@
         Aucun build visible pour cet utilisateur.
     </div>
     {% endfor %}
-</div>
+    </div>
