@@ -1,7 +1,7 @@
 <div{{ attributes }} class="flex flex-col gap-4">
     {% for build in builds %}
     <div class="flex flex-col gap-4 p-4 bg-(--container-color) rounded">
-        <a href="{{ path('app_build_show' , {id : build.id})}}" class="flex gap-4 items-center">
+        <a href="{{ path('app_build_show' , {id : build.id})}}" class="flex flex-col md:flex-row gap-4 md:items-center">
             <img src="{{ asset('uploads/build_images/' ~ build.images[0].url) }}" alt="{{ build.title }}"
                 class="w-full rounded flex-1/5 object-contain">
             <div class="flex flex-col flex-4/5">
