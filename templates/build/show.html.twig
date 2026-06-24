@@ -6,15 +6,15 @@
 {% block body %}
 <div class="flex flex-col  gap-4">
     <twig:GoBack />
-    <div class="flex gap-4 flex-3">
-        <div class="flex overflow-auto flex-col gap-4 flex-2">
+    <div class="flex gap-4 flex-wrap flex-3">
+        <div class="flex overflow-auto flex-col gap-4 md:flex-2">
             <div class="relative w-full h-full  overflow-hidden rounded-xl" data-carousel>
-                <div class="flex transition-transform duration-300 ease-in-out" data-carousel-track>
+                <div class="flex  transition-transform duration-300 ease-in-out" data-carousel-track>
 
                     {% for image in build.images %}
-                    <div class="min-w-full">
+                    <div class="min-w-full bg-black flex  items-center">
                         <img src="{{ asset('uploads/build_images/' ~ image.url) }}" alt="{{ build.title }}"
-                            class="w-full h-[600px] object-contain">
+                            class="w-full md:h-[600px] object-contain">
                     </div>
                     {% endfor %}
                 </div>
@@ -41,59 +41,78 @@
             <twig:BuildActions :build="build" :isLikedByUser="isLikedByUser" :isSavedByUser="isSavedByUser" />
 
 
-            <div class="container">
-                <div class="text-(--title-color) flex items-center gap-2 font-bold text-xl">
-                    <i class="ti ti-message-circle"></i>
-                    <h3 class="break-everywhere">Commentaires ({{ build.comments|length }})</h3>
-                </div>
-                {% if app.user %}
-                <div class="flex  gap-4 w-full">
-                    <img class="w-12 h-12 rounded-full"
-                        src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
-                        alt="Avatar de {{ app.user.username }}">
-                    {{ form_start(form, {
-                    attr: {
-                    class: 'w-full flex flex-col gap-2',
-                    }
-                    }) }}
-
-                    {{ form_widget(form.content, {
-                    attr: {
-                    class: 'w-full border border-(--border-color) bg-(--container-color-secondary) px-4 py-2 rounded
-                    text-(--title-color) focus:outline-none focus:ring-2 focus:ring-(--primary-color)
-                    focus:ring-opacity-50',
-                    }
-                    }) }}
-
-                    <div class="error-message flex flex-col gap-2">
-                        {{ form_errors(form.content) }}
-                        {{ form_errors(form) }}
+            <div data-controller="mobile-filters" class="container p-0! md:p-8!">
+                <div class="flex items-center md:hidden justify-between gap-4 p-4">
+                    <div class="text-(--title-color) flex items-center gap-2 font-bold text-xl">
+                        <i class="ti ti-message-circle"></i>
+                        <h3 class="break-everywhere">Commentaires ({{ build.comments|length }})</h3>
                     </div>
-
-                    <button type="submit" class="primary-button w-fit">
-                        Commenter
+                    <button type="button" class="md:hidden inline-flex leading-none h-fit text-white text-4xl"
+                        data-mobile-filters-target="button" data-action="mobile-filters#toggle"
+                        aria-expanded="false" aria-controls="mobile-build-comments-{{ build.id }}">
+                        <i class="ti ti-chevron-up"></i>
                     </button>
-
-                    {{ form_end(form) }}
                 </div>
-                {% else %}
-                <p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
-                        href="{{ path('app_login') }}">Connectez-vous</a> pour laisser un commentaire.</p>
-                {% endif %}
 
-                {% for comment in build.comments %}
-                <twig:Comments :comment="comment" :build="build" />
-                {% endfor %}
+                <div id="mobile-build-comments-{{ build.id }}" id="comment" class="hidden md:flex flex-col gap-4 space-y-4 md:space-y-0 p-4 md:p-0"
+                    data-mobile-filters-target="panel">
+                    <div class="text-(--title-color) hidden md:flex items-center gap-2 font-bold text-xl">
+                        <i class="ti ti-message-circle"></i>
+                        <h3 class="break-everywhere">Commentaires ({{ build.comments|length }})</h3>
+                    </div>
+                    {% if app.user %}
+                    <div class="flex  gap-4 w-full">
+                        <img class="w-12 h-12 rounded-full"
+                            src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
+                            alt="Avatar de {{ app.user.username }}">
+                        {{ form_start(form, {
+                        attr: {
+                        class: 'w-full flex flex-col gap-2',
+                        }
+                        }) }}
+
+                        {{ form_widget(form.content, {
+                        attr: {
+                        class: 'w-full border border-(--border-color) bg-(--container-color-secondary) px-4 py-2 rounded
+                        text-(--title-color) focus:outline-none focus:ring-2 focus:ring-(--primary-color)
+                        focus:ring-opacity-50',
+                        }
+                        }) }}
+
+                        <div class="error-message flex flex-col gap-2">
+                            {{ form_errors(form.content) }}
+                            {{ form_errors(form) }}
+                        </div>
+
+                        <button type="submit" class="primary-button w-fit">
+                            Commenter
+                        </button>
+
+                        {{ form_end(form) }}
+                    </div>
+                    {% else %}
+                    <p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
+                            href="{{ path('app_login') }}">Connectez-vous</a> pour laisser un commentaire.</p>
+                    {% endif %}
+
+                    {% for comment in build.comments %}
+                    <twig:Comments :comment="comment" :build="build" />
+                    {% endfor %}
+                </div>
             </div>
 
         </div>
+
+
+
+
 
 
         <div class="flex flex-col gap-4 flex-1">
 
             <twig:BuildUserAction :build="build" :isFollowedByUser="isFollowedByUser"  />
 
-            <div class="container">
+            <div class="container md:p-8! p-4!">
                 <h3 class="title">Détails</h3>
                 <div class="build-info-gap">
                     <div class="build-info-gap-title">
@@ -140,7 +159,7 @@
             </div>
 
             {% if build.materials|length > 0 %}
-            <div class="container">
+            <div class="container md:p-8! p-4!">
                 <h3 class="title">Matériaux Requis</h3>
                 <div class="flex flex-col gap-2">
                     {% for material in build.materials %}
@@ -154,7 +173,7 @@
             {% endif %}
 
             {% if build.buildTags|length > 0 %}
-            <div class="container">
+            <div class="container md:p-8! p-4!">
                 <h3 class="title">Tags</h3>
                 <div class="flex flex-wrap gap-2">
                     {% for tag in build.buildTags %}

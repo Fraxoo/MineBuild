@@ -1,6 +1,6 @@
-<div{{ attributes }} class="container">
+<div{{ attributes }} class="container md:p-8! p-4!">
     <div class="flex gap-2 items-center">
-        <img class="w-18 h-18 rounded-full border-4 border-(--border-color-secondary) object-cover"
+        <img class="w-18 h-18 rounded-full flex-wrap border-4 border-(--border-color-secondary) object-cover"
             data-avatar-preview-target="image"
             src="{{ build.author.avatarUrl ? asset('uploads/avatars/' ~ build.author.avatarUrl) : asset('images/default-avatar.jpg') }}"
             alt="Avatar de {{ build.author.username }}">
@@ -12,7 +12,7 @@
     {% if build.author.bio %}
     <p class="text-(--secondary-color)">{{ build.author.bio }}</p>
     {% endif %}
-    <div class="flex items-center gap-2">
+    <div class="flex items-center flex-wrap gap-2">
         {% if app.user %}
         {% if app.user.id === build.author.id %}
         <a class="primary-button w-full" href="{{ path('app_build_edit', {'id': build.id}) }}"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
