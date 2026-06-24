@@ -40,7 +40,7 @@ input {
     scrollbar-color: var(--primary-color) var(--container-color);
 }
 
-i {
+/* i {
     line-height: 1;
     flex-shrink: 0;
 }
@@ -53,6 +53,17 @@ button:has(i) {
 a:has(i) {
     line-height: 1;
     flex-shrink: 0;
+} */
+
+
+
+.ti {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+    vertical-align: middle;
 }
 
 
@@ -864,6 +875,8 @@ body {
         width: 100%;
         padding: 1.25rem;
     }
+
+
 
     .user-filter-container {
         display: flex;
