@@ -8,7 +8,7 @@
                 alt="Avatar de {{ user.username }}">
             <div class="flex flex-col gap-2">
                 <h2 class="font-bold text-2xl flex md:hidden text-(--title-color)">{{user.username}}</h2>
-                <div class="flex gap-4 items-center">
+                <div class="flex gap-4 md:hidden items-center">
                     <div class="flex flex-col gap-2 items-start">
                         <p class="text-(--title-color) font-bold">{{ user.followerRelations|length }}</p>
                         <p class="text-(--secondary-color)">Followers</p>
