@@ -12,8 +12,8 @@
 				<p>{{ build.likesCount}} <span class="md:inline-block hidden">J'aime</span></p>
 			</div>
 			<div class="build-stats">
-				<i class="ti ti-download"></i>
-				<p>{{ build.downloadsCount }} <span class="md:inline-block hidden">Téléchargements</span></p>
+				<i class="ti ti-heart"></i>
+				<p>{{ build.savesCount }} <span class="md:inline-block hidden">Favoris</span></p>
 			</div>
 			<div class="build-stats text-yellow-400!">
 				<i class="ti ti-star"></i>
@@ -36,7 +36,7 @@
 			</button>
 
 			<button class="container-button" {{live_action('save')}}>
-				<i class="ti ti-star {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
+				<i class="ti ti-heart {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				<p>Favoris</p>
 			</button>
 			<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
@@ -63,7 +63,7 @@
 				<span>Partager</span>
 			</button>
 			<a href="{{ path('app_login') }}" class="container-button">
-				<i class="ti ti-star {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
+				<i class="ti ti-heart {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				<p>Favoris</p>
 			</a>
 			<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
