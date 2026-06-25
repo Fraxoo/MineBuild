@@ -15,7 +15,7 @@
 			<i class="fa-solid fa-magnifying-glass"></i>
 		</button>
 		<input name="search" class="w-full outline-none! focus:outline-none! focus:ring-0!"
-			placeholder="Rechercher des builds, auteur..." type="search">
+			placeholder="Rechercher des builds, auteur..." value="{{ app.request.query.get('search')}}" type="search">
 	</form>
 	<div class="flex items-center text-(--title-color) text-xl gap-2">
 		<i class="ti text-2xl! ti-bell"></i>
