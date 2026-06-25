@@ -74,7 +74,6 @@
 			{% endif %}
 		</div>
 	</div>
-	{{ dump(build) }}
 	{% if build.assets|length > 0 %} 
 	<a href="{{ path('app_build_download', { id: build.id }) }}"
 		class="flex items-center gap-2 justify-center bg-(--primary-color) py-3 px-4 text-center rounded font-semibold">
