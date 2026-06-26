@@ -55,7 +55,8 @@ class UserFollowRepository extends ServiceEntityRepository
     public function countFollowingsByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('uf')
-            ->select('COUNT(uf.created_at)')
+            ->select('COUNT(DISTINCT following.id)')
+            ->innerJoin('uf.following', 'following')
             ->andWhere('uf.follower = :user')
             ->setParameter('user', $user)
             ->getQuery()
@@ -65,7 +66,8 @@ class UserFollowRepository extends ServiceEntityRepository
     public function countFollowersByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('uf')
-            ->select('COUNT(uf.created_at)')
+            ->select('COUNT(DISTINCT follower.id)')
+            ->innerJoin('uf.follower', 'follower')
             ->andWhere('uf.following = :user')
             ->setParameter('user', $user)
             ->getQuery()

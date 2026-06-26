@@ -40,7 +40,7 @@ class CommentRepository extends ServiceEntityRepository
     public function countVisibleByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('c')
-            ->select('COUNT(c.id)')
+            ->select('COUNT(DISTINCT c.id)')
             ->andWhere('c.author = :user')
             ->andWhere('c.visibility = :visibility')
             ->andWhere('c.deleted_at IS NULL')

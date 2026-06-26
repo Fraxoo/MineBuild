@@ -21,7 +21,7 @@ class ModerationActionRepository extends ServiceEntityRepository
     public function countHistoryReport(): int
     {
         return (int) $this->createQueryBuilder('ma')
-            ->select('COUNT(ma.id)')
+            ->select('COUNT(DISTINCT ma.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }

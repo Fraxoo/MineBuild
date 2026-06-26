@@ -96,7 +96,7 @@ class BuildRepository extends ServiceEntityRepository
     public function countOnlineBuilds(): int
     {
         return (int) $this->createQueryBuilder('b')
-            ->select('COUNT(b.id)')
+            ->select('COUNT(DISTINCT b.id)')
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
             ->setParameter('visibility', 'PUBLIC')
@@ -125,7 +125,7 @@ class BuildRepository extends ServiceEntityRepository
     public function countVisibleByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('b')
-            ->select('COUNT(b.id)')
+            ->select('COUNT(DISTINCT b.id)')
             ->andWhere('b.author = :user')
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')

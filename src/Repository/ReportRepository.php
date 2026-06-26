@@ -53,7 +53,7 @@ class ReportRepository extends ServiceEntityRepository
     public function countReportByUser($user)
     {
         return (int) $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
+            ->select('COUNT(DISTINCT r.id)')
             ->andWhere('r.user = :user')
             ->setParameter('user', $user)
             ->getQuery()
@@ -98,7 +98,7 @@ class ReportRepository extends ServiceEntityRepository
     public function countPendingReportByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
+            ->select('COUNT(DISTINCT r.id)')
             ->andWhere('r.status = :status')
             ->andWhere('r.user = :user')
             ->setParameter('status', 'Pending')
@@ -109,7 +109,7 @@ class ReportRepository extends ServiceEntityRepository
 
     public function countPendingReport(){
         return (int) $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
+            ->select('COUNT(DISTINCT r.id)')
             ->andWhere('r.status = :status')
             ->setParameter('status', 'Pending')
             ->getQuery()
