@@ -157,7 +157,8 @@
         <p class="build-card__subtitle">Ajoutez jusqu’à 10 tags pour aider les autres à trouver votre build</p>
     </header>
     <div class="build-card__body">
-        <div class="build-tags" data-controller="tags-input" data-tags-input-max-value="10">
+        <div class="build-tags" data-controller="tags-input" data-tags-input-max-value="10"
+            data-action="submit->tags-input#submit">
             {{ form_widget(form.tags, { attr: { 'data-tags-input-target': 'hidden' } }) }}
 
             <div class="build-tags__row">
