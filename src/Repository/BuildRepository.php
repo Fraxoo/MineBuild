@@ -6,6 +6,7 @@ use App\Entity\Build;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @extends ServiceEntityRepository<Build>
@@ -82,11 +83,13 @@ class BuildRepository extends ServiceEntityRepository
             $queryBuilder->orderBy('b.created_at', 'DESC');
         }
 
-
         $queryBuilder->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $queryBuilder->getQuery()->getResult();
+
+        $paginator = new Paginator($queryBuilder, true);
+
+        return iterator_to_array($paginator->getIterator());
     }
 
 
