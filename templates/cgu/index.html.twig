@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions d'utilisation{% endblock %}
+
+{% block body %}
+<div class="flex flex-col items-center gap-4">
+    <div class="flex flex-col w-full max-w-[56rem] m-auto gap-4">
+        <twig:GoBack />
+        <div class="flex items-center gap-2 text-4xl font-bold">
+            <i class="ti text-(--primary-color) text-4xl! ti-file-text"></i>
+            <h1 class="text-(--title-color)">Conditions d'utilisation</h1>
+        </div>
+        <p class="text-(--secondary-color) text-xl">Veuillez prendre le temps de lire avant de continuer</p>
+
+        <div class="flex flex-col gap-4">
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">1. Présentation du site</h3>
+                <p>Minebuild est une plateforme communautaire dédiée au partage de constructions Minecraft.</p>
+                <p>Le site permet aux utilisateurs de publier, consulter, commenter, noter, sauvegarder et télécharger des builds Minecraft. Les utilisateurs peuvent également suivre d’autres créateurs et signaler des contenus ou comportements qui ne respectent pas les règles de la plateforme.</p>
+                <p>Minebuild n’est pas un service officiel Minecraft et n’est pas affilié à Mojang ou Microsoft.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">2. Acceptation des conditions d’utilisation</h3>
+                <p>En créant un compte ou en utilisant le site, l’utilisateur accepte les présentes conditions d’utilisation.</p>
+                <p>Si l’utilisateur n’accepte pas ces conditions, il ne doit pas créer de compte ni utiliser les fonctionnalités réservées aux membres.</p>
+                <p>Les conditions d’utilisation peuvent être modifiées à tout moment afin de s’adapter à l’évolution du site, de ses fonctionnalités ou de la réglementation.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">3. Création de compte</h3>
+                <p>Certaines fonctionnalités nécessitent la création d’un compte utilisateur.</p>
+                <p>Lors de l’inscription, l’utilisateur doit fournir des informations exactes, notamment un nom d’utilisateur, une adresse email et un mot de passe.</p>
+                <p>L’utilisateur est responsable de la confidentialité de son mot de passe et de l’utilisation de son compte.</p>
+                <p>En cas d’utilisation non autorisée de son compte, l’utilisateur doit contacter l’équipe du site dès que possible.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">4. Règles de comportement</h3>
+                <p>L’utilisateur s’engage à utiliser Minebuild de manière respectueuse.</p>
+                <p>Sont interdits sur la plateforme :</p>
+                <ul class="list-disc pl-6 flex flex-col gap-2">
+                    <li>les insultes, menaces ou comportements agressifs ;</li>
+                    <li>le harcèlement ou l’intimidation ;</li>
+                    <li>les propos haineux, discriminatoires ou violents ;</li>
+                    <li>les contenus sexuels, pornographiques ou choquants ;</li>
+                    <li>les contenus illégaux ou dangereux ;</li>
+                    <li>l’usurpation d’identité ;</li>
+                    <li>le spam, la publicité abusive ou les liens malveillants ;</li>
+                    <li>la publication de contenus volés ou ne respectant pas les droits d’auteur ;</li>
+                    <li>les signalements abusifs ou répétés sans raison valable.</li>
+                </ul>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">5. Publication de builds</h3>
+                <p>Un utilisateur connecté peut publier un build Minecraft sur la plateforme.</p>
+                <p>Lors de la publication, l’utilisateur peut ajouter un titre, une description, des images, des catégories, des tags, une version Minecraft, une difficulté, un mode de jeu, des dimensions, une liste de matériaux et éventuellement un fichier téléchargeable.</p>
+                <p>L’utilisateur reste responsable du contenu qu’il publie.</p>
+                <p>Les images, descriptions, fichiers et autres éléments publiés doivent respecter les règles du site.</p>
+                <p>L’utilisateur doit uniquement publier du contenu qu’il a créé lui-même ou qu’il est autorisé à partager.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">6. Images et fichiers envoyés</h3>
+                <p>Les images et fichiers envoyés sur Minebuild doivent être liés au build publié.</p>
+                <p>Les contenus pornographiques, violents, haineux, illégaux ou dangereux sont interdits.</p>
+                <p>Les fichiers envoyés ne doivent pas contenir de virus, logiciel malveillant ou contenu pouvant nuire aux autres utilisateurs.</p>
+                <p>L’équipe de modération peut supprimer ou masquer une image, un fichier ou un build si le contenu ne respecte pas les règles du site.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">7. Commentaires et interactions</h3>
+                <p>Les utilisateurs connectés peuvent commenter, liker, noter, sauvegarder et partager les builds.</p>
+                <p>Les commentaires doivent rester respectueux et en rapport avec le contenu publié.</p>
+                <p>Les interactions abusives, le spam ou les comportements visant à nuire à un utilisateur peuvent entraîner une sanction.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">8. Signalements</h3>
+                <p>Tout utilisateur connecté peut signaler un build, un commentaire ou un utilisateur.</p>
+                <p>Un signalement doit être fait de bonne foi et avec un motif valable.</p>
+                <p>Les motifs de signalement peuvent concerner notamment le spam, le harcèlement, les contenus haineux, les contenus sexuels, la violence, les contenus illégaux, l’usurpation d’identité ou les droits d’auteur.</p>
+                <p>Les signalements abusifs ou répétés peuvent entraîner une sanction sur le compte de l’utilisateur.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">9. Modération</h3>
+                <p>L’équipe de modération peut consulter les signalements et prendre les mesures nécessaires.</p>
+                <p>Selon la situation, la modération peut :</p>
+                <ul class="list-disc pl-6 flex flex-col gap-2">
+                    <li>rejeter un signalement ;</li>
+                    <li>valider un signalement ;</li>
+                    <li>masquer ou supprimer un build ;</li>
+                    <li>masquer ou supprimer un commentaire ;</li>
+                    <li>envoyer un avertissement à un utilisateur ;</li>
+                    <li>désactiver ou sanctionner un compte ;</li>
+                    <li>conserver un historique des actions effectuées.</li>
+                </ul>
+                <p>Chaque action de modération importante peut être accompagnée d’un motif.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">10. Suppression de contenu</h3>
+                <p>Un contenu peut être supprimé ou masqué s’il ne respecte pas les présentes conditions d’utilisation.</p>
+                <p>L’utilisateur concerné peut recevoir un avertissement ou une notification expliquant la raison de l’action.</p>
+                <p>La suppression ou le masquage d’un contenu ne donne droit à aucune compensation.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">11. Droits sur les contenus publiés</h3>
+                <p>L’utilisateur conserve ses droits sur les contenus qu’il publie sur Minebuild.</p>
+                <p>En publiant un contenu sur la plateforme, l’utilisateur autorise Minebuild à l’afficher, l’héberger et le rendre accessible aux autres utilisateurs dans le cadre du fonctionnement du site.</p>
+                <p>Cette autorisation est nécessaire pour permettre l’affichage des builds, des images, des commentaires et des fichiers associés.</p>
+                <p>L’utilisateur garantit qu’il dispose des droits nécessaires sur les contenus qu’il publie.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">12. Téléchargements</h3>
+                <p>Certains builds peuvent proposer des fichiers téléchargeables.</p>
+                <p>L’utilisateur qui télécharge un fichier le fait sous sa propre responsabilité.</p>
+                <p>Minebuild ne garantit pas que les fichiers publiés par les utilisateurs soient exempts d’erreurs, de problèmes techniques ou de contenu non conforme.</p>
+                <p>Les fichiers signalés peuvent être contrôlés et supprimés par la modération.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">13. Disponibilité du site</h3>
+                <p>Minebuild peut être temporairement indisponible pour des raisons de maintenance, de mise à jour ou de problème technique.</p>
+                <p>L’équipe du site fait son possible pour maintenir un accès stable, mais ne garantit pas une disponibilité permanente.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">14. Responsabilité</h3>
+                <p>Minebuild propose un espace communautaire permettant aux utilisateurs de publier et partager du contenu.</p>
+                <p>Chaque utilisateur est responsable des contenus qu’il publie et de son comportement sur la plateforme.</p>
+                <p>Minebuild ne peut pas être tenu responsable des contenus publiés par les utilisateurs, mais peut intervenir en cas de signalement ou de non-respect des règles.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">15. Données personnelles</h3>
+                <p>Minebuild peut collecter certaines données nécessaires au fonctionnement du site, comme le nom d’utilisateur, l’adresse email, le mot de passe chiffré, l’avatar, la biographie et les contenus publiés.</p>
+                <p>Ces données sont utilisées pour gérer les comptes, l’authentification, les profils, les publications, les commentaires, les signalements et la modération.</p>
+                <p>Une politique de confidentialité séparée peut préciser plus en détail les données collectées, leur utilisation, leur durée de conservation et les droits des utilisateurs.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">16. Suppression du compte</h3>
+                <p>L’utilisateur peut demander ou effectuer la suppression de son compte depuis les paramètres de son profil, si cette fonctionnalité est disponible.</p>
+                <p>La suppression du compte peut entraîner la suppression ou l’anonymisation de certaines données associées.</p>
+                <p>Certains éléments peuvent être conservés si cela est nécessaire pour des raisons techniques, de sécurité ou de modération.</p>
+            </section>
+
+            <section class="container flex flex-col gap-3 text-(--secondary-color)">
+                <h3 class="text-(--title-color) text-2xl font-bold">17. Sanctions</h3>
+                <p>En cas de non-respect des conditions d’utilisation, Minebuild peut appliquer différentes sanctions :</p>
+                <ul class="list-disc pl-6 flex flex-col gap-2">
+                    <li>avertissement ;</li>
+                    <li>suppression ou masquage d’un contenu ;</li>
+                    <li>restriction d’accès à certaines fonctionnalités ;</li>
+                    <li>désactivation temporaire ou définitive du compte.</li>
+                </ul>
+                <p>La sanction dépend de la gravité du comportement ou du contenu concerné.</p>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

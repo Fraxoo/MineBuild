@@ -827,6 +827,15 @@ body {
     border: 1px solid var(--border-color);
 }
 
+.container h3{
+    color: var(--title-color);
+    font-weight: bold;
+}
+
+.container p {
+    color: var(--secondary-color);
+}
+
 .build-info-gap {
     display: flex;
     justify-content: space-between;
