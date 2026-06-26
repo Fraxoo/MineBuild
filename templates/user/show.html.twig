@@ -73,7 +73,7 @@
 		{% for item in items %}
 
 		{% set followUser = followType == 'followers' ? item.follower : item.following %}
-		<twig:UserCard :item="item" />
+		<twig:UserCard :item="item" :followType="followType" />
 		{% endfor %}
 
 		{% else %}
