@@ -147,7 +147,8 @@ class BuildRepository extends ServiceEntityRepository
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
             ->setParameter('visibility', 'PUBLIC')
-            ->select('COUNT(b.id)');
+            // USE DISTINCT 0 DOUBLON
+            ->select('COUNT(DISTINCT b.id)');
 
 
         if ($isFavorite) {
