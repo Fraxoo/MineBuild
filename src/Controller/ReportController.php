@@ -32,7 +32,7 @@ final class ReportController extends AbstractController
 
         if ($targetType === 'users') {
             $totalItems = $userRepository->countUsers();
-            $items = $userRepository->findBy([], ['created_at' => 'DESC'], $limit, ($page - 1) * $limit);
+            $items = $userRepository->findAllWithPagination($limit, $page);
         } elseif ($targetType === 'history') {
             $totalItems = $maRepository->countHistoryReport();
             $items = $maRepository->findAllWithIncludeAndPagination($limit, $page);
