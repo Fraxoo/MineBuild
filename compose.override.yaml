@@ -11,7 +11,7 @@ services:
       - ./frankenphp/Caddyfile:/etc/frankenphp/Caddyfile:ro
       - ./frankenphp/conf.d/20-app.dev.ini:/usr/local/etc/php/app.conf.d/20-app.dev.ini:ro
       # Keep var/ off the bind-mount for faster I/O on Mac/Windows; comment to inspect from the host.
-      - /app/var
+      - app_var:/app/var
       # If you develop on Mac or Windows you can remove the vendor/ directory
       #  from the bind-mount for better performance by enabling the next line:
       #- /app/vendor
@@ -25,6 +25,24 @@ services:
     extra_hosts:
       # Ensure that host.docker.internal is correctly defined on Linux
       - host.docker.internal:host-gateway
+    tty: true
+  tailwind:
+    image: ${IMAGES_PREFIX:-}app-php-dev
+    build:
+      context: .
+      target: frankenphp_dev
+    entrypoint: ["docker-php-entrypoint"]
+    command: php bin/console tailwind:build --watch
+    volumes:
+      - ./:/app
+      - app_var:/app/var
+    environment:
+      APP_ENV: "${APP_ENV:-dev}"
+    depends_on:
+      php:
+        condition: service_healthy
+    healthcheck:
+      disable: true
     tty: true
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
@@ -45,3 +63,6 @@ services:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
 ###< symfony/mailer ###
+
+volumes:
+  app_var:
