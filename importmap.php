@@ -25,6 +25,12 @@ return [
     '@symfony/ux-live-component' => [
         'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
     ],
+    'bootstrap' => [
+        'path' => './assets/vendor/bootstrap/bootstrap.index.js',
+    ],
+    '@popperjs/core' => [
+        'path' => './assets/vendor/@popperjs/core/core.index.js',
+    ],
     '@hotwired/turbo' => [
         'version' => '8.0.23',
     ],
