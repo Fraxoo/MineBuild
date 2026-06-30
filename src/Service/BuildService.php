@@ -9,6 +9,7 @@ use App\Entity\BuildDownload;
 use App\Entity\BuildImage;
 use App\Entity\BuildTag;
 use App\Entity\BuildVersion;
+use App\Entity\BuildView;
 use App\Entity\Comment;
 use App\Entity\Tag;
 use App\Entity\User;
@@ -18,7 +19,9 @@ use App\Repository\BuildDownloadRepository;
 use App\Repository\BuildLikeRepository;
 use App\Repository\BuildRepository;
 use App\Repository\BuildSaveRepository;
+use App\Repository\BuildViewRepository;
 use App\Repository\TagRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
@@ -36,6 +39,7 @@ final readonly class BuildService
         private BuildDownloadRepository $buildDownloadRepository,
         private BuildLikeRepository $buildLikeRepository,
         private BuildSaveRepository $buildSaveRepository,
+        private BuildViewRepository $buildViewRepository,
         private SluggerInterface $slugger,
         private ParameterBagInterface $parameterBag,
     ) {
@@ -172,6 +176,44 @@ final readonly class BuildService
         $comment->setBuild($build);
         $comment->setVisibility(Visibility::PUBLIC);
         $this->entityManager->persist($comment);
+        $this->entityManager->flush();
+    }
+
+    public function recordView(Build $build, ?User $user, Request $request): void
+    {
+        if ($user instanceof User && $build->getAuthor()?->getId() === $user->getId()) {
+            return;
+        }
+
+        $since = new DateTimeImmutable('-24 hours');
+
+        if ($user instanceof User) {
+            if ($this->buildViewRepository->hasRecentUserView($build, $user, $since)) {
+                return;
+            }
+
+            $view = new BuildView();
+            $view->setUserId($user);
+        } else {
+            $ipHash = hash_hmac(
+                'sha256',
+                $request->getClientIp() ?? 'unknown',
+                (string) $this->parameterBag->get('kernel.secret')
+            );
+
+            if ($this->buildViewRepository->hasRecentIpView($build, $ipHash, $since)) {
+                return;
+            }
+
+            $view = new BuildView();
+            $view->setIpHash($ipHash);
+        }
+
+        $view->setBuildId($build);
+        $view->setViewedAt(new DateTimeImmutable());
+        $build->setViewsCount($build->getViewsCount() + 1);
+
+        $this->entityManager->persist($view);
         $this->entityManager->flush();
     }
 
@@ -426,4 +468,5 @@ final readonly class BuildService
     {
         return (string) $this->parameterBag->get('build_assets_directory');
     }
+
 }

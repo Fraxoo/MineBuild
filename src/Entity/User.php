@@ -110,6 +110,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: BuildDownload::class, mappedBy: 'user_id')]
     private Collection $buildDownloads;
 
+    /**
+     * @var Collection<int, BuildView>
+     */
+    #[ORM\OneToMany(targetEntity: BuildView::class, mappedBy: 'user_id')]
+    private Collection $buildViews;
+
 
     
 
@@ -127,6 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->followerRelations = new ArrayCollection();
         $this->commentLikes = new ArrayCollection();
         $this->buildDownloads = new ArrayCollection();
+        $this->buildViews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -388,6 +395,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($buildDownload->getUserId() === $this) {
                 $buildDownload->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BuildView>
+     */
+    public function getBuildViews(): Collection
+    {
+        return $this->buildViews;
+    }
+
+    public function addBuildView(BuildView $buildView): static
+    {
+        if (!$this->buildViews->contains($buildView)) {
+            $this->buildViews->add($buildView);
+            $buildView->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuildView(BuildView $buildView): static
+    {
+        if ($this->buildViews->removeElement($buildView)) {
+            // set the owning side to null (unless already changed)
+            if ($buildView->getUserId() === $this) {
+                $buildView->setUserId(null);
             }
         }
 
