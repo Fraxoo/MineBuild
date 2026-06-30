@@ -3,35 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Build;
-use App\Entity\BuildAsset;
-use App\Entity\BuildCategory;
-use App\Entity\BuildDownload;
-use App\Entity\BuildImage;
-use App\Entity\BuildTag;
-use App\Entity\BuildVersion;
 use App\Entity\Comment;
-use App\Entity\Mcversion;
-use App\Entity\Tag;
 use App\Enum\BuildAssetType;
 use App\Enum\Visibility;
 use App\Form\BuildType;
 use App\Form\CommentType;
-use App\Repository\BuildDownloadRepository;
-use App\Repository\BuildLikeRepository;
-use App\Repository\BuildRepository;
-use App\Repository\BuildSaveRepository;
-use App\Repository\TagRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Exception\MissingColumnException;
+use App\Service\BuildService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/build')]
 final class BuildController extends AbstractController
@@ -40,15 +23,15 @@ final class BuildController extends AbstractController
 
 
     #[Route(name: 'app_build_index', methods: ['GET'])]
-    public function index(BuildRepository $buildRepository): Response
+    public function index(BuildService $buildService): Response
     {
         return $this->render('build/index.html.twig', [
-            'builds' => $buildRepository->findAll(),
+            'builds' => $buildService->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'app_build_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, TagRepository $tagRepository, SluggerInterface $slugger): Response
+    public function new(Request $request, BuildService $buildService): Response
     {
 
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -62,107 +45,7 @@ final class BuildController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($build);
-
-
-            // create category ( only one )
-            $category = $form->get('category')->getData();
-            if ($category) {
-                $buildCategory = new BuildCategory($build, $category);
-                $entityManager->persist($buildCategory);
-            }
-
-            // create tags
-            $tags = $form->get('tags')->getData();
-
-            $tags = array_filter(array_map('trim', explode(',', $tags)));
-
-            foreach ($tags as $tag) {
-
-                $existing = $tagRepository->findOneBy(['name' => $tag]);
-                if (!$existing) {
-                    $newTag = new Tag();
-                    $newTag->setName($tag);
-
-                    $baseSlug = strtolower((string) $slugger->slug($tag));
-                    $baseSlug = $baseSlug ?: strtolower(bin2hex(random_bytes(6)));
-                    $slug = $baseSlug;
-                    if ($tagRepository->findOneBy(['slug' => $slug])) {
-                        $slug = $baseSlug . '-' . strtolower(bin2hex(random_bytes(3)));
-                    }
-
-                    $newTag->setSlug($slug);
-                    $entityManager->persist($newTag);
-                    $existing = $newTag;
-                }
-
-                $buildTag = new BuildTag($build, $existing);
-                $entityManager->persist($buildTag);
-            }
-
-            foreach ($build->getMaterials() as $material) {
-                $material->setBuild($build);
-                $entityManager->persist($material);
-            }
-
-            // Upload images
-            $imageFiles = $form->get('image_files')->getData();
-            $sortOrder = 0;
-            foreach ($imageFiles as $file) {
-                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = strtolower((string) $slugger->slug($originalFilename));
-                $newFilename = ($safeFilename ?: 'image') . '-' . uniqid() . '.' . ($file->guessExtension() ?: 'bin');
-
-                try {
-                    $file->move($this->getParameter('build_images_directory'), $newFilename);
-                } catch (FileException $e) {
-                    continue;
-                }
-
-                $image = new BuildImage();
-                $image->setBuild($build);
-                $image->setUrl($newFilename);
-                $image->setAlt($originalFilename);
-                $image->setSortOrder($sortOrder++);
-                $entityManager->persist($image);
-            }
-
-            $worldFile = $form->get('world_file')->getData();
-            if ($worldFile instanceof UploadedFile && $worldFile->isValid()) {
-                $clientOriginalName = $worldFile->getClientOriginalName();
-                $sizeBytes = (int) ($worldFile->getSize() ?? 0);
-
-                $originalFilename = pathinfo($clientOriginalName, PATHINFO_FILENAME);
-                $safeFilename = strtolower((string) $slugger->slug($originalFilename));
-                $newFilename = ($safeFilename ?: 'world') . '-' . uniqid() . '.' . ($worldFile->guessExtension() ?: 'bin');
-
-                try {
-                    $worldFile->move($this->getParameter('build_assets_directory'), $newFilename);
-                } catch (FileException $e) {
-                    // ignore upload failure
-                    $newFilename = null;
-                }
-
-                if ($newFilename) {
-                    $asset = new BuildAsset();
-                    $asset->setBuild($build);
-                    $asset->setType(BuildAssetType::WORLD);
-                    $asset->setUrl($newFilename);
-                    $asset->setFilename($clientOriginalName);
-                    $asset->setSizeBytes($sizeBytes);
-                    $entityManager->persist($asset);
-                }
-            }
-
-            $mcVersion = $form->get('Mcversion')->getData();
-            if ($mcVersion) {
-                $newMcVersion = new BuildVersion();
-                $newMcVersion->setVersion($mcVersion);
-                $newMcVersion->setBuild($build);
-                $entityManager->persist($newMcVersion);
-            }
-
-            $entityManager->flush();
+            $buildService->create($build, $form);
 
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
@@ -174,7 +57,7 @@ final class BuildController extends AbstractController
     }
 
     #[Route('/build/{id}/download', name: 'app_build_download')]
-    public function download(Build $build, BuildDownloadRepository $buildDownloadRepository, EntityManagerInterface $entityManager): BinaryFileResponse
+    public function download(Build $build, BuildService $buildService): BinaryFileResponse
     {
         if ($build->getDeletedAt() !== null) {
             throw $this->createNotFoundException('Build introuvable.');
@@ -203,16 +86,7 @@ final class BuildController extends AbstractController
 
         $user = $this->getUser();
         if ($user instanceof \App\Entity\User) {
-            $downloadedByUser = $buildDownloadRepository->findOneBy([
-                'build' => $build,
-                'user_id' => $user,
-            ]);
-
-            if (!$downloadedByUser) {
-                $entityManager->persist(new BuildDownload($build, $user));
-                $build->setDownloadsCount($build->getDownloadsCount() + 1);
-                $entityManager->flush();
-            }
+            $buildService->registerDownload($build, $user);
         }
 
         return $this->file(
@@ -223,29 +97,19 @@ final class BuildController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_build_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Build $build, EntityManagerInterface $em, BuildSaveRepository $buildSaveRepository, BuildRepository $buildRepository, BuildLikeRepository $buildLikeRepository): Response
+    public function show(Request $request, Build $build, BuildService $buildService): Response
     {
-        $build = $buildRepository->getBuildWithJoinByUser($build);
+        $build = $buildService->getBuildWithJoinByUser($build);
 
         if ($build->getVisibility() === Visibility::HIDDEN or !$build) {
             return $this->redirectToRoute('app_build_not_found', [], Response::HTTP_SEE_OTHER);
         }
 
         $user = $this->getUser();
-        $isLikedByUser = $user instanceof \App\Entity\User
-            ? $buildLikeRepository->existsForBuildAndUser($build->getId(), $user->getId())
-            : false;
-
-        $isFollowedByUser = $user instanceof \App\Entity\User
-            ? $build->getAuthor()->getFollowerRelations()->exists(fn($i, $rel) => $rel->getFollower()->getId() === $user->getId())
-            : false;
-
-        $isSavedByUser = $user instanceof \App\Entity\User
-            ? $buildSaveRepository->findOneBy([
-                'build' => $build,
-                'user' => $user,
-            ]) !== null
-            : false;
+        $appUser = $user instanceof \App\Entity\User ? $user : null;
+        $isLikedByUser = $buildService->isLikedByUser($build, $appUser);
+        $isFollowedByUser = $buildService->isFollowedByUser($build, $appUser);
+        $isSavedByUser = $buildService->isSavedByUser($build, $appUser);
 
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -254,15 +118,8 @@ final class BuildController extends AbstractController
         if ($form->isSubmitted()) {
             $this->denyAccessUnlessGranted('ROLE_USER');
 
-            if ($user instanceof \App\Entity\User) {
-                $comment->setAuthor($user);
-            }
-            $comment->setBuild($build);
-            $comment->setVisibility(Visibility::PUBLIC);
-
             if ($form->isValid()) {
-                $em->persist($comment);
-                $em->flush();
+                $buildService->addComment($build, $comment, $appUser);
 
                 return $this->redirectToRoute('app_build_show', ['id' => $build->getId()], Response::HTTP_SEE_OTHER);
             }
@@ -279,7 +136,7 @@ final class BuildController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_build_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Build $build, EntityManagerInterface $entityManager, TagRepository $tagRepository, SluggerInterface $slugger): Response
+    public function edit(Request $request, Build $build, BuildService $buildService): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -292,223 +149,13 @@ final class BuildController extends AbstractController
         ]);
 
         if (!$request->isMethod('POST')) {
-            $existingCategory = $build->getBuildCategories()->first();
-            if ($existingCategory) {
-                $form->get('category')->setData($existingCategory->getCategory());
-            }
-
-            $existingBuildVersion = $build->getBuildVersions()->first();
-            if ($existingBuildVersion) {
-                $form->get('Mcversion')->setData($existingBuildVersion->getVersion());
-            }
-
-            $existingTags = [];
-            foreach ($build->getBuildTags() as $buildTag) {
-                $tagName = $buildTag->getTag()?->getName();
-                if ($tagName) {
-                    $existingTags[] = $tagName;
-                }
-            }
-
-            $form->get('tags')->setData(implode(',', $existingTags));
+            $buildService->prepareEditForm($build, $form);
         }
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $deleteImageIds = $request->request->all('delete_images');
-            } catch (\Symfony\Component\HttpFoundation\Exception\BadRequestException) {
-                $deleteImageIds = [];
-            }
-            $deleteImageIds = array_fill_keys(array_map('strval', $deleteImageIds), true);
-
-            $buildImagesDir = rtrim((string) $this->getParameter('build_images_directory'), '/');
-            foreach ($build->getImages()->toArray() as $existingImage) {
-                $imageId = $existingImage->getId();
-                if ($imageId === null || !isset($deleteImageIds[(string) $imageId])) {
-                    continue;
-                }
-
-                $filename = $existingImage->getUrl();
-                if ($filename) {
-                    $filePath = $buildImagesDir . '/' . $filename;
-                    if (is_file($filePath)) {
-                        @unlink($filePath);
-                    }
-                }
-
-                $build->removeImage($existingImage);
-                $entityManager->remove($existingImage);
-            }
-
-            $deleteWorldAsset = $request->request->has('delete_world_asset');
-
-            // Catégorie: éviter remove+recreate identique (collision Doctrine sur clé composite)
-            $selectedCategory = $form->get('category')->getData();
-            $existingBuildCategories = $build->getBuildCategories()->toArray();
-            $keepExistingCategory = false;
-            $selectedCategoryId = $selectedCategory?->getId();
-            foreach ($existingBuildCategories as $existing) {
-                $existingCategoryId = $existing->getCategory()?->getId();
-                if ($selectedCategoryId !== null && $existingCategoryId === $selectedCategoryId) {
-                    $keepExistingCategory = true;
-                    continue;
-                }
-
-                $entityManager->remove($existing);
-            }
-            if ($selectedCategory && !$keepExistingCategory) {
-                $entityManager->persist(new BuildCategory($build, $selectedCategory));
-            }
-
-            $selectedMcVersion = $form->get('Mcversion')->getData();
-            $existingBuildVersions = $build->getBuildVersions()->toArray();
-            $buildVersion = array_shift($existingBuildVersions);
-
-            if ($buildVersion) {
-                $buildVersion->setVersion($selectedMcVersion);
-            } elseif ($selectedMcVersion) {
-                $buildVersion = new BuildVersion();
-                $buildVersion->setBuild($build);
-                $buildVersion->setVersion($selectedMcVersion);
-                $entityManager->persist($buildVersion);
-            }
-
-            foreach ($existingBuildVersions as $extraBuildVersion) {
-                $entityManager->remove($extraBuildVersion);
-            }
-
-            // Tags: synchronisation complète, même quand la liste est vide.
-            $rawTags = (string) $form->get('tags')->getData();
-            $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
-            $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
-
-            $desiredTagsByKey = [];
-            foreach ($tagNames as $tagName) {
-                if ($tagName === '') {
-                    continue;
-                }
-
-                $existingTag = $tagRepository->findOneBy(['name' => $tagName]);
-                if (!$existingTag) {
-                    $tag = new Tag();
-                    $tag->setName($tagName);
-
-                    $baseSlug = strtolower((string) $slugger->slug($tagName));
-                    $baseSlug = $baseSlug ?: strtolower(bin2hex(random_bytes(6)));
-                    $slug = $baseSlug;
-                    if ($tagRepository->findOneBy(['slug' => $slug])) {
-                        $slug = $baseSlug . '-' . strtolower(bin2hex(random_bytes(3)));
-                    }
-
-                    $tag->setSlug($slug);
-                    $entityManager->persist($tag);
-                    $existingTag = $tag;
-                }
-
-                $desiredTagsByKey[strtolower($existingTag->getName() ?? $tagName)] = $existingTag;
-            }
-
-            $existingBuildTags = $build->getBuildTags()->toArray();
-            foreach ($existingBuildTags as $existing) {
-                $existingTagName = $existing->getTag()?->getName();
-                $existingKey = $existingTagName ? strtolower($existingTagName) : null;
-                if ($existingKey !== null && isset($desiredTagsByKey[$existingKey])) {
-                    unset($desiredTagsByKey[$existingKey]);
-                    continue;
-                }
-
-                $entityManager->remove($existing);
-            }
-
-            foreach ($desiredTagsByKey as $tag) {
-                $entityManager->persist(new BuildTag($build, $tag));
-            }
-
-            // Matériaux: persist explicite (pas de cascade)
-            foreach ($build->getMaterials() as $material) {
-                $material->setBuild($build);
-                $entityManager->persist($material);
-            }
-
-            // Upload images (optionnel)
-            $imageFiles = $form->get('image_files')->getData();
-            $sortOrder = 0;
-            foreach ($build->getImages() as $existingImage) {
-                $sortOrder = max($sortOrder, $existingImage->getSortOrder() + 1);
-            }
-            foreach ($imageFiles as $file) {
-                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = strtolower((string) $slugger->slug($originalFilename));
-                $newFilename = ($safeFilename ?: 'image') . '-' . uniqid() . '.' . ($file->guessExtension() ?: 'bin');
-
-                try {
-                    $file->move($this->getParameter('build_images_directory'), $newFilename);
-                } catch (FileException $e) {
-                    continue;
-                }
-
-                $image = new BuildImage();
-                $image->setBuild($build);
-                $image->setUrl($newFilename);
-                $image->setAlt($originalFilename);
-                $image->setSortOrder($sortOrder++);
-                $entityManager->persist($image);
-            }
-
-            // Fichier monde (optionnel)
-            $worldFile = $form->get('world_file')->getData();
-            if ($worldFile instanceof UploadedFile && $worldFile->isValid()) {
-                $deleteWorldAsset = true;
-            }
-
-            if ($deleteWorldAsset) {
-                $buildAssetsDir = rtrim((string) $this->getParameter('build_assets_directory'), '/');
-                foreach ($build->getAssets()->toArray() as $existingAsset) {
-                    if ($existingAsset->getType() !== BuildAssetType::WORLD) {
-                        continue;
-                    }
-
-                    $filename = $existingAsset->getUrl();
-                    if ($filename) {
-                        $assetPath = $buildAssetsDir . '/' . $filename;
-                        if (is_file($assetPath)) {
-                            @unlink($assetPath);
-                        }
-                    }
-
-                    $build->removeAsset($existingAsset);
-                    $entityManager->remove($existingAsset);
-                }
-            }
-
-            if ($worldFile instanceof UploadedFile && $worldFile->isValid()) {
-                $clientOriginalName = $worldFile->getClientOriginalName();
-                $sizeBytes = (int) ($worldFile->getSize() ?? 0);
-
-                $originalFilename = pathinfo($clientOriginalName, PATHINFO_FILENAME);
-                $safeFilename = strtolower((string) $slugger->slug($originalFilename));
-                $newFilename = ($safeFilename ?: 'world') . '-' . uniqid() . '.' . ($worldFile->guessExtension() ?: 'bin');
-
-                try {
-                    $worldFile->move($this->getParameter('build_assets_directory'), $newFilename);
-                } catch (FileException $e) {
-                    $newFilename = null;
-                }
-
-                if ($newFilename) {
-                    $asset = new BuildAsset();
-                    $asset->setBuild($build);
-                    $asset->setType(BuildAssetType::WORLD);
-                    $asset->setUrl($newFilename);
-                    $asset->setFilename($clientOriginalName);
-                    $asset->setSizeBytes($sizeBytes);
-                    $entityManager->persist($asset);
-                }
-            }
-
-            $entityManager->flush();
+            $buildService->update($build, $form, $request);
 
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
@@ -520,7 +167,7 @@ final class BuildController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_build_delete', methods: ['POST'])]
-    public function delete(Request $request, Build $build, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Build $build, BuildService $buildService): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -530,12 +177,7 @@ final class BuildController extends AbstractController
         }
 
         if ($this->isCsrfTokenValid('delete' . $build->getId(), $request->getPayload()->getString('_token'))) {
-            $build->setDeletedAt(new \DateTimeImmutable());
-            $build->setDeletedBy($user);
-            $deletedReason = trim($request->getPayload()->getString('deleted_reason'));
-            $build->setDeletedReason($deletedReason !== '' ? $deletedReason : null);
-
-            $entityManager->flush();
+            $buildService->softDelete($build, $user, $request->getPayload()->getString('deleted_reason'));
         }
 
         $redirectTo = $request->request->get('_redirect_to');
