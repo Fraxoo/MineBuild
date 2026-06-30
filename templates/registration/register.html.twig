@@ -81,7 +81,7 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
         </div>
         <div class="flex check items-center gap-2 text-(--title-color)">
             {{ form_widget(registrationForm.agreeTerms) }}
-            <p>J'accepte <a class="text-(--primary-color) hover:underline" href="">les conditions d'utilisation</a></p>
+            <p>J'accepte <a href="{{ path('app_cgu')}}" class="text-(--primary-color) hover:underline" href="">les conditions d'utilisation</a></p>
         </div>
         <div class="error-message">
             {{ form_errors(registrationForm) }}
