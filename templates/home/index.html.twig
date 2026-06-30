@@ -3,61 +3,80 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-<div class="flex flex-col gap-4">
+<div data-controller="mobile-filters" class="flex flex-col gap-4">
 
-    <form method="get" action="{{ path('app_home', { page: 1 }) }}"
-        class="container w-full max-w-none! flex flex-row! justify-between items-center">
-        <div class="flex items-center gap-4">
-            <input type="hidden" name="search" value="{{ filters.search }}">
-            <input type="hidden" name="sort" value="{{ filters.sort }}">
-            <p class="text-(--secondary-color)">Filtres :</p>
-
-
-            <select onchange="this.form.submit()" class="filter-select" name="version">
-                <option value="">Toutes les versions</option>
-
-                {% for version in versions %}
-                <option value="{{ version.id }}" {{ filters.versions==version.id ? 'selected' : '' }}>
-                    {{ version.number }}
-                </option>
-                {% endfor %}
-            </select>
-
-            <select onchange="this.form.submit()" class="filter-select" name="category">
-                <option value="">Toutes les catégories</option>
-
-                {% for categorie in categories %}
-                <option value="{{ categorie.id }}" {{ filters.category==categorie.id ? 'selected' : '' }}>
-                    {{ categorie.nameFr }}
-                </option>
-                {% endfor %}
-            </select>
-
-            <select onchange="this.form.submit()" class="filter-select" name="difficulty">
-                <option value="">Toutes les difficultés</option>
-                <option {{ filters.difficulty=='easy' ? 'selected' : '' }} value="easy">Facile</option>
-                <option {{ filters.difficulty=='medium' ? 'selected' : '' }} value="medium">Moyen</option>
-                <option {{ filters.difficulty=='hard' ? 'selected' : '' }} value="hard">Difficile</option>
-            </select>
+    <div class="flex flex-col rounded border bg-(--container-color) border-(--border-color)">
+        <div class="flex items-center md:hidden justify-between gap-4 p-4">
+            <p class="text-white">Filtres :</p>
+            <button type="button" class="md:hidden inline-flex leading-none h-fit text-white text-4xl"
+                data-mobile-filters-target="button" data-action="mobile-filters#toggle" aria-expanded="false"
+                aria-controls="mobile-filters">
+                <i class="ti ti-chevron-up"></i>
+            </button>
         </div>
+        <div id="mobile-filters" class="hidden md:flex max-h-[60vh] overflow-y-auto" data-mobile-filters-target="panel">
+            <form method="get" action="{{ path('app_home', { page: 1 }) }}"
+                class="container p-4! md:p-8! md:border border-none! hidden w-full max-w-none! flex-wrap md:flex flex-row! justify-between items-center">
+                <div class="flex flex-wrap md:flex-row flex-col md:items-center gap-4">
+                    <input type="hidden" name="search" value="{{ filters.search }}">
+                    <input type="hidden" name="sort" value="{{ filters.sort }}">
+                    <p class="text-(--secondary-color)">Filtres :</p>
 
-        <div class="flex items-center gap-2">
-            <p class="text-(--secondary-color)">Filtrer par :</p>
+                    <div class="flex flex-col md:flex-row gap-4">
 
-            <select onchange="this.form.submit()" class="filter-select" name="sort">
-                <option {{ filters.sort=='DESC' ? 'selected' : '' }} value="DESC">Nouveau</option>
-                <option {{ filters.sort=='POPULAR' ? 'selected' : '' }} value="POPULAR">Populaire</option>
-                <option {{ filters.sort=='ASC' ? 'selected' : '' }} value="ASC">Ancien</option>
-            </select>
+                        <select onchange="this.form.submit()" class="filter-select" name="version">
+                            <option value="">Toutes les versions</option>
+
+                            {% for version in versions %}
+                            <option value="{{ version.id }}" {{ filters.versions==version.id ? 'selected' : '' }}>
+                                {{ version.number }}
+                            </option>
+                            {% endfor %}
+                        </select>
+
+                        <select onchange="this.form.submit()" class="filter-select" name="category">
+                            <option value="">Toutes les catégories</option>
+
+                            {% for categorie in categories %}
+                            <option value="{{ categorie.id }}" {{ filters.category==categorie.id ? 'selected' : '' }}>
+                                {{ categorie.nameFr }}
+                            </option>
+                            {% endfor %}
+                        </select>
+
+                        <select onchange="this.form.submit()" class="filter-select" name="difficulty">
+                            <option value="">Toutes les difficultés</option>
+                            <option {{ filters.difficulty=='easy' ? 'selected' : '' }} value="easy">Facile</option>
+                            <option {{ filters.difficulty=='medium' ? 'selected' : '' }} value="medium">Moyen</option>
+                            <option {{ filters.difficulty=='hard' ? 'selected' : '' }} value="hard">Difficile</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex md:items-center md:flex-row flex-col gap-2">
+                    <p class="text-(--secondary-color)">Filtrer par :</p>
+
+                    <select onchange="this.form.submit()" class="filter-select" name="sort">
+                        <option {{ filters.sort=='DESC' ? 'selected' : '' }} value="DESC">Nouveauté</option>
+                        <option {{ filters.sort=='POPULAR' ? 'selected' : '' }} value="POPULAR">Popularité</option>
+                        <option {{ filters.sort=='ASC' ? 'selected' : '' }} value="ASC">Ancienneté</option>
+                    </select>
+                </div>
+            </form>
         </div>
-    </form>
-
+    </div>
+    {% if items %}
     <div class=" flex flex-col md:grid md:grid-cols-4 gap-4">
         {% for item in items %}
         <twig:BuildCard :build="item" />
         {% endfor %}
     </div>
-    <twig:PaginationComponent  :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
+    {% else %}
+    <div class="flex justify-center w-full text-(--title-color)">
+        <p class="font-bold">Aucun Résultat</p>
+    </div>
+    {% endif %}
+    <twig:PaginationComponent :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
 </div>
 
 

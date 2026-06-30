@@ -1,18 +1,28 @@
-<div{{attributes}} class="flex items-center border-b border-(--border-color) justify-between p-4">
-	<twig:WebsiteTitle />
-	<form class="input-input w-1/3" action="{{ path('app_home', { page: 1 }) }}" method="get">
+<div{{attributes}} class="flex items-center border-b border-(--border-color) gap-4 justify-between p-4">
+
+	<div class="md:flex hidden">
+		<twig:WebsiteTitle />
+	</div>
+	<button type="button" class="flex md:hidden text-white text-4xl" data-mobile-menu-target="button"
+		data-action="mobile-menu#toggle" aria-controls="mobile-navigation" aria-expanded="false"
+		aria-label="Ouvrir le menu">
+		<i class="ti flex md:hidden text-white text-4xl! ti-menu-2"></i>
+	</button>
+
+	<form class="input-input bg-(--search)!  md:w-1/3" action="{{ path('app_home', { page: 1 }) }}" method="get">
 
 		<button class="cursor-pointer">
 			<i class="fa-solid fa-magnifying-glass"></i>
 		</button>
-		<input name="search" class="w-full" placeholder="Rechercher des builds, auteur..." type="search">
+		<input name="search" class="w-full outline-none! focus:outline-none! focus:ring-0!"
+			placeholder="Rechercher des builds, auteur..." value="{{ app.request.query.get('search')}}" type="search">
 	</form>
-	<div class="flex items-center text-(--title-color) text-xl gap-4">
+	<div class="flex items-center text-(--title-color) text-xl gap-2">
 		<i class="ti text-2xl! ti-bell"></i>
 		<div class="dropdown bg-(--background-color) ">
 			<div tabindex="0" role="button" class=" cursor-pointer border-0 shadow-none bg-(--background-color)! m-1">
 				{% if app.user %}
-				<img class="w-10 h-10 rounded-full border-4 border-(--border-color-secondary) object-cover"
+				<img class="w-10 h-10 min-w-10 min-h-10 shrink-0 rounded-full border-4 border-(--border-color-secondary) object-cover"
 					data-avatar-preview-target="image"
 					src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
 					alt="Avatar de {{ app.user.username }}">
@@ -23,7 +33,8 @@
 			</div>
 			<div class="dropdown-content">
 				{% if app.user %}
-				<a href="{{ path('app_user_show', { id: app.user.id }) }}" class="dropdown-link border-b border-(--border-color)">
+				<a href="{{ path('app_user_show', { id: app.user.id }) }}"
+					class="dropdown-link border-b border-(--border-color)">
 					<img class="w-10 h-10 rounded-full border-4 border-(--border-color-secondary) object-cover"
 						data-avatar-preview-target="image"
 						src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
@@ -47,14 +58,14 @@
 					<p class="text-red-500!">Déconnexion</p>
 				</a>
 				{% else %}
-					<a class="dropdown-link" href="{{ path('app_login') }}">
-						<i class="ti ti-login"></i>
-						<p>Se connecter</p>
-					</a>
-					<a class="dropdown-link" href="{{ path('app_register') }}">
-						<i class="ti ti-user-plus"></i>
-						<p>S'enregistrer</p>
-					</a>
+				<a class="dropdown-link" href="{{ path('app_login') }}">
+					<i class="ti ti-login"></i>
+					<p>Se connecter</p>
+				</a>
+				<a class="dropdown-link" href="{{ path('app_register') }}">
+					<i class="ti ti-user-plus"></i>
+					<p>S'enregistrer</p>
+				</a>
 				{% endif %}
 			</div>
 

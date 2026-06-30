@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\ModerationAction;
 use App\Entity\Report;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,14 +21,14 @@ class ModerationActionRepository extends ServiceEntityRepository
     public function countHistoryReport(): int
     {
         return (int) $this->createQueryBuilder('ma')
-            ->select('COUNT(ma.id)')
+            ->select('COUNT(DISTINCT ma.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
 
     public function findAllWithIncludeAndPagination(int $limit, int $page): array
     {
-        $rows = $this->createQueryBuilder('ma')
+        $queryBuilder = $this->createQueryBuilder('ma')
             ->leftJoin('ma.target_user', 'target_user')->addSelect('target_user')
             ->leftJoin('ma.moderator', 'moderator')->addSelect('moderator')
             ->leftJoin('ma.build', 'build')->addSelect('build')
@@ -45,9 +46,10 @@ class ModerationActionRepository extends ServiceEntityRepository
             ->addGroupBy('reporter.id')
             ->orderBy('ma.created_at', 'DESC')
             ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
+
+        $paginator = new Paginator($queryBuilder, true);
+        $rows = iterator_to_array($paginator->getIterator());
 
         return array_map(static function (array $row): ModerationAction {
             $moderationAction = $row[0];

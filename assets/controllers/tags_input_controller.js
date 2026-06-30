@@ -29,6 +29,10 @@ export default class extends Controller {
     this.render();
   }
 
+  submit() {
+    this.add();
+  }
+
   remove(event) {
     const value = event.params.value;
     const tags = this.getTags().filter((t) => t !== value);

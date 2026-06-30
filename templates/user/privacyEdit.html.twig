@@ -3,7 +3,7 @@
 {% block title %}Edit User{% endblock %}
 
 {% block body %}
-<div class="flex flex-col mx-auto w-full max-w-4xl px-4  gap-4 ">
+<div class="flex flex-col mx-auto w-full max-w-4xl md:px-4  gap-4 ">
     <twig:UserEditNav :user="user" />
     <div class="user-edit-container border! border-(--red-border)!">
         <div class="flex flex-col gap-2">
@@ -13,7 +13,7 @@
             </div>
             <p class="text-(--secondary-color)">Action irréversible faite attention</p>
         </div>
-        <div class="flex p-4 bg-(--red-background) rounded-lg border border-(--red-border)  justify-between items-center">
+        <div class="flex p-4 bg-(--red-background) flex-wrap gap-2 rounded-lg border border-(--red-border)  justify-between items-center">
             <div class="flex  flex-col gap-2">
                 <h3 class="text-(--title-color) font-bold">Supprimer mon compte</h3>
                 <p class="text-(--secondary-color)">Supprimer définitivement votre compte et toutes les données associées.</p>

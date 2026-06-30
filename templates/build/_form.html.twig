@@ -157,7 +157,8 @@
         <p class="build-card__subtitle">Ajoutez jusqu’à 10 tags pour aider les autres à trouver votre build</p>
     </header>
     <div class="build-card__body">
-        <div class="build-tags" data-controller="tags-input" data-tags-input-max-value="10">
+        <div class="build-tags" data-controller="tags-input" data-tags-input-max-value="10"
+            data-action="submit->tags-input#submit">
             {{ form_widget(form.tags, { attr: { 'data-tags-input-target': 'hidden' } }) }}
 
             <div class="build-tags__row">
@@ -184,9 +185,7 @@
         <div class="build-materials__row" data-collection-item>
             <div class="build-materials__name">{{ form_widget(form.materials.vars.prototype.name) }}</div>
             <div class="build-materials__qty">{{ form_widget(form.materials.vars.prototype.quantity) }}</div>
-            <div class="h-full!">{{ form_widget(form.materials.vars.prototype.color , {
-                'attr' : { 'class' : 'h-full! ' }
-                }) }}</div>
+            <div class="build-materials__color">{{ form_widget(form.materials.vars.prototype.color) }}</div>
             <button type="button" class="container-button build-materials__remove" data-action="click->collection#remove"
                 aria-label="Supprimer">
                 <i class="ti ti-x"></i>

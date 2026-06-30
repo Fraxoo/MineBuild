@@ -1,7 +1,7 @@
 <div{{attributes}} class="flex flex-col gap-4 p-4 bg-(--container-color) rounded">
     {# {{ dump(report) }} #}
 
-    <div class="flex items-center text-xs gap-3">
+    <div class="flex flex-wrap items-center text-xs gap-3">
         <div class="flex items-center gap-3">
             <div
                 class="text-(--secondary-color)  px-2 py-1 rounded border border-(--border-color) flex items-center gap-1">
@@ -26,7 +26,7 @@
     <i class="dashboard-info">{{report.build.title}}</i>
     {% endif %}
 
-    <div class="flex items-center text-sm gap-4">
+    <div class="flex flex-wrap items-center text-sm gap-4">
         <div class="flex items-center text-red-500 font-semibold">
             <i class="ti ti-flag text-[1rem]"></i>
             {{ ('report.reason.' ~ report.reasonCode)|trans }}
@@ -41,17 +41,17 @@
 
     <p class="text-(--secondary-color)">{{report.message}}</p>
 
-    <div class="flex items-center gap-4 border-t   border-(--border-color) py-2" {{stimulus_controller('modal-form')}}>
+    <div class="flex flex-wrap items-center gap-4 border-t w-full md:w-fit  border-(--border-color) py-2" {{stimulus_controller('modal-form')}}>
         <button data-action="click->modal-form#openModal"
-            class="btn flex gap-4  items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2"
+            class="btn  flex gap-2 md:gap-4 flex-1 justify-center items-center border-0 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-sm! px-4 py-2"
             type="button">
             <i class="ti text-[1rem] ti-trash"></i>
             <p>Supprimer</p>
         </button>
         <twig:Modal :report="report" />
-        <form method="post" action="{{ path('app_report_reject', {'id': report.id}) }}">
+        <form method="post" class="flex-1" action="{{ path('app_report_reject', {'id': report.id}) }}">
             <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ report.id) }}">
-            <button class="container-color-button  text-sm!">
+            <button class="container-color-button w-full! gap-2! md:gap-4! text-sm!">
                 <i class="ti text-[1rem] ti-x"></i>
                 <p>Rejeter</p>
             </button>

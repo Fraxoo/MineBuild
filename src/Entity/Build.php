@@ -95,6 +95,7 @@ class Build
      * @var Collection<int, BuildImage>
      */
     #[ORM\OneToMany(mappedBy: 'build', targetEntity: BuildImage::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['sort_order' => 'ASC'])]
     private Collection $images;
 
     /**

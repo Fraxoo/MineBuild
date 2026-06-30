@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\UserFollow;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,34 +22,41 @@ class UserFollowRepository extends ServiceEntityRepository
     {
         $offset = ($page - 1) * $limit;
 
-        return $this->createQueryBuilder('uf')
+        $queryBuilder = $this->createQueryBuilder('uf')
             ->andWhere('uf.follower = :user')
             ->setParameter('user', $user)
             ->orderBy('uf.created_at', 'DESC')
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
+
+        $paginator = new Paginator($queryBuilder, false);
+        $paginator->setUseOutputWalkers(false);
+
+        return iterator_to_array($paginator->getIterator());
     }
 
     public function getFollowersByUser(User $user, int $page, int $limit): array
     {
         $offset = ($page - 1) * $limit;
 
-        return $this->createQueryBuilder('uf')
+        $queryBuilder = $this->createQueryBuilder('uf')
             ->andWhere('uf.following = :user')
             ->setParameter('user', $user)
             ->orderBy('uf.created_at', 'DESC')
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
+
+        $paginator = new Paginator($queryBuilder, false);
+        $paginator->setUseOutputWalkers(false);
+
+        return iterator_to_array($paginator->getIterator());
     }
 
     public function countFollowingsByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('uf')
-            ->select('COUNT(uf.created_at)')
+            ->select('COUNT(DISTINCT following.id)')
+            ->innerJoin('uf.following', 'following')
             ->andWhere('uf.follower = :user')
             ->setParameter('user', $user)
             ->getQuery()
@@ -58,7 +66,8 @@ class UserFollowRepository extends ServiceEntityRepository
     public function countFollowersByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('uf')
-            ->select('COUNT(uf.created_at)')
+            ->select('COUNT(DISTINCT follower.id)')
+            ->innerJoin('uf.follower', 'follower')
             ->andWhere('uf.following = :user')
             ->setParameter('user', $user)
             ->getQuery()

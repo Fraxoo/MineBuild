@@ -1,30 +1,27 @@
-<div {{attributes}} class="flex flex-col gap-4">
-	<div class="flex flex-wrap gap-4 items-center justify-between  rounded p-4 bg-(--container-color)">
-		<div class="flex items-center gap-4">
+<div {{attributes}} class="flex flex-col flex-wrap gap-4">
+	<div class="flex flex-col flex-wrap gap-4  justify-between  rounded p-4 bg-(--container-color)">
+		<div class="flex md:justify-start justify-between w-full md:w-fit flex-wrap items-center gap-4">
 			<div class="build-stats">
 				<i class="ti ti-eye"></i>
-				<p>{{build.viewsCount}}
-					Vues</p>
+				<p>{{build.viewsCount}} <span class="md:inline-block hidden">Vues</span></p>
 			</div>
 			<div class="build-stats">
 				<button class="h-fit">
 					<i class="ti ti-thumb-up"></i>
 				</button>
-				<p>{{ build.likesCount}}
-					J'aime</p>
+				<p>{{ build.likesCount}} <span class="md:inline-block hidden">J'aime</span></p>
 			</div>
 			<div class="build-stats">
-				<i class="ti ti-download"></i>
-				<p>{{ build.downloadsCount }}
-					Téléchargements</p>
+				<i class="ti ti-heart"></i>
+				<p>{{ build.savesCount }} <span class="md:inline-block hidden">Favoris</span></p>
 			</div>
 			<div class="build-stats text-yellow-400!">
 				<i class="ti ti-star"></i>
-				<p>{{build.ratingAvg}}
-					({{build.ratings|length}})</p>
+				<p>{{build.ratingAvg}} <span class="md:inline-block hidden">({{build.ratings|length}})</span></p>
 			</div>
 		</div>
-		<div {{stimulus_controller('modal-form')}} class="flex  items-center gap-4">
+		<div {{stimulus_controller('modal-form')}}
+			class="md:flex md:flex-wrap grid w-full md:w-fit grid-cols-2 [&>button]:flex-1 [&>a]:flex-1 items-center gap-4">
 			{% if app.user %}
 			<button type="button" data-action="live#action" data-live-action-param="like" class="container-button">
 				<i
@@ -39,20 +36,20 @@
 			</button>
 
 			<button class="container-button" {{live_action('save')}}>
-				<i class="ti ti-star {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
+				<i class="ti ti-heart {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				<p>Favoris</p>
 			</button>
-				<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
-					<i class="ti ti-flag"></i>
-					Signaler
-				</a>
-				{% if is_granted('ROLE_ADMIN') and app.user.id != build.author.id %}
-				<button data-action="click->modal-form#openModal" class="red-button" type="button">
-					<i class="ti ti-trash"></i>
-					Supprimer
-				</button>
-				<twig:DeleteModal :id="build.id" type="build" />
-				{% endif %}
+			<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
+				<i class="ti ti-flag"></i>
+				Signaler
+			</a>
+			{% if is_granted('ROLE_ADMIN') and app.user.id != build.author.id %}
+			<button data-action="click->modal-form#openModal" class="red-button" type="button">
+				<i class="ti ti-trash"></i>
+				Supprimer
+			</button>
+			<twig:DeleteModal :id="build.id" type="build" />
+			{% endif %}
 
 			{% else %}
 			<a href="{{ path('app_login') }}" class="container-button">
@@ -66,37 +63,39 @@
 				<span>Partager</span>
 			</button>
 			<a href="{{ path('app_login') }}" class="container-button">
-				<i class="ti ti-star {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
+				<i class="ti ti-heart {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				<p>Favoris</p>
 			</a>
 			<a href="{{ path('app_report_new_build' , { id: build.id }) }}" class="container-button">
 				<i class="ti ti-flag"></i>
 				Signaler
 			</a>
-			
+
 			{% endif %}
 		</div>
 	</div>
+	{% if build.assets|length > 0 %} 
 	<a href="{{ path('app_build_download', { id: build.id }) }}"
 		class="flex items-center gap-2 justify-center bg-(--primary-color) py-3 px-4 text-center rounded font-semibold">
 		<i class="ti ti-download"></i>
-		<h3>Télecharger ce build ({{ build.downloadsCount }})</h3>
-	</a>
-
-	<div class="container">
-		<h3 class="title">Notez ce build</h3>
-		{% if app.user %}
-		<div class="flex gap-2">
-			{% for i in 1..5 %}
-			<button type="button" {{ live_action('rate', { value: i }) }}
-				class="text-2xl transition-colors duration-200" aria-label="Noter {{ i }} sur 5">
-				<i class="{{ i <= rating ? 'fa-solid text-yellow-400' : 'fa-regular text-gray-400' }} fa-star"></i>
-			</button>
-			{% endfor %}
-		</div>
-		{% else %}
-		<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
-				href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>
+		<h3>Télecharger ce build</h3>
+		</a>
 		{% endif %}
-	</div>
+
+		<div class="container max-w-none! md:p-8! p-4!">
+			<h3 class="title">Notez ce build</h3>
+			{% if app.user %}
+			<div class="flex gap-2">
+				{% for i in 1..5 %}
+				<button type="button" {{ live_action('rate', { value: i }) }}
+					class="text-2xl transition-colors duration-200" aria-label="Noter {{ i }} sur 5">
+					<i class="{{ i <= rating ? 'fa-solid text-yellow-400' : 'fa-regular text-gray-400' }} fa-star"></i>
+				</button>
+				{% endfor %}
+			</div>
+			{% else %}
+			<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
+					href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>
+			{% endif %}
+		</div>
 </div>

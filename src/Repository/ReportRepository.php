@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Report;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -38,7 +39,8 @@ class ReportRepository extends ServiceEntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        $rows = $queryBuilder->getQuery()->getResult();
+        $paginator = new Paginator($queryBuilder, true);
+        $rows = iterator_to_array($paginator->getIterator());
 
         return array_map(static function (array $row): Report {
             $report = $row[0];
@@ -51,7 +53,7 @@ class ReportRepository extends ServiceEntityRepository
     public function countReportByUser($user)
     {
         return (int) $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
+            ->select('COUNT(DISTINCT r.id)')
             ->andWhere('r.user = :user')
             ->setParameter('user', $user)
             ->getQuery()
@@ -62,7 +64,7 @@ class ReportRepository extends ServiceEntityRepository
     {
         $offset = ($page - 1) * $limit;
 
-        $rows = $this->createQueryBuilder('r')
+        $queryBuilder = $this->createQueryBuilder('r')
             ->addSelect('COUNT(DISTINCT targetReports.id) AS targetReportsCount')
             ->leftJoin('r.reporter', 'reporter')->addSelect('reporter')
             ->leftJoin('r.user', 'target')->addSelect('target')
@@ -80,9 +82,10 @@ class ReportRepository extends ServiceEntityRepository
             ->addGroupBy('comment.id')
             ->orderBy('r.created_at', 'DESC')
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
+
+        $paginator = new Paginator($queryBuilder, true);
+        $rows = iterator_to_array($paginator->getIterator());
 
         return array_map(static function (array $row): Report {
             $report = $row[0];
@@ -95,7 +98,7 @@ class ReportRepository extends ServiceEntityRepository
     public function countPendingReportByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
+            ->select('COUNT(DISTINCT r.id)')
             ->andWhere('r.status = :status')
             ->andWhere('r.user = :user')
             ->setParameter('status', 'Pending')
@@ -106,7 +109,7 @@ class ReportRepository extends ServiceEntityRepository
 
     public function countPendingReport(){
         return (int) $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
+            ->select('COUNT(DISTINCT r.id)')
             ->andWhere('r.status = :status')
             ->setParameter('status', 'Pending')
             ->getQuery()

@@ -54,9 +54,7 @@ final class BuildController extends AbstractController
 
         $build = new Build();
         $user = $this->getUser();
-        if ($user instanceof \App\Entity\User) {
-            $build->setAuthor($user);
-        }
+        $build->setAuthor($user);
 
         $form = $this->createForm(BuildType::class, $build);
         $form->handleRequest($request);
@@ -65,36 +63,35 @@ final class BuildController extends AbstractController
             $entityManager->persist($build);
 
 
-
+            // create category ( only one )
             $category = $form->get('category')->getData();
             if ($category) {
                 $buildCategory = new BuildCategory($build, $category);
                 $entityManager->persist($buildCategory);
             }
 
-            $rawTags = (string) $form->get('tags')->getData();
-            $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
-            $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
-            foreach ($tagNames as $tagName) {
-                if ($tagName === '') {
-                    continue;
-                }
+            // create tags
+            $tags = $form->get('tags')->getData();
 
-                $existing = $tagRepository->findOneBy(['name' => $tagName]);
+            $tags = array_filter(array_map('trim', explode(',', $tags)));
+
+            foreach ($tags as $tag) {
+
+                $existing = $tagRepository->findOneBy(['name' => $tag]);
                 if (!$existing) {
-                    $tag = new Tag();
-                    $tag->setName($tagName);
+                    $newTag = new Tag();
+                    $newTag->setName($tag);
 
-                    $baseSlug = strtolower((string) $slugger->slug($tagName));
+                    $baseSlug = strtolower((string) $slugger->slug($tag));
                     $baseSlug = $baseSlug ?: strtolower(bin2hex(random_bytes(6)));
                     $slug = $baseSlug;
                     if ($tagRepository->findOneBy(['slug' => $slug])) {
                         $slug = $baseSlug . '-' . strtolower(bin2hex(random_bytes(3)));
                     }
 
-                    $tag->setSlug($slug);
-                    $entityManager->persist($tag);
-                    $existing = $tag;
+                    $newTag->setSlug($slug);
+                    $entityManager->persist($newTag);
+                    $existing = $newTag;
                 }
 
                 $buildTag = new BuildTag($build, $existing);
@@ -228,7 +225,7 @@ final class BuildController extends AbstractController
     {
         $build = $buildRepository->getBuildWithJoinByUser($build);
 
-        if ($build->getVisibility() === "HIDDEN" or !$build ) {
+        if ($build->getVisibility() === "HIDDEN" or !$build) {
             return $this->redirectToRoute('app_build_not_found', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -305,13 +302,13 @@ final class BuildController extends AbstractController
 
             $existingTags = [];
             foreach ($build->getBuildTags() as $buildTag) {
-                if ($buildTag->getTag() && $buildTag->getTag()->getName()) {
-                    $existingTags[] = $buildTag->getTag()->getName();
+                $tagName = $buildTag->getTag()?->getName();
+                if ($tagName) {
+                    $existingTags[] = $tagName;
                 }
             }
-            if ($existingTags) {
-                $form->get('tags')->setData(implode(',', $existingTags));
-            }
+
+            $form->get('tags')->setData(implode(',', $existingTags));
         }
 
         $form->handleRequest($request);
@@ -380,55 +377,51 @@ final class BuildController extends AbstractController
                 $entityManager->remove($extraBuildVersion);
             }
 
-            // Tags: si rempli, on synchronise (pas de remove+recreate identique)
+            // Tags: synchronisation complète, même quand la liste est vide.
             $rawTags = (string) $form->get('tags')->getData();
-            if (trim($rawTags) !== '') {
-                $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
-                $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
+            $tagNames = array_values(array_filter(array_map(static fn($t) => trim($t), preg_split('/[\n,]+/', $rawTags) ?: [])));
+            $tagNames = array_slice(array_values(array_unique($tagNames)), 0, 10);
 
-                $desiredTagsById = [];
-                foreach ($tagNames as $tagName) {
-                    if ($tagName === '') {
-                        continue;
-                    }
-
-                    $existingTag = $tagRepository->findOneBy(['name' => $tagName]);
-                    if (!$existingTag) {
-                        $tag = new Tag();
-                        $tag->setName($tagName);
-
-                        $baseSlug = strtolower((string) $slugger->slug($tagName));
-                        $baseSlug = $baseSlug ?: strtolower(bin2hex(random_bytes(6)));
-                        $slug = $baseSlug;
-                        if ($tagRepository->findOneBy(['slug' => $slug])) {
-                            $slug = $baseSlug . '-' . strtolower(bin2hex(random_bytes(3)));
-                        }
-
-                        $tag->setSlug($slug);
-                        $entityManager->persist($tag);
-                        $existingTag = $tag;
-                    }
-
-                    $tagId = $existingTag->getId();
-                    if ($tagId !== null) {
-                        $desiredTagsById[$tagId] = $existingTag;
-                    }
+            $desiredTagsByKey = [];
+            foreach ($tagNames as $tagName) {
+                if ($tagName === '') {
+                    continue;
                 }
 
-                $existingBuildTags = $build->getBuildTags()->toArray();
-                foreach ($existingBuildTags as $existing) {
-                    $existingTagId = $existing->getTag()?->getId();
-                    if ($existingTagId !== null && isset($desiredTagsById[$existingTagId])) {
-                        unset($desiredTagsById[$existingTagId]);
-                        continue;
+                $existingTag = $tagRepository->findOneBy(['name' => $tagName]);
+                if (!$existingTag) {
+                    $tag = new Tag();
+                    $tag->setName($tagName);
+
+                    $baseSlug = strtolower((string) $slugger->slug($tagName));
+                    $baseSlug = $baseSlug ?: strtolower(bin2hex(random_bytes(6)));
+                    $slug = $baseSlug;
+                    if ($tagRepository->findOneBy(['slug' => $slug])) {
+                        $slug = $baseSlug . '-' . strtolower(bin2hex(random_bytes(3)));
                     }
 
-                    $entityManager->remove($existing);
+                    $tag->setSlug($slug);
+                    $entityManager->persist($tag);
+                    $existingTag = $tag;
                 }
 
-                foreach ($desiredTagsById as $tag) {
-                    $entityManager->persist(new BuildTag($build, $tag));
+                $desiredTagsByKey[strtolower($existingTag->getName() ?? $tagName)] = $existingTag;
+            }
+
+            $existingBuildTags = $build->getBuildTags()->toArray();
+            foreach ($existingBuildTags as $existing) {
+                $existingTagName = $existing->getTag()?->getName();
+                $existingKey = $existingTagName ? strtolower($existingTagName) : null;
+                if ($existingKey !== null && isset($desiredTagsByKey[$existingKey])) {
+                    unset($desiredTagsByKey[$existingKey]);
+                    continue;
                 }
+
+                $entityManager->remove($existing);
+            }
+
+            foreach ($desiredTagsByKey as $tag) {
+                $entityManager->persist(new BuildTag($build, $tag));
             }
 
             // Matériaux: persist explicite (pas de cascade)

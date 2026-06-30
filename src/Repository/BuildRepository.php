@@ -6,6 +6,7 @@ use App\Entity\Build;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @extends ServiceEntityRepository<Build>
@@ -82,18 +83,20 @@ class BuildRepository extends ServiceEntityRepository
             $queryBuilder->orderBy('b.created_at', 'DESC');
         }
 
-
         $queryBuilder->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $queryBuilder->getQuery()->getResult();
+
+        $paginator = new Paginator($queryBuilder, true);
+
+        return iterator_to_array($paginator->getIterator());
     }
 
 
     public function countOnlineBuilds(): int
     {
         return (int) $this->createQueryBuilder('b')
-            ->select('COUNT(b.id)')
+            ->select('COUNT(DISTINCT b.id)')
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
             ->setParameter('visibility', 'PUBLIC')
@@ -103,7 +106,7 @@ class BuildRepository extends ServiceEntityRepository
 
     public function findVisibleByUserWithPagination(User $user, int $limit, int $page): array
     {
-        return $this->createQueryBuilder('b')
+        $queryBuilder = $this->createQueryBuilder('b')
             ->leftJoin('b.author', 'author')->addSelect('author')
             ->andWhere('b.author = :user')
             ->andWhere('b.visibility = :visibility')
@@ -112,15 +115,17 @@ class BuildRepository extends ServiceEntityRepository
             ->setParameter('visibility', 'PUBLIC')
             ->orderBy('b.created_at', 'DESC')
             ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
+
+        $paginator = new Paginator($queryBuilder, true);
+
+        return iterator_to_array($paginator->getIterator());
     }
 
     public function countVisibleByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('b')
-            ->select('COUNT(b.id)')
+            ->select('COUNT(DISTINCT b.id)')
             ->andWhere('b.author = :user')
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
@@ -142,7 +147,8 @@ class BuildRepository extends ServiceEntityRepository
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
             ->setParameter('visibility', 'PUBLIC')
-            ->select('COUNT(b.id)');
+            // USE DISTINCT 0 DOUBLON
+            ->select('COUNT(DISTINCT b.id)');
 
 
         if ($isFavorite) {
