@@ -5,12 +5,14 @@ namespace App\Form;
 use App\Entity\Build;
 use App\Entity\Category;
 use App\Entity\Mcversion;
+use App\Enum\BuildDifficulty;
+use App\Enum\BuildGameMode;
 use App\Repository\McversionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -87,15 +89,16 @@ class BuildType extends AbstractType
                 'mapped' => false,
                 'placeholder' => 'Sélectionner une version',
             ])
-            ->add('difficulty', ChoiceType::class, [
+            ->add('difficulty', EnumType::class, [
+                'class' => BuildDifficulty::class,
                 'required' => true,
                 'placeholder' => 'Sélectionner une difficulté',
-                'choices' => [
-                    'Facile' => 'easy',
-                    'Moyen' => 'medium',
-                    'Difficile' => 'hard',
-                    'Expert' => 'expert',
-                ],
+                'choice_label' => static fn (BuildDifficulty $difficulty): string => match ($difficulty) {
+                    BuildDifficulty::EASY => 'Facile',
+                    BuildDifficulty::MEDIUM => 'Moyen',
+                    BuildDifficulty::HARD => 'Difficile',
+                    BuildDifficulty::EXPERT => 'Expert',
+                },
             ])
             ->add('dimensions_x', IntegerType::class, [
                 'required' => false,
@@ -125,13 +128,14 @@ class BuildType extends AbstractType
                     'min' => 0,
                 ],
             ])
-            ->add('game_mode', ChoiceType::class, [
+            ->add('game_mode', EnumType::class, [
+                'class' => BuildGameMode::class,
                 'required' => true,
                 'placeholder' => 'Sélectionner un mode',
-                'choices' => [
-                    'Survie' => 'survival',
-                    'Créatif' => 'creative',
-                ],
+                'choice_label' => static fn (BuildGameMode $gameMode): string => match ($gameMode) {
+                    BuildGameMode::SURVIVAL => 'Survie',
+                    BuildGameMode::CREATIVE => 'Créatif',
+                },
             ])
             ->add('modded', CheckboxType::class, [
                 'required' => false,

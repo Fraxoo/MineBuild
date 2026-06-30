@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Enum\BuildDifficulty;
+use App\Enum\BuildGameMode;
+use App\Enum\Visibility;
 use App\Repository\BuildRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,19 +40,19 @@ class Build
     #[ORM\Column(nullable: true)]
     private ?int $dimensions_z = null;
 
-    #[ORM\Column(length: 255 , nullable: false)]
-    private ?string $difficulty = null;
+    #[ORM\Column(length: 255, enumType: BuildDifficulty::class)]
+    private ?BuildDifficulty $difficulty = null;
 
     #[ORM\Column(nullable: false)]
     private ?int $time_estimated_min = null;
 
 
 
-    #[ORM\Column(length: 255)]
-    private ?string $game_mode = null;
+    #[ORM\Column(length: 255, enumType: BuildGameMode::class)]
+    private ?BuildGameMode $game_mode = null;
 
-    #[ORM\Column(length: 255 , options: ['default' => 'PUBLIC'])]
-    private ?string $visibility = "PUBLIC";
+    #[ORM\Column(length: 255, enumType: Visibility::class, options: ['default' => 'PUBLIC'])]
+    private ?Visibility $visibility = Visibility::PUBLIC;
 
     #[ORM\Column(options: ['default' => 0])]
     private int $views_count = 0;
@@ -247,12 +250,12 @@ class Build
         return $this;
     }
 
-    public function getDifficulty(): ?string
+    public function getDifficulty(): ?BuildDifficulty
     {
         return $this->difficulty;
     }
 
-    public function setDifficulty(string $difficulty): static
+    public function setDifficulty(BuildDifficulty $difficulty): static
     {
         $this->difficulty = $difficulty;
 
@@ -271,24 +274,24 @@ class Build
         return $this;
     }
 
-    public function getGameMode(): ?string
+    public function getGameMode(): ?BuildGameMode
     {
         return $this->game_mode;
     }
 
-    public function setGameMode(string $game_mode): static
+    public function setGameMode(BuildGameMode $game_mode): static
     {
         $this->game_mode = $game_mode;
 
         return $this;
     }
 
-    public function getVisibility(): ?string
+    public function getVisibility(): ?Visibility
     {
         return $this->visibility;
     }
 
-    public function setVisibility(string $visibility): static
+    public function setVisibility(Visibility $visibility): static
     {
         $this->visibility = $visibility;
 

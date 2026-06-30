@@ -5,9 +5,9 @@
             <div class="flex flex-wrap items-center gap-3">
                 <div
                     class="text-(--secondary-color)  px-2 py-1 rounded border border-(--border-color) flex items-center gap-1">
-                    <i class="ti text-[1rem] {{ item.targetType === " user" ? " ti-user" : (item.targetType===" build"
+                    <i class="ti text-[1rem] {{ item.targetType.value === "user" ? " ti-user" : (item.targetType.value==="build"
                         ? " ti-blocks" : " ti-message-circle" ) }}"></i>
-                    <p>{{ item.targetType}}</p>
+                    <p>{{ item.targetType.value }}</p>
                 </div>
                 <p class="text-(--secondary-color)">
                     <span class="text-(--title-color)">{{ item.targetUser.username }}</span>
@@ -22,16 +22,16 @@
             </div>
         </div>
 
-        {% if item.targetType === "comment" %}
+        {% if item.targetType.value === "comment" %}
         <i class="dashboard-info rounded">{{item.comment.content}}</i>
-        {% elseif item.targetType === "build" %}
+        {% elseif item.targetType.value === "build" %}
         <i class="dashboard-info">{{item.build.title}}</i>
         {% endif %}
 
         <div class="flex items-center flex-wrap text-sm gap-4">
             <div class="flex items-center text-red-500 font-semibold">
                 <i class="ti ti-flag text-[1rem]"></i>
-                {{ ('report.reason.' ~ item.reasonCode)|trans }}
+                {{ ('report.reason.' ~ item.reasonCode.value)|trans }}
             </div>
             <div class="flex items-center text-(--secondary-color)">
                 <i class="ti ti-history text-[1rem]"></i>

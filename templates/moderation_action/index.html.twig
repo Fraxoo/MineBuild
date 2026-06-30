@@ -20,8 +20,8 @@
         {% for moderation_action in moderation_actions %}
             <tr>
                 <td>{{ moderation_action.id }}</td>
-                <td>{{ moderation_action.targetType }}</td>
-                <td>{{ moderation_action.action }}</td>
+                <td>{{ moderation_action.targetType.value }}</td>
+                <td>{{ moderation_action.action.value }}</td>
                 <td>{{ moderation_action.reason }}</td>
                 <td>{{ moderation_action.createdAt ? moderation_action.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>

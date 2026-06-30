@@ -4,6 +4,12 @@ namespace App\Controller;
 
 use App\Entity\ModerationAction;
 use App\Entity\Report;
+use App\Entity\User;
+use App\Enum\ModerationActionType;
+use App\Enum\ReportReasonCode;
+use App\Enum\ReportStatus;
+use App\Enum\TargetType;
+use App\Enum\Visibility;
 use App\Form\ReportType;
 use App\Repository\BuildRepository;
 use App\Repository\CommentRepository;
@@ -135,10 +141,20 @@ final class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $targetTypeEnum = TargetType::tryFrom($targetType);
+            if (!$targetTypeEnum) {
+                throw $this->createNotFoundException('Target not found');
+            }
+
+            $reporter = $this->getUser();
+            if (!$reporter instanceof User) {
+                throw $this->createAccessDeniedException();
+            }
+
             $report->setCreatedAt(new DateTimeImmutable());
-            $report->setReporter($this->getUser());
-            $report->setStatus('Pending');
-            $report->setTargetType($targetType);
+            $report->setReporter($reporter);
+            $report->setStatus(ReportStatus::PENDING);
+            $report->setTargetType($targetTypeEnum);
 
             $target = match ($targetType) {
                 'comment' => $commentRepo->find($id),
@@ -209,21 +225,26 @@ final class ReportController extends AbstractController
     public function delete(Request $request, Report $report, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $report->getId(), $request->getPayload()->getString('_token'))) {
-            $report->setHandledAt(new DateTimeImmutable());
-            $report->setHandledBy($this->getUser());
-            $report->setStatus("Confirmed");
-            $action = new ModerationAction();
-            $action->setAction("Delete");
+            $moderator = $this->getUser();
+            if (!$moderator instanceof User) {
+                throw $this->createAccessDeniedException();
+            }
 
-            if ($report->getTargetType() === "comment") {
+            $report->setHandledAt(new DateTimeImmutable());
+            $report->setHandledBy($moderator);
+            $report->setStatus(ReportStatus::CONFIRMED);
+            $action = new ModerationAction();
+            $action->setAction(ModerationActionType::DELETE);
+
+            if ($report->getTargetType() === TargetType::COMMENT) {
                 $comment = $report->getComment();
                 $action->setComment($comment);
-                $comment->setVisibility("HIDDEN");
-            } elseif ($report->getTargetType() === "build") {
+                $comment->setVisibility(Visibility::HIDDEN);
+            } elseif ($report->getTargetType() === TargetType::BUILD) {
                 $build = $report->getBuild();
-                $build->setVisibility("HIDDEN");
+                $build->setVisibility(Visibility::HIDDEN);
                 $action->setBuild($build);
-            } elseif ($report->getTargetType() === "user") {
+            } elseif ($report->getTargetType() === TargetType::USER) {
                 $user = $report->getUser();
                 $user->setIsActive(false);
             }
@@ -231,10 +252,10 @@ final class ReportController extends AbstractController
 
             $action->setCreatedAt(new DateTimeImmutable());
             $action->setTargetType($report->getTargetType());
-            $action->setModerator($this->getUser());
+            $action->setModerator($moderator);
             $action->setTargetUser($report->getUser());
-            $action->setReason($request->request->get('reason'));
-            $action->setReasonCode($report->getReasonCode() ?? 'other');
+            $action->setReason($request->getPayload()->getString('reason'));
+            $action->setReasonCode($report->getReasonCode() ?? ReportReasonCode::OTHER);
             $action->setReport($report);
 
             $entityManager->persist($action);
@@ -250,9 +271,14 @@ final class ReportController extends AbstractController
     public function reject(Request $request, Report $report, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('reject' . $report->getId(), $request->getPayload()->getString('_token'))) {
+            $moderator = $this->getUser();
+            if (!$moderator instanceof User) {
+                throw $this->createAccessDeniedException();
+            }
+
             $report->setHandledAt(new DateTimeImmutable());
-            $report->setHandledBy($this->getUser());
-            $report->setStatus("Rejected");
+            $report->setHandledBy($moderator);
+            $report->setStatus(ReportStatus::REJECTED);
 
             $entityManager->persist($report);
             $entityManager->flush();

@@ -137,8 +137,8 @@
                         <p>Difficulté</p>
                     </div>
                     <p
-                        class=" font-bold {{ build.difficulty === 'easy' ? 'bg-green-600/10 text-green-200' : build.difficulty === 'medium' ? 'bg-blue-600/10 text-blue-600' : build.difficulty === 'hard' ? 'bg-orange-900/10 text-orange-400' : 'bg-red-600/10 text-red-200' }} px-2 py-1  rounded text-[0.875rem]">
-                        {{ build.difficulty }}</p>
+                        class=" font-bold {{ build.difficulty.value === 'easy' ? 'bg-green-600/10 text-green-200' : build.difficulty.value === 'medium' ? 'bg-blue-600/10 text-blue-600' : build.difficulty.value === 'hard' ? 'bg-orange-900/10 text-orange-400' : 'bg-red-600/10 text-red-200' }} px-2 py-1  rounded text-[0.875rem]">
+                        {{ build.difficulty.value }}</p>
                 </div>
                 <div class="build-info-gap">
                     <div class="build-info-gap-title">

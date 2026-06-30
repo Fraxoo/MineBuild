@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\NotificationType;
 use App\Repository\NotificationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,8 +23,8 @@ class Notification
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $actor = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
+    #[ORM\Column(length: 255, enumType: NotificationType::class)]
+    private ?NotificationType $type = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
@@ -74,12 +75,12 @@ class Notification
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): ?NotificationType
     {
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(NotificationType $type): static
     {
         $this->type = $type;
         return $this;

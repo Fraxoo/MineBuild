@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Report;
 use App\Entity\User;
+use App\Enum\ReportStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -31,7 +32,7 @@ class ReportRepository extends ServiceEntityRepository
             ->leftJoin(Report::class, 'targetReports', 'WITH', 'targetReports.user = target')
             ->groupBy('r.id')
             ->andWhere('r.status = :status')
-            ->setParameter('status' , 'Pending')
+            ->setParameter('status' , ReportStatus::PENDING)
             ->addGroupBy('reporter.id')
             ->addGroupBy('target.id')
             ->addGroupBy('build.id')
@@ -73,7 +74,7 @@ class ReportRepository extends ServiceEntityRepository
             ->leftJoin(Report::class, 'targetReports', 'WITH', 'targetReports.user = target')
             ->andWhere('r.status = :status')
             ->andWhere('r.user = :user')
-            ->setParameter('status', 'Pending')
+            ->setParameter('status', ReportStatus::PENDING)
             ->setParameter('user', $user)
             ->groupBy('r.id')
             ->addGroupBy('reporter.id')
@@ -101,7 +102,7 @@ class ReportRepository extends ServiceEntityRepository
             ->select('COUNT(DISTINCT r.id)')
             ->andWhere('r.status = :status')
             ->andWhere('r.user = :user')
-            ->setParameter('status', 'Pending')
+            ->setParameter('status', ReportStatus::PENDING)
             ->setParameter('user', $user)
             ->getQuery()
             ->getSingleScalarResult();
@@ -111,7 +112,7 @@ class ReportRepository extends ServiceEntityRepository
         return (int) $this->createQueryBuilder('r')
             ->select('COUNT(DISTINCT r.id)')
             ->andWhere('r.status = :status')
-            ->setParameter('status', 'Pending')
+            ->setParameter('status', ReportStatus::PENDING)
             ->getQuery()
             ->getSingleScalarResult();
     }
