@@ -107,6 +107,11 @@ final class BuildController extends AbstractController
 
         $user = $this->getUser();
         $appUser = $user instanceof \App\Entity\User ? $user : null;
+
+        if ($request->isMethod('GET')) {
+            $buildService->recordView($build, $appUser, $request);
+        }
+
         $isLikedByUser = $buildService->isLikedByUser($build, $appUser);
         $isFollowedByUser = $buildService->isFollowedByUser($build, $appUser);
         $isSavedByUser = $buildService->isSavedByUser($build, $appUser);
