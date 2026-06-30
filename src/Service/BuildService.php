@@ -426,4 +426,10 @@ final readonly class BuildService
     {
         return (string) $this->parameterBag->get('build_assets_directory');
     }
+
+    private function recordView(Build $build , User $user, Request $request) : void
+    {
+        $build->setViewsCount($build->getViewsCount() + 1);
+        
+    }
 }

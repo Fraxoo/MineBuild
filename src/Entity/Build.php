@@ -158,6 +158,12 @@ class Build
     #[ORM\OneToMany(targetEntity: BuildVersion::class, mappedBy: 'Build')]
     private Collection $buildVersions;
 
+    /**
+     * @var Collection<int, BuildView>
+     */
+    #[ORM\OneToMany(targetEntity: BuildView::class, mappedBy: 'build_id')]
+    private Collection $buildViews;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -172,6 +178,7 @@ class Build
         $this->ratings = new ArrayCollection();
         $this->buildDownloads = new ArrayCollection();
         $this->buildVersions = new ArrayCollection();
+        $this->buildViews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -615,6 +622,36 @@ class Build
             // set the owning side to null (unless already changed)
             if ($buildVersion->getBuild() === $this) {
                 $buildVersion->setBuild(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BuildView>
+     */
+    public function getBuildViews(): Collection
+    {
+        return $this->buildViews;
+    }
+
+    public function addBuildView(BuildView $buildView): static
+    {
+        if (!$this->buildViews->contains($buildView)) {
+            $this->buildViews->add($buildView);
+            $buildView->setBuildId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuildView(BuildView $buildView): static
+    {
+        if ($this->buildViews->removeElement($buildView)) {
+            // set the owning side to null (unless already changed)
+            if ($buildView->getBuildId() === $this) {
+                $buildView->setBuildId(null);
             }
         }
 
