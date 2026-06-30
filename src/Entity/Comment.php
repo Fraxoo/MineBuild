@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Visibility;
 use App\Repository\CommentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -42,8 +43,8 @@ class Comment
     #[ORM\OneToMany(targetEntity: CommentLike::class, mappedBy: 'comment_id')]
     private Collection $commentLikes;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $visibility = null;
+    #[ORM\Column(length: 255, nullable: true, enumType: Visibility::class)]
+    private ?Visibility $visibility = null;
 
     public function __construct()
     {
@@ -156,12 +157,12 @@ class Comment
         return $this;
     }
 
-    public function getVisibility(): ?string
+    public function getVisibility(): ?Visibility
     {
         return $this->visibility;
     }
 
-    public function setVisibility(?string $visibility): static
+    public function setVisibility(?Visibility $visibility): static
     {
         $this->visibility = $visibility;
 

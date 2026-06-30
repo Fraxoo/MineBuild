@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Enum\ReportReasonCode;
+use App\Enum\ReportStatus;
+use App\Enum\TargetType;
 use App\Repository\ReportRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,8 +21,8 @@ class Report
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $reporter = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $target_type = null;
+    #[ORM\Column(length: 255, enumType: TargetType::class)]
+    private ?TargetType $target_type = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
@@ -33,14 +36,14 @@ class Report
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?User $user = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $reason_code = null;
+    #[ORM\Column(length: 255, enumType: ReportReasonCode::class)]
+    private ?ReportReasonCode $reason_code = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $message = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    #[ORM\Column(length: 255, enumType: ReportStatus::class)]
+    private ?ReportStatus $status = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
@@ -82,12 +85,12 @@ class Report
         return $this;
     }
 
-    public function getTargetType(): ?string
+    public function getTargetType(): ?TargetType
     {
         return $this->target_type;
     }
 
-    public function setTargetType(string $target_type): static
+    public function setTargetType(TargetType $target_type): static
     {
         $this->target_type = $target_type;
         return $this;
@@ -126,12 +129,12 @@ class Report
         return $this;
     }
 
-    public function getReasonCode(): ?string
+    public function getReasonCode(): ?ReportReasonCode
     {
         return $this->reason_code;
     }
 
-    public function setReasonCode(string $reason_code): static
+    public function setReasonCode(ReportReasonCode $reason_code): static
     {
         $this->reason_code = $reason_code;
         return $this;
@@ -148,12 +151,12 @@ class Report
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?ReportStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(ReportStatus $status): static
     {
         $this->status = $status;
         return $this;

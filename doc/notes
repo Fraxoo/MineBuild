@@ -109,3 +109,46 @@ Afficher et mettre à jour :
 
 ## 13. Responsive
 - Le site doit rester utilisable sur mobile, tablette et desktop.
+
+## 14. Choix de la stack
+- Pour ce projet, j’ai choisi d’utiliser Symfony à la fois pour le back-end et pour le front-end. C’est un framework que je trouve adapté pour un projet complet, car il permet de bien organiser le code avec les contrôleurs, les entités, les repositories et les formulaires.
+
+Symfony me permet aussi de gérer plus facilement l’authentification, les rôles, la sécurité et les échanges avec la base de données grâce à Doctrine. Pour l’affichage, j’utilise Twig afin de créer des pages dynamiques, et Tailwind CSS pour construire une interface responsive et personnalisée.
+
+J’ai également utilisé Stimulus pour ajouter quelques interactions côté front, comme les modales ou le menu mobile, sans devoir mettre en place une grosse architecture JavaScript.
+
+
+## 15. Endpoints Utilisé                                 
+  app_build_new                  GET|POST   /build/new                                     
+  app_build_download             ANY        /build/build/{id}/download                     
+  app_build_show                 GET|POST   /build/{id}                                    
+  app_build_edit                 GET|POST   /build/{id}/edit                               
+  app_build_delete               POST       /build/{id}        
+  app_comment_new                Post       /comment/new  
+  app_comment_delete             POST       /comment/{id}                                  
+  app_home                       GET        /home/{page}                                   
+  app_moderation_action_delete   POST       /moderation/action/{type}/{id}                 
+  app_user_not_found             ANY        /error/user/404                                
+  app_build_not_found            ANY        /error/build/404                               
+  app_register                   ANY        /register                                      
+  app_report_index               GET        /dashboard/{page}                              
+  app_report_users               GET        /dashboard/users/{page}                        
+  app_report_history             GET        /dashboard/history/{page}                      
+  app_report_users_builds        GET        /dashboard/users/show/{id}/{page}              
+  app_report_users_comments      GET        /dashboard/users/show/comments/{id}/{page}     
+  app_report_users_reports       GET        /dashboard/users/show/reports/{id}/{page}      
+  app_report_new_comment         GET|POST   /dashboard/new/comment/{id}                    
+  app_report_new_build           GET|POST   /dashboard/new/build/{id}                      
+  app_report_new_user            GET|POST   /dashboard/new/user/{id}                       
+  app_report_delete              POST       /dashboard/{id}                                
+  app_report_reject              POST       /dashboard/reject/{id}                         
+  app_login                      ANY        /login                                         
+  app_logout                     ANY        /logout                                        
+  app_user_show                  GET        /user/{id}/all/{page}                          
+  app_user_favorites             GET        /user/{id}/favorites/{page}                    
+  app_user_following             GET        /user/{id}/following/{page}                    
+  app_user_followers             GET        /user/{id}/followers/{page}                    
+  app_user_edit                  GET|POST   /user/{id}/edit                                
+  app_user_edit_password         GET|POST   /user/{id}/edit/password                       
+  app_user_edit_privacy          GET|POST   /user/{id}/edit/privacy                        
+  app_user_delete                POST       /user/{id}                                     

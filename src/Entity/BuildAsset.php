@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\BuildAssetType;
 use App\Repository\BuildAssetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,8 +19,8 @@ class BuildAsset
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Build $build = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
+    #[ORM\Column(length: 255, enumType: BuildAssetType::class)]
+    private ?BuildAssetType $type = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $url = null;
@@ -57,12 +58,12 @@ class BuildAsset
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): ?BuildAssetType
     {
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(BuildAssetType $type): static
     {
         $this->type = $type;
         return $this;

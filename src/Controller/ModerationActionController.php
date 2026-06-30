@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\ModerationAction;
-use App\Entity\Report;
+use App\Entity\User;
+use App\Enum\ModerationActionType as ModerationActionTypeEnum;
+use App\Enum\ReportReasonCode;
+use App\Enum\TargetType;
+use App\Enum\Visibility;
 use App\Form\ModerationActionType;
 use App\Repository\BuildRepository;
 use App\Repository\CommentRepository;
@@ -33,9 +37,13 @@ final class ModerationActionController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $id, $request->getPayload()->getString('_token'))) {
 
             $action = new ModerationAction();
-            $action->setAction("Delete");
+            $action->setAction(ModerationActionTypeEnum::DELETE);
             $user = null;
             $build = null;
+            $targetType = TargetType::tryFrom($type);
+            if (!$targetType) {
+                throw $this->createNotFoundException('Target not found');
+            }
 
             if ($type === "comment") {
                 $comment = $commentRepo->find($id);
@@ -44,7 +52,7 @@ final class ModerationActionController extends AbstractController
                 }
 
                 $action->setComment($comment);
-                $comment->setVisibility("HIDDEN");
+                $comment->setVisibility(Visibility::HIDDEN);
                 $user = $comment->getAuthor();
                 $build = $comment->getBuild();
             } elseif ($type === "build") {
@@ -53,7 +61,7 @@ final class ModerationActionController extends AbstractController
                     throw $this->createNotFoundException('Build not found');
                 }
 
-                $build->setVisibility("HIDDEN");
+                $build->setVisibility(Visibility::HIDDEN);
                 $action->setBuild($build);
                 $user = $build->getAuthor();
             } elseif ($type === "user") {
@@ -67,12 +75,17 @@ final class ModerationActionController extends AbstractController
 
 
             $action->setCreatedAt(new DateTimeImmutable());
-            $action->setTargetType($type);
-            $action->setModerator($this->getUser());
+            $action->setTargetType($targetType);
+            $moderator = $this->getUser();
+            if (!$moderator instanceof User) {
+                throw $this->createAccessDeniedException();
+            }
+
+            $action->setModerator($moderator);
             $action->setTargetUser($user);
-            $action->setReason($request->request->get('reason'));
-            $reasonCode = trim((string) $request->request->get('reason_code', 'other'));
-            $action->setReasonCode($reasonCode !== '' ? $reasonCode : 'other');
+            $action->setReason($request->getPayload()->getString('reason'));
+            $reasonCode = trim($request->getPayload()->getString('reason_code', 'other'));
+            $action->setReasonCode(ReportReasonCode::tryFrom($reasonCode) ?? ReportReasonCode::OTHER);
 
             $entityManager->persist($action);
             $entityManager->flush();
