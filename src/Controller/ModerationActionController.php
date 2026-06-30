@@ -4,17 +4,10 @@ namespace App\Controller;
 
 use App\Entity\ModerationAction;
 use App\Entity\User;
-use App\Enum\ModerationActionType as ModerationActionTypeEnum;
-use App\Enum\ReportReasonCode;
-use App\Enum\TargetType;
-use App\Enum\Visibility;
+use App\Exception\ModerationTargetNotFoundException;
 use App\Form\ModerationActionType;
-use App\Repository\BuildRepository;
-use App\Repository\CommentRepository;
-use App\Repository\ModerationActionRepository;
-use App\Repository\UserRepository;
-use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\ModerationActionResult;
+use App\Service\ModerationActionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,71 +17,35 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ModerationActionController extends AbstractController
 {
     #[Route(name: 'app_moderation_action_index', methods: ['GET'])]
-    public function index(ModerationActionRepository $moderationActionRepository): Response
+    public function index(ModerationActionService $moderationActionService): Response
     {
         return $this->render('moderation_action/index.html.twig', [
-            'moderation_actions' => $moderationActionRepository->findAll(),
+            'moderation_actions' => $moderationActionService->findAll(),
         ]);
     }
 
     #[Route('/{type}/{id}', name: 'app_moderation_action_delete', methods: ['POST'])]
-    public function delete(string $type, Request $request, UserRepository $userRepo, BuildRepository $buildRepo, CommentRepository $commentRepo, EntityManagerInterface $entityManager, int $id): Response
+    public function delete(string $type, Request $request, ModerationActionService $moderationActionService, int $id): Response
     {
+        $result = null;
+
         if ($this->isCsrfTokenValid('delete' . $id, $request->getPayload()->getString('_token'))) {
-
-            $action = new ModerationAction();
-            $action->setAction(ModerationActionTypeEnum::DELETE);
-            $user = null;
-            $build = null;
-            $targetType = TargetType::tryFrom($type);
-            if (!$targetType) {
-                throw $this->createNotFoundException('Target not found');
-            }
-
-            if ($type === "comment") {
-                $comment = $commentRepo->find($id);
-                if (!$comment) {
-                    throw $this->createNotFoundException('Comment not found');
-                }
-
-                $action->setComment($comment);
-                $comment->setVisibility(Visibility::HIDDEN);
-                $user = $comment->getAuthor();
-                $build = $comment->getBuild();
-            } elseif ($type === "build") {
-                $build = $buildRepo->find($id);
-                if (!$build) {
-                    throw $this->createNotFoundException('Build not found');
-                }
-
-                $build->setVisibility(Visibility::HIDDEN);
-                $action->setBuild($build);
-                $user = $build->getAuthor();
-            } elseif ($type === "user") {
-                $user = $userRepo->find($id);
-                if (!$user) {
-                    throw $this->createNotFoundException('User not found');
-                }
-
-                $user->setIsActive(false);
-            }
-
-
-            $action->setCreatedAt(new DateTimeImmutable());
-            $action->setTargetType($targetType);
             $moderator = $this->getUser();
             if (!$moderator instanceof User) {
                 throw $this->createAccessDeniedException();
             }
 
-            $action->setModerator($moderator);
-            $action->setTargetUser($user);
-            $action->setReason($request->getPayload()->getString('reason'));
-            $reasonCode = trim($request->getPayload()->getString('reason_code', 'other'));
-            $action->setReasonCode(ReportReasonCode::tryFrom($reasonCode) ?? ReportReasonCode::OTHER);
-
-            $entityManager->persist($action);
-            $entityManager->flush();
+            try {
+                $result = $moderationActionService->deleteTarget(
+                    $type,
+                    $id,
+                    $moderator,
+                    $request->getPayload()->getString('reason'),
+                    $request->getPayload()->getString('reason_code', 'other'),
+                );
+            } catch (ModerationTargetNotFoundException $exception) {
+                throw $this->createNotFoundException($exception->getMessage(), $exception);
+            }
         }
 
         $redirectTo = $request->request->get('_redirect_to');
@@ -96,9 +53,9 @@ final class ModerationActionController extends AbstractController
             return $this->redirect($redirectTo, Response::HTTP_SEE_OTHER);
         }
 
-        if ($type === "comment" && $build) {
+        if ($this->shouldRedirectToBuild($type, $result)) {
             return $this->redirectToRoute('app_build_show', [
-                'id' => $build->getId()
+                'id' => $result->redirectBuild->getId()
             ], Response::HTTP_SEE_OTHER);
 
         } elseif ($type === "build") {
@@ -117,13 +74,13 @@ final class ModerationActionController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_moderation_action_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, ModerationAction $moderationAction, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, ModerationAction $moderationAction, ModerationActionService $moderationActionService): Response
     {
         $form = $this->createForm(ModerationActionType::class, $moderationAction);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $moderationActionService->save();
 
             return $this->redirectToRoute('app_moderation_action_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -135,13 +92,17 @@ final class ModerationActionController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_moderation_action_del', methods: ['POST'])]
-    public function del(Request $request, ModerationAction $moderationAction, EntityManagerInterface $entityManager): Response
+    public function del(Request $request, ModerationAction $moderationAction, ModerationActionService $moderationActionService): Response
     {
         if ($this->isCsrfTokenValid('delete' . $moderationAction->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($moderationAction);
-            $entityManager->flush();
+            $moderationActionService->remove($moderationAction);
         }
 
         return $this->redirectToRoute('app_moderation_action_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function shouldRedirectToBuild(string $type, ?ModerationActionResult $result): bool
+    {
+        return $type === 'comment' && $result?->redirectBuild !== null;
     }
 }
