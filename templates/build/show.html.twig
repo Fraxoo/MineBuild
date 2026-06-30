@@ -121,11 +121,11 @@
                     </div>
                     <div class="flex flex-wrap gap-2">
                         {% for buildVersion in build.buildVersions %}
-                            <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
+                            <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
                                 {{ buildVersion.version.number }}
                             </p>
                         {% else %}
-                            <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
+                            <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
                                 Non renseignée
                             </p>
                         {% endfor %}
@@ -137,7 +137,7 @@
                         <p>Difficulté</p>
                     </div>
                     <p
-                        class=" font-bold {{ build.difficulty.value === 'easy' ? 'bg-green-600/10 text-green-200' : build.difficulty.value === 'medium' ? 'bg-blue-600/10 text-blue-600' : build.difficulty.value === 'hard' ? 'bg-orange-900/10 text-orange-400' : 'bg-red-600/10 text-red-200' }} px-2 py-1  rounded text-[0.875rem]">
+                        class=" font-bold {{ build.difficulty.value === 'easy' ? 'bg-green-600/10 text-green-200!' : build.difficulty.value === 'medium' ? 'bg-blue-600/10 text-blue-600!' : build.difficulty.value === 'hard' ? 'bg-orange-900/10 text-orange-400!' : 'bg-red-600/10 text-red-200!' }} px-2 py-1  rounded text-[0.875rem]">
                         {{ build.difficulty.value }}</p>
                 </div>
                 <div class="build-info-gap">
@@ -145,7 +145,7 @@
                         <i class="ti ti-ruler-2"></i>
                         <p>Taille</p>
                     </div>
-                    <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
+                    <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
                         L : {{build.dimensionsX ? build.dimensionsX : "-"}} H : {{build.dimensionsY ? build.dimensionsY : "-"}} L : {{build.dimensionsZ ? build.dimensionsZ : "-"}}</p>
                 </div>
                 <div class="build-info-gap">
@@ -153,7 +153,7 @@
                         <i class="ti ti-calendar-event"></i>
                         <p>Publié le </p>
                     </div>
-                    <p class=" px-2 py-1 text-(--title-color) rounded text-[0.875rem]">{{ build.createdAt|date('d/m/Y')
+                    <p class=" px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">{{ build.createdAt|date('d/m/Y')
                         }}</p>
                 </div>
             </div>
