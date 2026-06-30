@@ -9,9 +9,7 @@
                     ? " ti-blocks" : " ti-message-circle" ) }}"></i>
                 <p>{{ report.targetType.value }}</p>
             </div>
-            <p class="text-(--secondary-color)">
-                <span class="text-(--title-color)">{{ report.user.username }}</span>
-            </p>
+            <a href="{{ path('app_report_users_builds' , { id: report.user.id})}}" class="text-(--title-color) hover:underline">{{ report.user.username }}</a>
             <div class="flex items-center gap-1 text-red-500 font-bold">
                 <i class="fa-solid text-[1rem] fa-circle-exclamation"></i>
                 <p>{{ report.targetReportsCount }}
@@ -35,8 +33,8 @@
             <i class="ti ti-history text-[1rem]"></i>
             <p>{{report.createdAt|date('d/m/Y')}} {{report.createdAt|date('h:m')}}</p>
         </div>
-        <p class="text-(--secondary-color)">Signalement fait par <span class="text-(--title-color)">{{
-                report.reporter.username}}</span></p>
+        <p class="text-(--secondary-color)">Signalement fait par <a href="{{ path('app_report_users_builds' , { id: report.reporter.id})}}" class="hover:underline text-(--title-color)">{{
+                report.reporter.username}}</a></p>
     </div>
 
     <p class="text-(--secondary-color)">{{report.message}}</p>
