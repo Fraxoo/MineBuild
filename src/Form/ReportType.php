@@ -6,9 +6,10 @@ use App\Entity\Build;
 use App\Entity\Comment;
 use App\Entity\Report;
 use App\Entity\User;
+use App\Enum\ReportReasonCode;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,18 +25,9 @@ class ReportType extends AbstractType
 
                 ]
             ])
-            ->add('reason_code', ChoiceType::class, [
-                'choices' => [
-                    'report.reason.spam' => 'spam',
-                    'report.reason.harassment' => 'harassment',
-                    'report.reason.hate_speech' => 'hate_speech',
-                    'report.reason.nudity' => 'nudity',
-                    'report.reason.violence' => 'violence',
-                    'report.reason.illegal' => 'illegal',
-                    'report.reason.impersonation' => 'impersonation',
-                    'report.reason.copyright' => 'copyright',
-                    'report.reason.other' => 'other',
-                ],
+            ->add('reason_code', EnumType::class, [
+                'class' => ReportReasonCode::class,
+                'choice_label' => static fn (ReportReasonCode $reasonCode): string => 'report.reason.' . $reasonCode->value,
                 'choice_translation_domain' => 'messages',
                 'placeholder' => 'Choisir un motif',
             ])

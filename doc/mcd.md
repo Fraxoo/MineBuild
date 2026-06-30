@@ -21,10 +21,10 @@ erDiagram
     string title
     string description
     string dimensions
-    string difficulty
+    enum difficulty "easy|medium|hard|expert"
     number time_estimated
-    string game_mode
-    string visibility
+    enum game_mode "survival|creative"
+    enum visibility "PUBLIC|HIDDEN"
     number views_count
     number likes_count
     number saves_count
@@ -59,11 +59,11 @@ erDiagram
 
   COMMENT {
     string content
-    string visibility
+    enum visibility "PUBLIC|HIDDEN"
   }
 
   BUILD_ASSET {
-    string type
+    enum type "world"
     string url
     string filename
     number size_bytes
@@ -75,24 +75,24 @@ erDiagram
   }
 
   NOTIFICATION {
-    string type
+    enum type "follow|like|comment|rating|moderation"
     string message
     datetime read_at
   }
 
   REPORT {
-    string target_type
-    string reason_code
+    enum target_type "build|comment|user"
+    enum reason_code "spam|harassment|hate_speech|nudity|violence|illegal|impersonation|copyright|other"
     string message
-    string status
+    enum status "Pending|Confirmed|Rejected"
     datetime handled_at
   }
 
   MODERATION_ACTION {
-    string target_type
-    string action
+    enum target_type "build|comment|user"
+    enum action "Delete"
     string reason
-    string reason_code
+    enum reason_code "spam|harassment|hate_speech|nudity|violence|illegal|impersonation|copyright|other"
   }
 
   ROLE ||--o{ USER : attribue
@@ -137,4 +137,3 @@ erDiagram
   REPORT o|--o| MODERATION_ACTION : produit
 
 ```
-

@@ -12,6 +12,8 @@ use App\Entity\BuildVersion;
 use App\Entity\Comment;
 use App\Entity\Mcversion;
 use App\Entity\Tag;
+use App\Enum\BuildAssetType;
+use App\Enum\Visibility;
 use App\Form\BuildType;
 use App\Form\CommentType;
 use App\Repository\BuildDownloadRepository;
@@ -144,7 +146,7 @@ final class BuildController extends AbstractController
                 if ($newFilename) {
                     $asset = new BuildAsset();
                     $asset->setBuild($build);
-                    $asset->setType('world');
+                    $asset->setType(BuildAssetType::WORLD);
                     $asset->setUrl($newFilename);
                     $asset->setFilename($clientOriginalName);
                     $asset->setSizeBytes($sizeBytes);
@@ -180,7 +182,7 @@ final class BuildController extends AbstractController
 
         $worldAsset = null;
         foreach ($build->getAssets() as $asset) {
-            if ($asset->getType() === 'world') {
+            if ($asset->getType() === BuildAssetType::WORLD) {
                 $worldAsset = $asset;
                 break;
             }
@@ -225,7 +227,7 @@ final class BuildController extends AbstractController
     {
         $build = $buildRepository->getBuildWithJoinByUser($build);
 
-        if ($build->getVisibility() === "HIDDEN" or !$build) {
+        if ($build->getVisibility() === Visibility::HIDDEN or !$build) {
             return $this->redirectToRoute('app_build_not_found', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -256,7 +258,7 @@ final class BuildController extends AbstractController
                 $comment->setAuthor($user);
             }
             $comment->setBuild($build);
-            $comment->setVisibility("PUBLIC");
+            $comment->setVisibility(Visibility::PUBLIC);
 
             if ($form->isValid()) {
                 $em->persist($comment);
@@ -464,7 +466,7 @@ final class BuildController extends AbstractController
             if ($deleteWorldAsset) {
                 $buildAssetsDir = rtrim((string) $this->getParameter('build_assets_directory'), '/');
                 foreach ($build->getAssets()->toArray() as $existingAsset) {
-                    if ($existingAsset->getType() !== 'world') {
+                    if ($existingAsset->getType() !== BuildAssetType::WORLD) {
                         continue;
                     }
 
@@ -498,7 +500,7 @@ final class BuildController extends AbstractController
                 if ($newFilename) {
                     $asset = new BuildAsset();
                     $asset->setBuild($build);
-                    $asset->setType('world');
+                    $asset->setType(BuildAssetType::WORLD);
                     $asset->setUrl($newFilename);
                     $asset->setFilename($clientOriginalName);
                     $asset->setSizeBytes($sizeBytes);

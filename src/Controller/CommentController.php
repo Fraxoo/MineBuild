@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Enum\Visibility;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,7 +31,7 @@ final class CommentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setVisibility("PUBLIC");
+            $comment->setVisibility(Visibility::PUBLIC);
             $entityManager->persist($comment);
             $entityManager->flush();
 

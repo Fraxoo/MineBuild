@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use App\Entity\User;
+use App\Enum\Visibility;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,7 +28,7 @@ class CommentRepository extends ServiceEntityRepository
             ->andWhere('c.visibility = :visibility')
             ->andWhere('c.deleted_at IS NULL')
             ->setParameter('user', $user)
-            ->setParameter('visibility', 'PUBLIC')
+            ->setParameter('visibility', Visibility::PUBLIC)
             ->orderBy('c.created_at', 'DESC')
             ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit);
@@ -45,7 +46,7 @@ class CommentRepository extends ServiceEntityRepository
             ->andWhere('c.visibility = :visibility')
             ->andWhere('c.deleted_at IS NULL')
             ->setParameter('user', $user)
-            ->setParameter('visibility', 'PUBLIC')
+            ->setParameter('visibility', Visibility::PUBLIC)
             ->getQuery()
             ->getSingleScalarResult();
     }

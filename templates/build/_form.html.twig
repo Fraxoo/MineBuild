@@ -229,7 +229,7 @@
         {% if build.id and build.assets is defined and build.assets|length > 0 %}
             {% set worldAsset = null %}
             {% for a in build.assets %}
-                {% if a.type == 'world' %}
+                {% if a.type.value == 'world' %}
                     {% set worldAsset = a %}
                 {% endif %}
             {% endfor %}

@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Build;
 use App\Entity\User;
+use App\Enum\BuildDifficulty;
+use App\Enum\Visibility;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -31,7 +33,7 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('buildCategories.category', 'category')->addSelect('category')
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
-            ->setParameter('visibility', 'PUBLIC');
+            ->setParameter('visibility', Visibility::PUBLIC);
 
 
         if ($isFavorite) {
@@ -51,9 +53,9 @@ class BuildRepository extends ServiceEntityRepository
             } else {
                 $queryBuilder->orderBy('b.views_count', 'DESC');
             }
-            if ($filters['difficulty'] !== null) {
+            if ($filters['difficulty'] !== null && BuildDifficulty::tryFrom($filters['difficulty'])) {
                 $queryBuilder->andWhere('b.difficulty = :difficulty')
-                    ->setParameter('difficulty', $filters['difficulty']);
+                    ->setParameter('difficulty', BuildDifficulty::from($filters['difficulty']));
             }
 
             if ($filters['category'] !== null) {
@@ -99,7 +101,7 @@ class BuildRepository extends ServiceEntityRepository
             ->select('COUNT(DISTINCT b.id)')
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
-            ->setParameter('visibility', 'PUBLIC')
+            ->setParameter('visibility', Visibility::PUBLIC)
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -112,7 +114,7 @@ class BuildRepository extends ServiceEntityRepository
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
             ->setParameter('user', $user)
-            ->setParameter('visibility', 'PUBLIC')
+            ->setParameter('visibility', Visibility::PUBLIC)
             ->orderBy('b.created_at', 'DESC')
             ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit);
@@ -130,7 +132,7 @@ class BuildRepository extends ServiceEntityRepository
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
             ->setParameter('user', $user)
-            ->setParameter('visibility', 'PUBLIC')
+            ->setParameter('visibility', Visibility::PUBLIC)
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -146,7 +148,7 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('buildCategories.category', 'category')->addSelect('category')
             ->andWhere('b.visibility = :visibility')
             ->andWhere('b.deleted_at IS NULL')
-            ->setParameter('visibility', 'PUBLIC')
+            ->setParameter('visibility', Visibility::PUBLIC)
             // USE DISTINCT 0 DOUBLON
             ->select('COUNT(DISTINCT b.id)');
 
@@ -163,9 +165,9 @@ class BuildRepository extends ServiceEntityRepository
         }
 
         if ($filters) {
-            if ($filters['difficulty'] !== null) {
+            if ($filters['difficulty'] !== null && BuildDifficulty::tryFrom($filters['difficulty'])) {
                 $queryBuilder->andWhere('b.difficulty = :difficulty')
-                    ->setParameter('difficulty', $filters['difficulty']);
+                    ->setParameter('difficulty', BuildDifficulty::from($filters['difficulty']));
             }
 
             if ($filters['category'] !== null) {
@@ -244,7 +246,7 @@ class BuildRepository extends ServiceEntityRepository
             ->leftJoin('b.comments', 'comments', 'WITH', 'comments.visibility = :commentVisibility')
             ->orderBy('comments.created_at', 'DESC')
             ->addSelect('comments')
-            ->setParameter('commentVisibility', 'PUBLIC')
+            ->setParameter('commentVisibility', Visibility::PUBLIC)
             ->leftJoin('b.materials', 'materials')->addSelect('materials')
             ->leftJoin('b.author', 'author')->addSelect('author')
             ->leftJoin('b.buildCategories', 'buildCategories')->addSelect('buildCategories')

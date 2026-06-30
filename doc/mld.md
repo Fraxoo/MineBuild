@@ -32,10 +32,10 @@ erDiagram
     INT dimensions_x
     INT dimensions_y
     INT dimensions_z
-    VARCHAR difficulty
+    ENUM difficulty "easy|medium|hard|expert"
     INT time_estimated_min
-    VARCHAR game_mode
-    VARCHAR visibility
+    ENUM game_mode "survival|creative"
+    ENUM visibility "PUBLIC|HIDDEN"
     INT views_count
     INT likes_count
     INT saves_count
@@ -105,7 +105,7 @@ erDiagram
     DATETIME created_at
     DATETIME updated_at
     DATETIME deleted_at
-    VARCHAR visibility
+    ENUM visibility "PUBLIC|HIDDEN"
   }
 
   COMMENT_LIKE {
@@ -151,7 +151,7 @@ erDiagram
     INT id PK
     INT recipient_id FK
     INT actor_id FK
-    VARCHAR type
+    ENUM type "follow|like|comment|rating|moderation"
     INT build_id FK
     INT comment_id FK
     TEXT message
@@ -162,13 +162,13 @@ erDiagram
   REPORT {
     INT id PK
     INT reporter_id FK
-    VARCHAR target_type
+    ENUM target_type "build|comment|user"
     INT build_id FK
     INT comment_id FK
     INT user_id FK
-    VARCHAR reason_code
+    ENUM reason_code "spam|harassment|hate_speech|nudity|violence|illegal|impersonation|copyright|other"
     TEXT message
-    VARCHAR status
+    ENUM status "Pending|Confirmed|Rejected"
     INT handled_by_id FK
     DATETIME handled_at
     DATETIME created_at
@@ -178,21 +178,21 @@ erDiagram
   MODERATION_ACTION {
     INT id PK
     INT moderator_id FK
-    VARCHAR target_type
+    ENUM target_type "build|comment|user"
     INT build_id FK
     INT target_user_id FK 
     INT comment_id FK
     INT report_id FK,UK
-    VARCHAR action
+    ENUM action "Delete"
     TEXT reason
-    VARCHAR reason_code
+    ENUM reason_code "spam|harassment|hate_speech|nudity|violence|illegal|impersonation|copyright|other"
     DATETIME created_at
   }
 
   BUILD_ASSET {
     INT id PK
     INT build_id FK
-    VARCHAR type
+    ENUM type "world"
     TEXT url
     VARCHAR filename
     INT size_bytes
