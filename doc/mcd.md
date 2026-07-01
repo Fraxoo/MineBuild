@@ -70,6 +70,11 @@ erDiagram
     number downloads_count
   }
 
+  BUILD_VIEW {
+    string ip_hash
+    datetime viewed_at
+  }
+
   MCVERSION {
     string number
   }
@@ -114,6 +119,9 @@ erDiagram
   USER }o--o{ BUILD : sauvegarde
   USER }o--o{ BUILD : note
   USER }o--o{ BUILD : telecharge
+
+  BUILD ||--o{ BUILD_VIEW : comptabilise
+  USER o|--o{ BUILD_VIEW : consulte
 
   USER }o--o{ COMMENT : aime_commentaire
 

@@ -100,7 +100,7 @@ Afficher et mettre à jour :
 ## 11. Signalements et modération
 - Signaler un build ou un commentaire.
 - Enregistrer les signalements avec un motif, un message et un statut.
-- Masquer un build avec un motif.
+- Supprimer un build avec un motif.
 - Historiser les actions de modération.
 
 ## 12. Notifications
@@ -119,18 +119,40 @@ J’ai également utilisé Stimulus pour ajouter quelques interactions côté fr
 
 
 ## 15. Endpoints Utilisé                                 
+  app_build_index                GET        /build
   app_build_new                  GET|POST   /build/new                                     
   app_build_download             ANY        /build/build/{id}/download                     
   app_build_show                 GET|POST   /build/{id}                                    
   app_build_edit                 GET|POST   /build/{id}/edit                               
   app_build_delete               POST       /build/{id}        
-  app_comment_new                Post       /comment/new  
+
+  app_build_image_index          GET        /build/image
+  app_build_image_new            GET|POST   /build/image/new
+  app_build_image_show           GET        /build/image/{id}
+  app_build_image_edit           GET|POST   /build/image/{id}/edit
+  app_build_image_delete         POST       /build/image/{id}
+
+  app_cgu                        ANY        /cgu
+
+  app_comment_index              GET        /comment
+  app_comment_new                GET|POST   /comment/new
+  app_comment_show               GET        /comment/{id}
+  app_comment_edit               GET|POST   /comment/{id}/edit
   app_comment_delete             POST       /comment/{id}                                  
+
   app_home                       GET        /home/{page}                                   
+
+  app_moderation_action_index    GET        /moderation/action
   app_moderation_action_delete   POST       /moderation/action/{type}/{id}                 
+  app_moderation_action_show     GET        /moderation/action/{id}
+  app_moderation_action_edit     GET|POST   /moderation/action/{id}/edit
+  app_moderation_action_del      POST       /moderation/action/{id}
+
   app_user_not_found             ANY        /error/user/404                                
-  app_build_not_found            ANY        /error/build/404                               
+  app_build_not_found            ANY        /error/build/404                                
+
   app_register                   ANY        /register                                      
+
   app_report_index               GET        /dashboard/{page}                              
   app_report_users               GET        /dashboard/users/{page}                        
   app_report_history             GET        /dashboard/history/{page}                      
@@ -140,10 +162,16 @@ J’ai également utilisé Stimulus pour ajouter quelques interactions côté fr
   app_report_new_comment         GET|POST   /dashboard/new/comment/{id}                    
   app_report_new_build           GET|POST   /dashboard/new/build/{id}                      
   app_report_new_user            GET|POST   /dashboard/new/user/{id}                       
+  app_report_show                GET        /dashboard/{id}
+  app_report_edit                GET|POST   /dashboard/{id}/edit
   app_report_delete              POST       /dashboard/{id}                                
   app_report_reject              POST       /dashboard/reject/{id}                         
+
   app_login                      ANY        /login                                         
   app_logout                     ANY        /logout                                        
+
+  app_user_index                 GET        /user
+  app_user_new                   GET|POST   /user/new
   app_user_show                  GET        /user/{id}/all/{page}                          
   app_user_favorites             GET        /user/{id}/favorites/{page}                    
   app_user_following             GET        /user/{id}/following/{page}                    
@@ -152,3 +180,5 @@ J’ai également utilisé Stimulus pour ajouter quelques interactions côté fr
   app_user_edit_password         GET|POST   /user/{id}/edit/password                       
   app_user_edit_privacy          GET|POST   /user/{id}/edit/privacy                        
   app_user_delete                POST       /user/{id}                                     
+  app_user_get_follow_list       GET        /user/follow/{id}
+  app_user_get_following_list    GET        /user/following/{id}
