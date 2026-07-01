@@ -100,7 +100,7 @@ Afficher et mettre à jour :
 ## 11. Signalements et modération
 - Signaler un build ou un commentaire.
 - Enregistrer les signalements avec un motif, un message et un statut.
-- Masquer un build avec un motif.
+- Supprimer un build avec un motif.
 - Historiser les actions de modération.
 
 ## 12. Notifications
