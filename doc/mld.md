@@ -141,6 +141,14 @@ erDiagram
     DATETIME created_at
   }
 
+  BUILD_VIEW {
+    INT id PK
+    INT build_id FK
+    INT user_id FK
+    VARCHAR ip_hash
+    DATETIME viewed_at
+  }
+
   USER_FOLLOW {
     INT follower_id PK,FK
     INT following_id PK,FK
@@ -235,6 +243,9 @@ erDiagram
 
   BUILD ||--o{ BUILD_DOWNLOAD : downloaded_as
   USER ||--o{ BUILD_DOWNLOAD : downloads
+
+  BUILD ||--o{ BUILD_VIEW : viewed_as
+  USER o|--o{ BUILD_VIEW : views
 
   COMMENT ||--o{ COMMENT_LIKE : liked_by
   USER ||--o{ COMMENT_LIKE : likes_comment
