@@ -18,4 +18,5 @@ return [
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     Symfony\UX\LiveComponent\LiveComponentBundle::class => ['all' => true],
     Symfony\UX\Toolkit\UXToolkitBundle::class => ['dev' => true, 'test' => true],
+    Symfony\Bundle\MercureBundle\MercureBundle::class => ['all' => true],
 ];
