@@ -11,11 +11,11 @@
             <h1 class="text-(--title-color) ">Notification</h1>
         </div>
         <p class="text-(--secondary-color) text-xl">Vous avez 0 notification non-lue</p>
-    </div>
-    {% for notif in notifications %}
-    <twig:NotificationCard :notif="notif" />
-    {% endfor %}
+        {% for notif in items %}
+        <twig:NotificationCard :notif="notif" />
+        {% endfor %}
         <twig:PaginationComponent :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
+    </div>
 </div>
 
-{% endblock %} 
+{% endblock %}

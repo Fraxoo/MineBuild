@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Notification;
 use App\Form\NotificationType;
 use App\Repository\NotificationRepository;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,12 +15,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/notification')]
 final class NotificationController extends AbstractController
 {
-    #[Route(name: 'app_notification_index', methods: ['GET'])]
-    public function index(NotificationRepository $notificationRepository): Response
+    #[Route('/{page}', name: 'app_notification_index', defaults: ['page' => 1], methods: ['GET'])]
+    public function index(int $page, Request $request, NotificationRepository $notificationRepository, NotificationService $notificationService): Response
     {
-        return $this->render('notification/index.html.twig', [
-            'notifications' => $notificationRepository->findAll(),
-        ]);
+        return $this->render('notification/index.html.twig' , $notificationService->getNotificationData($request, $page, 12,$this->getUser()),);
     }
 
     #[Route('/new', name: 'app_notification_new', methods: ['GET', 'POST'])]
@@ -71,7 +70,7 @@ final class NotificationController extends AbstractController
     #[Route('/{id}', name: 'app_notification_delete', methods: ['POST'])]
     public function delete(Request $request, Notification $notification, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$notification->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $notification->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($notification);
             $entityManager->flush();
         }
