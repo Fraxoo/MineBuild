@@ -1,3 +1,10 @@
-<div{{ attributes }}>
-    
-</div>
+<div{{ attributes }} class="container">
+<pre>
+    {{ dump(notif) }}
+</pre>
+    {# <img class="w-10 h-10 min-w-10 min-h-10 shrink-0 rounded-full border-4 border-(--border-color-secondary) object-cover"
+        data-avatar-preview-target="image"
+        src="{{ notification.actor.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
+        alt="Avatar de {{ app.user.username }}"> #}
+
+    </div>
