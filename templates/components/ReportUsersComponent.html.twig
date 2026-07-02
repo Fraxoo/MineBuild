@@ -11,6 +11,11 @@
         <div {{stimulus_controller('modal-form')}} class="flex flex-wrap flex-col gap-2 justify-between">
             <div class="flex items-center gap-2">
                 <h2 class="font-bold text-2xl text-(--title-color)">{{item.username}}</h2>
+                <div class="flex items-center gap-1 text-red-500 font-bold">
+                    <i class="fa-solid text-[1rem] fa-circle-exclamation"></i>
+                    <p>{{ item.reportsCount }}
+                        signalement{{ item.reportsCount > 1 ? 's' : '' }}</p>
+                </div>
             </div>
             <p class="text-(--secondary-color)">{{ item.bio ? item.bio : 'Aucune bio pour le moment' }}</p>
             <div class="flex items-center gap-4 text-(--secondary-color)">
@@ -18,6 +23,10 @@
                     <i class="ti ti-calendar-event"></i>
                     <p>Inscrit depuis le
                         {{ item.createdAt|date('d/m/Y') }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="ti ti-flag"></i>
+                    <p>{{ item.reportsCount ?? 0 }} signalement{{ (item.reportsCount ?? 0) > 1 ? 's' : '' }}</p>
                 </div>
             </div>
         </div>

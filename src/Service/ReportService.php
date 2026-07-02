@@ -106,6 +106,11 @@ final readonly class ReportService
             'user' => $report->setUser($target),
         };
 
+        $targetUser = $report->getUser();
+        if ($targetUser instanceof User) {
+            $targetUser->setReportsCount(($targetUser->getReportsCount() ?? 0) + 1);
+        }
+
         $this->entityManager->persist($report);
         $this->entityManager->flush();
     }

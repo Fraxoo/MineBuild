@@ -15,6 +15,7 @@ erDiagram
     BOOLEAN is_active
     DATETIME created_at
     DATETIME updated_at
+    INT reports_count
   }
 
   ROLE {
