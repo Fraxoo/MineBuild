@@ -58,8 +58,6 @@ class Report
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
 
-    private int $target_reports_count = 0;
-
     #[ORM\OneToOne(mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?ModerationAction $moderationAction = null;
 
@@ -203,17 +201,6 @@ class Report
     public function setUpdatedAt(?\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
-        return $this;
-    }
-
-    public function getTargetReportsCount(): int
-    {
-        return $this->target_reports_count;
-    }
-
-    public function setTargetReportsCount(int $target_reports_count): static
-    {
-        $this->target_reports_count = $target_reports_count;
         return $this;
     }
 

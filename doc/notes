@@ -100,6 +100,8 @@ Afficher et mettre à jour :
 ## 11. Signalements et modération
 - Signaler un build ou un commentaire.
 - Enregistrer les signalements avec un motif, un message et un statut.
+- Chaque utilisateur possède un compteur `reports_count` stocké en base, initialisé à `0`.
+- Lorsqu'un signalement est créé, le `reports_count` de l'utilisateur ciblé est incrémenté de 1.
 - Supprimer un build avec un motif.
 - Historiser les actions de modération.
 

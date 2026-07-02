@@ -51,8 +51,6 @@ class ModerationAction
     #[ORM\OneToOne(inversedBy: 'moderationAction', cascade: ['persist', 'remove'])]
     private ?Report $report = null;
 
-    private int $target_reports_count = 0;
-
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -175,15 +173,4 @@ class ModerationAction
         return $this;
     }
 
-    public function getTargetReportsCount(): int
-    {
-        return $this->target_reports_count;
-    }
-
-    public function setTargetReportsCount(int $target_reports_count): static
-    {
-        $this->target_reports_count = $target_reports_count;
-
-        return $this;
-    }
 }

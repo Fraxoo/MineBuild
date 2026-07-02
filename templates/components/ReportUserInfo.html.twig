@@ -1,39 +1,42 @@
-    <div class="flex flex-wrap gap-4 items-center bg-(--container-color) p-4 md:p-8 rounded justify-between w-full">
-        <div class="flex flex-wrap gap-4 items-center">
-            <img class="w-28 h-28 rounded-full border-4 border-(--primary-color) object-cover"
-                data-avatar-preview-target="image"
-                src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.jpg') }}"
-                alt="Avatar de {{ user.username }}">
-            <div {{stimulus_controller('modal-form')}} class="flex flex-wrap flex-col gap-2 justify-between">
-                <div class="flex items-center gap-2">
-                    <h2 class="font-bold text-2xl text-(--title-color)">{{user.username}}</h2>
+<div class="flex flex-wrap gap-4 items-center bg-(--container-color) p-4 md:p-8 rounded justify-between w-full">
+    <div class="flex flex-wrap gap-4 items-center">
+        <img class="w-28 h-28 rounded-full border-4 border-(--primary-color) object-cover"
+            data-avatar-preview-target="image"
+            src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.jpg') }}"
+            alt="Avatar de {{ user.username }}">
+        <div {{stimulus_controller('modal-form')}} class="flex flex-wrap flex-col gap-2 justify-between">
+            <div class="flex items-center gap-2">
+                <h2 class="font-bold text-2xl text-(--title-color)">{{user.username}}</h2>
+                <div class="flex items-center gap-1 text-red-500 font-bold">
+                    <i class="fa-solid text-[1rem] fa-circle-exclamation"></i>
+                    <p>{{ user.reportsCount }}
+                        signalement{{ user.reportsCount > 1 ? 's' : '' }}</p>
                 </div>
-                <p class="text-(--secondary-color)">{{ user.bio ? user.bio : 'Aucune bio pour le moment' }}</p>
-                <div class="flex items-center gap-4 text-(--secondary-color)">
-                    <div class="flex items-center gap-2">
-                        <i class="ti ti-calendar-event"></i>
-                        <p>Inscrit depuis le
-                            {{ user.createdAt|date('d/m/Y') }}</p>
-                    </div>
+            </div>
+            <p class="text-(--secondary-color)">{{ user.bio ? user.bio : 'Aucune bio pour le moment' }}</p>
+            <div class="flex items-center gap-4 text-(--secondary-color)">
+                <div class="flex items-center gap-2">
+                    <i class="ti ti-calendar-event"></i>
+                    <p>Inscrit depuis le
+                        {{ user.createdAt|date('d/m/Y') }}</p>
                 </div>
             </div>
         </div>
-
-        {% if is_granted('ROLE_ADMIN') and app.user.id !== user.id %}
-
-        <button data-action="click->modal-form#openModal" class="red-button px-2! py-1! text-sm!" type="button">
-            <i class="ti ti-trash"></i>
-            Supprimer l'utilisateur
-        </button>
-        <twig:DeleteModal :id="user.id" type="user" />
-
-        {% endif %}
     </div>
 
-    <twig:ReportUserNav :user="user" />
-{# 
-    {% if condition %}
+    {% if is_granted('ROLE_ADMIN') and app.user.id !== user.id %}
 
-    {% endif %} #}
+    <button data-action="click->modal-form#openModal" class="red-button px-2! py-1! text-sm!" type="button">
+        <i class="ti ti-trash"></i>
+        Supprimer l'utilisateur
+    </button>
+    <twig:DeleteModal :id="user.id" type="user" />
 
+    {% endif %}
+</div>
 
+<twig:ReportUserNav :user="user" />
+{#
+{% if condition %}
+
+{% endif %} #}

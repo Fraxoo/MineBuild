@@ -5,15 +5,15 @@
         <div class="flex items-center gap-3">
             <div
                 class="text-(--secondary-color)  px-2 py-1 rounded border border-(--border-color) flex items-center gap-1">
-                <i class="ti text-[1rem] {{ report.targetType.value === "user" ? " ti-user" : (report.targetType.value==="build"
+                <i class="ti text-[1rem] {{ report.targetType.value === "user" ? " ti-user" : (report.targetType.value === "build"
                     ? " ti-blocks" : " ti-message-circle" ) }}"></i>
                 <p>{{ report.targetType.value }}</p>
             </div>
             <a href="{{ path('app_report_users_builds' , { id: report.user.id})}}" class="text-(--title-color) hover:underline">{{ report.user.username }}</a>
             <div class="flex items-center gap-1 text-red-500 font-bold">
                 <i class="fa-solid text-[1rem] fa-circle-exclamation"></i>
-                <p>{{ report.targetReportsCount }}
-                    signalement{{ report.targetReportsCount > 1 ? 's' : '' }}</p>
+                <p>{{ report.user.reportsCount }}
+                    signalement{{ report.user.reportsCount > 1 ? 's' : '' }}</p>
             </div>
         </div>
     </div>

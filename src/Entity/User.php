@@ -116,6 +116,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: BuildView::class, mappedBy: 'user_id')]
     private Collection $buildViews;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private int $reports_count = 0;
+
 
     
 
@@ -427,6 +430,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $buildView->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getReportsCount(): int
+    {
+        if (!isset($this->reports_count)) {
+            return 0;
+        }
+
+        return $this->reports_count;
+    }
+
+    public function setReportsCount(int $reports_count): static
+    {
+        $this->reports_count = $reports_count;
 
         return $this;
     }

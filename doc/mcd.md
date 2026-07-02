@@ -11,6 +11,7 @@ erDiagram
     string avatar
     string bio
     boolean is_active
+    number reports_count
   }
 
   ROLE {
