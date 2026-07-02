@@ -11,9 +11,11 @@ use App\Entity\BuildTag;
 use App\Entity\BuildVersion;
 use App\Entity\BuildView;
 use App\Entity\Comment;
+use App\Entity\Notification;
 use App\Entity\Tag;
 use App\Entity\User;
 use App\Enum\BuildAssetType;
+use App\Enum\NotificationType;
 use App\Enum\Visibility;
 use App\Repository\BuildDownloadRepository;
 use App\Repository\BuildLikeRepository;
@@ -175,6 +177,18 @@ final readonly class BuildService
 
         $comment->setBuild($build);
         $comment->setVisibility(Visibility::PUBLIC);
+
+        if($build->getAuthor() !== $user){
+            $notification = new Notification();
+            $notification->setMessage($user->getUsername() . " a commenté votre publication");
+            $notification->setComment($comment);
+            $notification->setType(NotificationType::COMMENT);
+            $notification->setCreatedAt(new DateTimeImmutable());
+            $notification->setActor($user);
+            $notification->setRecipient($build->getAuthor());
+            $this->entityManager->persist($notification);
+        }
+
         $this->entityManager->persist($comment);
         $this->entityManager->flush();
     }
