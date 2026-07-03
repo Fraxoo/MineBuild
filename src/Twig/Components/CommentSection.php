@@ -4,10 +4,8 @@ namespace App\Twig\Components;
 
 use App\Entity\Build;
 use App\Form\CommentType;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\BuildService;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\FormView;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -33,9 +31,9 @@ final class CommentSection
     private ?Comment $commentEntity = null;
 
     public function __construct(
-        private EntityManagerInterface $em,
         private Security $security,
         private FormFactoryInterface $formFactory,
+        private BuildService $buildService,
     ) {
     }
 
@@ -59,11 +57,13 @@ final class CommentSection
         $this->submitForm();
 
         $comment = $this->getForm()->getData();
-        
-        
+        $user = $this->security->getUser();
 
-        $this->em->persist($comment);
-        $this->em->flush();
+        if (!$user instanceof User) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $this->buildService->addComment($this->build, $comment, $user);
 
         $this->resetForm(); 
         $this->commentEntity = null;

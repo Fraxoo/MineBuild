@@ -3,8 +3,8 @@
 namespace App\Twig\Components;
 
 use App\Entity\Build;
-use App\Entity\UserFollow;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
+use App\Service\UserService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -22,8 +22,8 @@ final class BuildUserAction
     public bool $isFollowedByUser = false;
 
     public function __construct(
-        private EntityManagerInterface $em,
         private Security $security,
+        private UserService $userService,
     ) {
     }
 
@@ -31,30 +31,15 @@ final class BuildUserAction
     public function follow(): void
     {
         $user = $this->security->getUser();
-        if (!$user) {
+        if (!$user instanceof User) {
             return;
         }
 
-        if($user === $this->build->getAuthor()) {
+        $author = $this->build->getAuthor();
+        if (!$author instanceof User) {
             return;
         }
 
-        $existingFollow = $this->em->getRepository(UserFollow::class)->findOneBy([
-            'follower' => $user,
-            'following' => $this->build->getAuthor(),
-        ]);
-
-        if ($existingFollow) {
-            $this->em->remove($existingFollow);
-            $this->isFollowedByUser = false;
-        } else {
-            $userFollow = new UserFollow($user, $this->build->getAuthor());
-            $this->em->persist($userFollow);
-            $this->isFollowedByUser = true;
-        }
-
-        $this->em->flush();
+        $this->isFollowedByUser = $this->userService->toggleFollow($author, $user);
     }
 }
-
-

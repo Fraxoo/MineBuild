@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Entity\UserFollow;
 use App\Exception\UserNotFoundException;
 use App\Repository\BuildRepository;
 use App\Repository\UserFollowRepository;
@@ -38,6 +39,42 @@ final readonly class UserService
         $this->entityManager->flush();
     }
 
+    public function isFollowedByUser(User $user, ?User $actualUser): bool
+    {
+        if (!$actualUser instanceof User) {
+            return false;
+        }
+
+        return $this->userFollowRepository->findOneBy([
+            'follower' => $actualUser,
+            'following' => $user,
+        ]) !== null;
+    }
+
+    public function toggleFollow(User $user, User $actualUser): bool
+    {
+        if ($actualUser === $user) {
+            return false;
+        }
+
+        $existingFollow = $this->userFollowRepository->findOneBy([
+            'follower' => $actualUser,
+            'following' => $user,
+        ]);
+
+        if ($existingFollow) {
+            $this->entityManager->remove($existingFollow);
+            $isFollowed = false;
+        } else {
+            $this->entityManager->persist(new UserFollow($actualUser, $user));
+            $isFollowed = true;
+        }
+
+        $this->entityManager->flush();
+
+        return $isFollowed;
+    }
+
     public function getProfileData(User $user, string $section, int $page, ?User $actualUser): array
     {
         $items = null;
@@ -64,10 +101,6 @@ final readonly class UserService
             $totalItems = $this->buildRepository->countOnlineBuildsWithFilters([], $user);
         }
 
-        $isFollowedByUser = $actualUser instanceof User
-            ? $user->getFollowerRelations()->exists(fn($i, $rel) => $rel->getFollower()->getId() === $actualUser->getId())
-            : false;
-
         return [
             'user' => $user,
             'totalLikes' => $this->buildRepository->getAllLikeForAllBuildsByUser($user),
@@ -79,7 +112,7 @@ final readonly class UserService
             'currentPage' => $page,
             'isFollow' => $isFollow,
             'followType' => $followType,
-            'isFollowedByUser' => $isFollowedByUser,
+            'isFollowedByUser' => $this->isFollowedByUser($user, $actualUser),
         ];
     }
 

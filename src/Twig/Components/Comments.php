@@ -4,10 +4,8 @@ namespace App\Twig\Components;
 
 use App\Entity\Build;
 use App\Entity\Comment;
-use App\Entity\CommentLike;
 use App\Entity\User;
-use App\Repository\CommentLikeRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\CommentService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -23,14 +21,14 @@ final class Comments
     #[LiveProp()]
     public Comment $comment;
 
+    #[LiveProp]
     public Build $build;
 
     public bool $isLikedByUser = false;
 
     public function __construct(
-        private EntityManagerInterface $em,
         private Security $security,
-        private CommentLikeRepository $commentLikeRepository,
+        private CommentService $commentService,
     ) {
     }
 
@@ -44,12 +42,7 @@ final class Comments
             return;
         }
 
-        $existingLike = $this->commentLikeRepository->findOneBy([
-            'comment_id' => $this->comment,
-            'user_id' => $user,
-        ]);
-
-        $this->isLikedByUser = $existingLike !== null;
+        $this->isLikedByUser = $this->commentService->isLikedByUser($this->comment, $user);
     }
 
     #[LiveAction()]
@@ -60,25 +53,7 @@ final class Comments
             return;
         }
 
-        $existingLikes = $this->commentLikeRepository->findBy([
-            'comment_id' => $this->comment,
-            'user_id' => $user,
-        ]);
-
-        if ($existingLikes !== []) {
-            foreach ($existingLikes as $existingLike) {
-                $this->em->remove($existingLike);
-            }
-
-            $this->em->flush();
-            $this->isLikedByUser = false;
-            return;
-        }
-
-        $like = new CommentLike($this->comment, $user);
-        $this->em->persist($like);
-        $this->em->flush();
-        $this->isLikedByUser = true;
+        $this->isLikedByUser = $this->commentService->toggleLike($this->comment, $user);
     }
 
 

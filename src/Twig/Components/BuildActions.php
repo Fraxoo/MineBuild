@@ -3,12 +3,8 @@
 namespace App\Twig\Components;
 
 use App\Entity\Build;
-use App\Entity\BuildLike;
-use App\Entity\BuildRating;
-use App\Entity\BuildSave;
 use App\Entity\User;
-use App\Repository\BuildRatingRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\BuildService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -34,9 +30,8 @@ final class BuildActions
     public bool $isLikedByUser = false;
 
     public function __construct(
-        private EntityManagerInterface $em,
         private Security $security,
-        private BuildRatingRepository $buildRatingRepository,
+        private BuildService $buildService,
     ) {
     }
 
@@ -50,12 +45,7 @@ final class BuildActions
             return;
         }
 
-        $existingRating = $this->buildRatingRepository->findOneBy([
-            'build' => $this->build,
-            'user' => $user,
-        ]);
-
-        $this->rating = $existingRating?->getRating() ?? 0;
+        $this->rating = $this->buildService->getRatingByUser($this->build, $user);
     }
 
 
@@ -63,81 +53,25 @@ final class BuildActions
     #[LiveAction]
     public function rate(#[LiveArg] int $value): void
     {
-        if ($value < 1 || $value > 5) {
-            return;
-        }
-
         $user = $this->security->getUser();
 
         if (!$user instanceof User) {
             return;
         }
 
-        $rating = $this->buildRatingRepository->findOneBy([
-            'build' => $this->build,
-            'user' => $user,
-        ]);
-
-        if (!$rating) {
-            $rating = new BuildRating($this->build, $user, $value);
-
-            $this->em->persist($rating);
-            $this->rating = $value;
-        } elseif ($rating->getRating() === $value) {
-            $this->em->remove($rating);
-            $this->rating = 0;
-        } else {
-            $rating->setRating($value);
-            $this->rating = $value;
-        }
-
-        $this->em->flush();
-
-        $ratings = $this->buildRatingRepository->findBy([
-            'build' => $this->build,
-        ]);
-
-        if (count($ratings) === 0) {
-            $average = 0;
-        } else {
-            $total = 0;
-
-            foreach ($ratings as $buildRating) {
-                $total += $buildRating->getRating();
-            }
-
-            $average = $total / count($ratings);
-        }
-
-        $this->build->setRatingAvg(round($average, 1));
-
-        $this->em->flush();
+        $this->rating = $this->buildService->rate($this->build, $user, $value);
     }
 
     #[LiveAction()]
     public function save(): void
     {
+        $user = $this->security->getUser();
 
-        $saved = $this->em->getRepository(BuildSave::class)->findOneBy([
-            'build' => $this->build,
-            'user' => $this->security->getUser(),
-        ]);
-
-        if (!$saved) {
-            $saved = new BuildSave($this->build, $this->security->getUser());
-            $query = $this->build->setSavesCount($this->build->getSavesCount() + 1);
-            $this->em->persist($query);
-            $this->em->persist($saved);
-            $this->isSavedByUser = true;
-        } else {
-            $query = $this->build->setSavesCount($this->build->getSavesCount() - 1);
-            $this->em->persist($query);
-            $this->em->remove($saved);
-            $this->isSavedByUser = false;
+        if (!$user instanceof User) {
+            return;
         }
 
-        $this->em->flush();
-
+        $this->isSavedByUser = $this->buildService->toggleSave($this->build, $user);
     }
 
     #[LiveAction]
@@ -145,35 +79,10 @@ final class BuildActions
     {
         $user = $this->security->getUser();
 
-        if (!$user) {
+        if (!$user instanceof User) {
             return;
         }
 
-        $existingLike = $this->em->getRepository(BuildLike::class)->findOneBy([
-            'build' => $this->build,
-            'user' => $user,
-        ]);
-
-        if ($existingLike) {
-            $this->em->remove($existingLike);
-
-            $this->build->setLikesCount(
-                max(0, $this->build->getLikesCount() - 1)
-            );
-
-            $this->isLikedByUser = false;
-        } else {
-            $buildLike = new BuildLike($this->build, $user);
-
-            $this->em->persist($buildLike);
-
-            $this->build->setLikesCount(
-                $this->build->getLikesCount() + 1
-            );
-
-            $this->isLikedByUser = true;
-        }
-
-        $this->em->flush();
+        $this->isLikedByUser = $this->buildService->toggleLike($this->build, $user);
     }
 }

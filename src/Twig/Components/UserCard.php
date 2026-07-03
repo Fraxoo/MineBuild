@@ -2,8 +2,6 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\User;
-use App\Entity\UserFollow;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]

@@ -7,8 +7,11 @@ use App\Entity\BuildAsset;
 use App\Entity\BuildCategory;
 use App\Entity\BuildDownload;
 use App\Entity\BuildImage;
+use App\Entity\BuildLike;
+use App\Entity\BuildRating;
 use App\Entity\BuildTag;
 use App\Entity\BuildVersion;
+use App\Entity\BuildSave;
 use App\Entity\BuildView;
 use App\Entity\Comment;
 use App\Entity\Notification;
@@ -19,6 +22,7 @@ use App\Enum\NotificationType;
 use App\Enum\Visibility;
 use App\Repository\BuildDownloadRepository;
 use App\Repository\BuildLikeRepository;
+use App\Repository\BuildRatingRepository;
 use App\Repository\BuildRepository;
 use App\Repository\BuildSaveRepository;
 use App\Repository\BuildViewRepository;
@@ -40,6 +44,7 @@ final readonly class BuildService
         private TagRepository $tagRepository,
         private BuildDownloadRepository $buildDownloadRepository,
         private BuildLikeRepository $buildLikeRepository,
+        private BuildRatingRepository $buildRatingRepository,
         private BuildSaveRepository $buildSaveRepository,
         private BuildViewRepository $buildViewRepository,
         private SluggerInterface $slugger,
@@ -75,6 +80,93 @@ final readonly class BuildService
                 'user' => $user,
             ]) !== null
             : false;
+    }
+
+    public function getRatingByUser(Build $build, ?User $user): int
+    {
+        if (!$user instanceof User) {
+            return 0;
+        }
+
+        $rating = $this->buildRatingRepository->findOneBy([
+            'build' => $build,
+            'user' => $user,
+        ]);
+
+        return $rating?->getRating() ?? 0;
+    }
+
+    public function rate(Build $build, User $user, int $value): int
+    {
+        if ($value < 1 || $value > 5) {
+            return $this->getRatingByUser($build, $user);
+        }
+
+        $rating = $this->buildRatingRepository->findOneBy([
+            'build' => $build,
+            'user' => $user,
+        ]);
+
+        if (!$rating) {
+            $rating = new BuildRating($build, $user, $value);
+            $this->entityManager->persist($rating);
+            $userRating = $value;
+        } elseif ($rating->getRating() === $value) {
+            $this->entityManager->remove($rating);
+            $userRating = 0;
+        } else {
+            $rating->setRating($value);
+            $userRating = $value;
+        }
+
+        $this->entityManager->flush();
+        $this->updateRatingAverage($build);
+
+        return $userRating;
+    }
+
+    public function toggleSave(Build $build, User $user): bool
+    {
+        $saved = $this->buildSaveRepository->findOneBy([
+            'build' => $build,
+            'user' => $user,
+        ]);
+
+        if (!$saved) {
+            $this->entityManager->persist(new BuildSave($build, $user));
+            $build->setSavesCount($build->getSavesCount() + 1);
+            $isSaved = true;
+        } else {
+            $this->entityManager->remove($saved);
+            $build->setSavesCount(max(0, $build->getSavesCount() - 1));
+            $isSaved = false;
+        }
+
+        $this->entityManager->flush();
+
+        return $isSaved;
+    }
+
+    public function toggleLike(Build $build, User $user): bool
+    {
+        $existingLike = $this->buildLikeRepository->findOneBy([
+            'build' => $build,
+            'user' => $user,
+        ]);
+
+        if ($existingLike) {
+            $this->entityManager->remove($existingLike);
+            $build->setLikesCount(max(0, $build->getLikesCount() - 1));
+            $isLiked = false;
+        } else {
+            $this->entityManager->persist(new BuildLike($build, $user));
+            $build->setLikesCount($build->getLikesCount() + 1);
+            $isLiked = true;
+        }
+
+        $this->entityManager->flush();
+
+        return $isLiked;
     }
 
     public function isFollowedByUser(Build $build, ?User $user): bool
@@ -178,9 +270,9 @@ final readonly class BuildService
         $comment->setBuild($build);
         $comment->setVisibility(Visibility::PUBLIC);
 
-        if($build->getAuthor() !== $user){
+        if ($user instanceof User && $build->getAuthor() !== $user) {
             $notification = new Notification();
-            $notification->setMessage($user->getUsername() . " a commenté votre publication");
+            $notification->setMessage(" a commenté votre publication");
             $notification->setComment($comment);
             $notification->setBuild($build);
             $notification->setType(NotificationType::COMMENT);
@@ -239,6 +331,28 @@ final readonly class BuildService
         $deletedReason = trim($deletedReason);
         $build->setDeletedReason($deletedReason !== '' ? $deletedReason : null);
 
+        $this->entityManager->flush();
+    }
+
+    private function updateRatingAverage(Build $build): void
+    {
+        $ratings = $this->buildRatingRepository->findBy([
+            'build' => $build,
+        ]);
+
+        if (count($ratings) === 0) {
+            $build->setRatingAvg(0);
+            $this->entityManager->flush();
+
+            return;
+        }
+
+        $total = 0;
+        foreach ($ratings as $buildRating) {
+            $total += $buildRating->getRating();
+        }
+
+        $build->setRatingAvg(round($total / count($ratings), 1));
         $this->entityManager->flush();
     }
 
