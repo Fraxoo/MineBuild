@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notification index{% endblock %}
+
+{% block body %}
+<div class="flex flex-col items-center gap-4">
+    <div class="flex flex-col w-full max-w-[56rem] m-auto gap-4">
+        <twig:GoBack />
+        <div class="flex items-center gap-2 text-4xl font-bold">
+            <i class="ti text-(--primary-color) text-4xl! ti-bell"></i>
+            <h1 class="text-(--title-color) ">Notification</h1>
+        </div>
+        <p class="text-(--secondary-color) text-xl">Vous avez {{ unreadItems }} notification{{ unreadItems > 1 ? 's' : '' }} non-lue{{ unreadItems > 1 ? 's' : '' }}</p>
+        {% for notif in items %}
+        <twig:NotificationCard :notif="notif" />
+        {% endfor %}
+        <twig:PaginationComponent :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
+    </div>
+</div>
+
+{% endblock %}

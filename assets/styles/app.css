@@ -18,6 +18,7 @@
     --border-color-secondary: rgb(155, 155, 155, 0.2);
     --red-border: rgb(255, 0, 0, 0.7);
     --red-background: #2e2626;
+    --primary-color-transparent : rgb(74, 222, 128, 0.05);
     --primary-color-muted: rgb(74, 222, 128, 0.7);
     --background-color-transparent: rgb(26, 26, 26, 0.5);
     --search: rgb(51, 51, 51, 0.3);
@@ -827,7 +828,18 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.container h3{
+.container-notif-non-read {
+    background-color: var(--primary-color-transparent);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid var(--border-color);
+    color: var(--secondary-color);
+}
+
+.container h3 {
     color: var(--title-color);
     font-weight: bold;
 }
@@ -932,8 +944,14 @@ body {
 
 }
 
+.notif-link {
+    font-weight: bold;
+    color: white;
+}
 
-
+.notif-link:hover {
+    text-decoration: underline;
+}
 
 
 
@@ -962,7 +980,8 @@ body {
         width: 100%;
         justify-content: start;
     }
-    .user-edit-container{
+
+    .user-edit-container {
         padding: 1.25rem;
     }
 }

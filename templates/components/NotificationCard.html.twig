@@ -1,0 +1,44 @@
+<div{{ attributes }}
+    class="{{ notif.readAt is null ? 'container-notif-non-read' : 'container' }} items-center justify-between flex-row! p-4!"
+>
+    <div class="flex items-center gap-4">
+        <img
+            class="w-15 h-15 min-w-10 min-h-10 shrink-0 rounded-full border-4 border-(--border-color-secondary) object-cover"
+            data-avatar-preview-target="image"
+            src="{{ notif.actor.avatarUrl ? asset('uploads/avatars/' ~ notif.actor.avatarUrl) : asset('images/default-avatar.jpg') }}"
+            alt="Avatar de {{ notif.actor.username }}"
+        >
+
+        <div>
+            <p>
+                <a class="notif-link" href="{{ path('app_user_show', { id: notif.actor.id }) }}">
+                    {{ notif.actor.username }}
+                </a>
+
+                {{ notif.message }}
+
+                {% if notif.type.value == 'comment' and notif.comment %}
+                    <a class="notif-link" href="{{ path('app_build_show', { id: notif.comment.build.id }) }}">
+                        {{ notif.comment.build.title }}
+                    </a>
+
+                {% elseif notif.type.value == 'like' and notif.comment %}
+                    <a class="notif-link" href="{{ path('app_build_show', { id: notif.comment.build.id }) }}">
+                        {{ notif.comment.content }}
+                    </a>
+
+                {% elseif notif.type.value == 'like' and notif.build %}
+                    <a class="notif-link" href="{{ path('app_build_show', { id: notif.build.id }) }}">
+                        {{ notif.build.title }}
+                    </a>
+                {% endif %}
+            </p>
+
+            <p>{{ notif.createdAt|time_ago }}</p>
+        </div>
+    </div>
+
+    {% if notif.readAt is null %}
+        <i class="fa-solid text-(--primary-color) text-xs! fa-circle"></i>
+    {% endif %}
+</div>

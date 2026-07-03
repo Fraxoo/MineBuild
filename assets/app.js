@@ -72,5 +72,5 @@ document.addEventListener('turbo:load', () => {
             }, 1500);
         });
     });
-})
 
+})

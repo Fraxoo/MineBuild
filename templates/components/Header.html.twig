@@ -18,7 +18,15 @@
 			placeholder="Rechercher des builds, auteur..." value="{{ app.request.query.get('search')}}" type="search">
 	</form>
 	<div class="flex items-center text-(--title-color) text-xl gap-2">
+	{% if app.user %}
+	<a class="relative" href="{{ path("app_notification_index")}}">
 		<i class="ti text-2xl! ti-bell"></i>
+		{% if hasUnreadNotif %}
+		<i class="fa-solid left-2/3 absolute text-(--primary-color) text-[0.7rem]! fa-circle"></i>
+		{% endif %}
+		
+	</a>
+	{% endif %}
 		<div class="dropdown bg-(--background-color) ">
 			<div tabindex="0" role="button" class=" cursor-pointer border-0 shadow-none bg-(--background-color)! m-1">
 				{% if app.user %}

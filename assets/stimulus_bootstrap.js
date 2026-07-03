@@ -7,6 +7,7 @@ import FilePreviewController from './controllers/file_preview_controller.js';
 import ModalController from "./controllers/modal.js"
 import MobileFiltersController from './controllers/mobile_filters_controller.js';
 
+
 const app = startStimulusApp();
 app.register('avatar-preview', AvatarPreviewController);
 app.register('collection', CollectionController);
