@@ -4,10 +4,13 @@ namespace App\Service;
 
 use App\Entity\Comment;
 use App\Entity\CommentLike;
+use App\Entity\Notification;
 use App\Entity\User;
+use App\Enum\NotificationType;
 use App\Enum\Visibility;
 use App\Repository\CommentLikeRepository;
 use App\Repository\CommentRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class CommentService
@@ -62,6 +65,18 @@ final readonly class CommentService
 
             return false;
         }
+
+        if ($user instanceof User !== $comment->getAuthor()) {
+            $notification = new Notification();
+            $notification->setMessage(" a aimé votre commentaire ");
+            $notification->setComment($comment);
+            $notification->setType(NotificationType::LIKE);
+            $notification->setCreatedAt(new DateTimeImmutable());
+            $notification->setActor($user);
+            $notification->setRecipient($comment->getAuthor());
+            $this->entityManager->persist($notification);
+        }
+
 
         $this->entityManager->persist(new CommentLike($comment, $user));
         $this->entityManager->flush();

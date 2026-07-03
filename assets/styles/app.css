@@ -932,7 +932,10 @@ body {
 
 }
 
-
+.notif-link{
+    font-weight: bold;
+    color: white;
+}
 
 
 

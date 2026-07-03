@@ -1,5 +1,5 @@
 <div{{ attributes }} class="container items-center justify-between flex-row! p-4!">
-    
+
     <pre>
     {{ dump(notif) }}
 </pre>
@@ -9,12 +9,12 @@
             src="{{ notif.actor.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
             alt="Avatar de {{ notif.actor.username }}">
         <div>
-            {% if notif.type.value == "comment" %}
-                <p>{{ notif.actor.username }} a aimé votre commentaire!</p>
-            {% endif %}
-            
-            <p>yo</p>
-            <p>yo</p>
+
+            <p><a class="notif-link" href="{{ path('app_user_show' , {id: notif.actor.id})}}">{{ notif.actor.username
+                    }}</a> {{ notif.message }} <a class="notif-link"
+                    href="{{ path('app_build_show' , {id: notif.comment.build.id})}}">{{ notif.comment.content }}</a>
+            </p>
+            <p>{{ notif.createdAt|time_ago }}</p>
         </div>
 
     </div>
