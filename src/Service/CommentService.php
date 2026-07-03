@@ -61,20 +61,31 @@ final readonly class CommentService
                 $this->entityManager->remove($existingLike);
             }
 
+            $this->removeLikeNotifications($comment, $user);
             $this->entityManager->flush();
 
             return false;
         }
 
-        if ($user instanceof User !== $comment->getAuthor()) {
-            $notification = new Notification();
-            $notification->setMessage(" a aimé votre commentaire ");
-            $notification->setComment($comment);
-            $notification->setType(NotificationType::LIKE);
-            $notification->setCreatedAt(new DateTimeImmutable());
-            $notification->setActor($user);
-            $notification->setRecipient($comment->getAuthor());
-            $this->entityManager->persist($notification);
+        $author = $comment->getAuthor();
+        if ($author instanceof User && $author !== $user) {
+            $existingNotification = $this->entityManager->getRepository(Notification::class)->findOneBy([
+                'actor' => $user,
+                'recipient' => $author,
+                'type' => NotificationType::LIKE,
+                'comment' => $comment,
+            ]);
+
+            if (!$existingNotification instanceof Notification) {
+                $notification = new Notification();
+                $notification->setMessage(' a aimé votre commentaire ');
+                $notification->setComment($comment);
+                $notification->setType(NotificationType::LIKE);
+                $notification->setCreatedAt(new DateTimeImmutable());
+                $notification->setActor($user);
+                $notification->setRecipient($author);
+                $this->entityManager->persist($notification);
+            }
         }
 
 
@@ -93,5 +104,24 @@ final readonly class CommentService
     {
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
+    }
+
+    private function removeLikeNotifications(Comment $comment, User $user): void
+    {
+        $author = $comment->getAuthor();
+        if (!$author instanceof User || $author === $user) {
+            return;
+        }
+
+        $notifications = $this->entityManager->getRepository(Notification::class)->findBy([
+            'actor' => $user,
+            'recipient' => $author,
+            'type' => NotificationType::LIKE,
+            'comment' => $comment,
+        ]);
+
+        foreach ($notifications as $notification) {
+            $this->entityManager->remove($notification);
+        }
     }
 }

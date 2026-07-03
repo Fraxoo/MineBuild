@@ -157,10 +157,12 @@ final readonly class BuildService
         if ($existingLike) {
             $this->entityManager->remove($existingLike);
             $build->setLikesCount(max(0, $build->getLikesCount() - 1));
+            $this->removeLikeNotifications($build, $user);
             $isLiked = false;
         } else {
             $this->entityManager->persist(new BuildLike($build, $user));
             $build->setLikesCount($build->getLikesCount() + 1);
+            $this->createLikeNotification($build, $user);
             $isLiked = true;
         }
 
@@ -354,6 +356,56 @@ final readonly class BuildService
 
         $build->setRatingAvg(round($total / count($ratings), 1));
         $this->entityManager->flush();
+    }
+
+    private function createLikeNotification(Build $build, User $user): void
+    {
+        $author = $build->getAuthor();
+        if (!$author instanceof User || $author === $user) {
+            return;
+        }
+
+        $existingNotification = $this->entityManager->getRepository(Notification::class)->findOneBy([
+            'actor' => $user,
+            'recipient' => $author,
+            'type' => NotificationType::LIKE,
+            'build' => $build,
+            'comment' => null,
+        ]);
+
+        if ($existingNotification instanceof Notification) {
+            return;
+        }
+
+        $notification = new Notification();
+        $notification->setMessage(' a aimé votre build ');
+        $notification->setBuild($build);
+        $notification->setType(NotificationType::LIKE);
+        $notification->setCreatedAt(new DateTimeImmutable());
+        $notification->setActor($user);
+        $notification->setRecipient($author);
+
+        $this->entityManager->persist($notification);
+    }
+
+    private function removeLikeNotifications(Build $build, User $user): void
+    {
+        $author = $build->getAuthor();
+        if (!$author instanceof User || $author === $user) {
+            return;
+        }
+
+        $notifications = $this->entityManager->getRepository(Notification::class)->findBy([
+            'actor' => $user,
+            'recipient' => $author,
+            'type' => NotificationType::LIKE,
+            'build' => $build,
+            'comment' => null,
+        ]);
+
+        foreach ($notifications as $notification) {
+            $this->entityManager->remove($notification);
+        }
     }
 
     private function persistCategory(Build $build, FormInterface $form): void
