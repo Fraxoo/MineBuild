@@ -182,6 +182,7 @@ final readonly class BuildService
             $notification = new Notification();
             $notification->setMessage($user->getUsername() . " a commenté votre publication");
             $notification->setComment($comment);
+            $notification->setBuild($build);
             $notification->setType(NotificationType::COMMENT);
             $notification->setCreatedAt(new DateTimeImmutable());
             $notification->setActor($user);

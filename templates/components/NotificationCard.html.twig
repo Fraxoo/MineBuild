@@ -1,18 +1,22 @@
-<div{{ attributes }} class="container flex-row! p-4!">
-    {#
+<div{{ attributes }} class="container items-center justify-between flex-row! p-4!">
+    
     <pre>
     {{ dump(notif) }}
-</pre> #}
+</pre>
     <div class="flex items-center gap-4 ">
         <img class="w-15 h-15 min-w-10 min-h-10 shrink-0 rounded-full border-4 border-(--border-color-secondary) object-cover"
             data-avatar-preview-target="image"
             src="{{ notif.actor.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
             alt="Avatar de {{ notif.actor.username }}">
         <div>
+            {% if notif.type.value == "comment" %}
+                <p>{{ notif.actor.username }} a aimé votre commentaire!</p>
+            {% endif %}
+            
             <p>yo</p>
             <p>yo</p>
         </div>
 
     </div>
-    <i class="ti ti-circle-filled"></i>
+    <i class="fa-solid text-(--primary-color) fa-circle"></i>
     </div>
