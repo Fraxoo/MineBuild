@@ -31,4 +31,9 @@ final readonly class NotificationService
             'currentPage' => $page,
         ];
     }
+
+    public function hasUnreadForUser(User $user): bool
+{
+    return $this->notificationRepository->countUnreadByUser($user) > 0;
+}
 }

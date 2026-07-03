@@ -1,8 +1,8 @@
-<div{{ attributes }} class="container items-center justify-between flex-row! p-4!">
+<div{{ attributes }} class="{{notif.readAt == null ? "container-notif-non-read" : "container"}}  items-center justify-between flex-row! p-4!">
 
-    <pre>
+    {# <pre>
     {{ dump(notif) }}
-</pre>
+</pre> #}
     <div class="flex items-center gap-4 ">
         <img class="w-15 h-15 min-w-10 min-h-10 shrink-0 rounded-full border-4 border-(--border-color-secondary) object-cover"
             data-avatar-preview-target="image"
@@ -11,12 +11,22 @@
         <div>
 
             <p><a class="notif-link" href="{{ path('app_user_show' , {id: notif.actor.id})}}">{{ notif.actor.username
-                    }}</a> {{ notif.message }} <a class="notif-link"
-                    href="{{ path('app_build_show' , {id: notif.comment.build.id})}}">{{ notif.comment.content }}</a>
+                    }}</a> {{ notif.message }}
+                {% if notif.type.value == "comment" %}
+                <a class="notif-link" href="{{ path('app_build_show' , {id: notif.comment.build.id})}}">{{
+                    notif.comment.build.title }}</a>
+                {% elseif notif.type.value == "like" and notif.build == null %}
+                <a class="notif-link" href="{{ path('app_build_show' , {id: notif.comment.build.id})}}">{{
+                    notif.comment.content }}</a>
+                {% elseif notif.type.value == "like" and notif.comment == null %}
+                           <a class="notif-link" href="{{ path('app_build_show' , {id: notif.comment.build.id})}}">{{
+                    notif.build.title }}</a>
+                {% endif %}
+
             </p>
             <p>{{ notif.createdAt|time_ago }}</p>
         </div>
 
     </div>
-    <i class="fa-solid text-(--primary-color) fa-circle"></i>
+    <i class="fa-solid text-(--primary-color) text-xs! fa-circle"></i>
     </div>

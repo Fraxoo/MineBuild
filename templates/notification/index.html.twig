@@ -11,6 +11,9 @@
             <h1 class="text-(--title-color) ">Notification</h1>
         </div>
         <p class="text-(--secondary-color) text-xl">Vous avez 0 notification non-lue</p>
+            <pre>
+    {{ dump(items) }}
+</pre>
         {% for notif in items %}
         <twig:NotificationCard :notif="notif" />
         {% endfor %}
