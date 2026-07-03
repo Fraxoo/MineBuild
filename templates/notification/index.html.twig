@@ -10,10 +10,7 @@
             <i class="ti text-(--primary-color) text-4xl! ti-bell"></i>
             <h1 class="text-(--title-color) ">Notification</h1>
         </div>
-        <p class="text-(--secondary-color) text-xl">Vous avez 0 notification non-lue</p>
-            <pre>
-    {{ dump(items) }}
-</pre>
+        <p class="text-(--secondary-color) text-xl">Vous avez {{ unreadItems }} notification{{ unreadItems > 1 ? 's' : '' }} non-lue{{ unreadItems > 1 ? 's' : '' }}</p>
         {% for notif in items %}
         <twig:NotificationCard :notif="notif" />
         {% endfor %}

@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Notification;
+use App\Entity\User;
 use App\Form\NotificationType;
-use App\Repository\NotificationRepository;
 use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,10 +15,16 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/notification')]
 final class NotificationController extends AbstractController
 {
-    #[Route('/{page}', name: 'app_notification_index', defaults: ['page' => 1], methods: ['GET'])]
-    public function index(int $page, Request $request, NotificationRepository $notificationRepository, NotificationService $notificationService): Response
+    #[Route('/{page}', name: 'app_notification_index', defaults: ['page' => 1], requirements: ['page' => '\d+'], methods: ['GET'])]
+    public function index(int $page, NotificationService $notificationService): Response
     {
-        return $this->render('notification/index.html.twig' , $notificationService->getNotificationData($request, $page, 12,$this->getUser()),);
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('notification/index.html.twig', $notificationService->getNotificationData($page, 12, $user));
     }
 
     #[Route('/new', name: 'app_notification_new', methods: ['GET', 'POST'])]
@@ -41,7 +47,7 @@ final class NotificationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_notification_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_notification_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(Notification $notification): Response
     {
         return $this->render('notification/show.html.twig', [
@@ -49,7 +55,7 @@ final class NotificationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_notification_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_notification_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Notification $notification, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(NotificationType::class, $notification);
@@ -67,7 +73,7 @@ final class NotificationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_notification_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_notification_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Notification $notification, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $notification->getId(), $request->getPayload()->getString('_token'))) {

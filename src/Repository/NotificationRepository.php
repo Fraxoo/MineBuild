@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Notification;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,16 +18,28 @@ class NotificationRepository extends ServiceEntityRepository
         parent::__construct($registry, Notification::class);
     }
 
-    public function countUnreadByUser($user)
+    public function countUnreadByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('n')
             ->select('COUNT(DISTINCT n.id)')
             ->andWhere('n.recipient = :user')
-            ->setParameter('user', $user)
             ->andWhere('n.read_at IS NULL')
             ->setParameter('user', $user)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function markAllAsReadByUser(User $user): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update(Notification::class, 'n')
+            ->set('n.read_at', ':readAt')
+            ->andWhere('n.recipient = :user')
+            ->andWhere('n.read_at IS NULL')
+            ->setParameter('readAt', new \DateTimeImmutable())
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
     }
 
     public function findNotificationByUserWithPagination(int $page, int $limit = 12, $user = null)
