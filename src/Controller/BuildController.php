@@ -50,10 +50,14 @@ final class BuildController extends AbstractController
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
+        $response = $form->isSubmitted()
+            ? new Response('', Response::HTTP_UNPROCESSABLE_ENTITY)
+            : null;
+
         return $this->render('build/new.html.twig', [
             'build' => $build,
             'form' => $form,
-        ]);
+        ], $response);
     }
 
     #[Route('/build/{id}/download', name: 'app_build_download')]

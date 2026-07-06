@@ -1,8 +1,14 @@
-{{ form_start(form, { attr: { class: 'build-form' } }) }}
+{{ form_start(form, { attr: { class: 'build-form', 'data-turbo': 'false' } }) }}
 
 <div class="error-message">
     {{ form_errors(form) }}
 </div>
+
+{# {% if form.vars.submitted and not form.vars.valid %}
+    <div class="error-message">
+        Le formulaire a bien ete envoye, mais Symfony l'a refuse. Verifiez les champs obligatoires et les fichiers.
+    </div>
+{% endif %} #}
 
 <section class="build-card">
     <header class="build-card__header">
