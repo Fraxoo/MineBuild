@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends AbstractController
 {
-    #[Route('/home/{page}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
+    #[Route('/{page<\d+>}', name: 'app_home', defaults: ['page' => 1], methods: ['GET'])]
     public function index(Request $request, HomeService $homeService, int $page): Response
     {
         $page = max(1, $page);
