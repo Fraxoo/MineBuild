@@ -12,53 +12,44 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $roleAdmin = new Role();
-        $roleAdmin->setCode('ROLE_ADMIN');
-        $roleAdmin->setCreatedAt(new \DateTimeImmutable());
-        $roleUser = new Role();
-        $roleUser->setCode('ROLE_USER');
-        $roleUser->setCreatedAt(new \DateTimeImmutable());
-        $manager->persist($roleAdmin);
-        $manager->persist($roleUser);
+        foreach (['ROLE_ADMIN', 'ROLE_USER'] as $code) {
+            if ($manager->getRepository(Role::class)->findOneBy(['code' => $code]) !== null) {
+                continue;
+            }
 
-        $category1 = new Category();
-        $category1->setName('house');
-        $category1->setNameFr('Maison');
+            $role = new Role();
+            $role->setCode($code);
+            $role->setCreatedAt(new \DateTimeImmutable());
+            $manager->persist($role);
+        }
 
-        $category2 = new Category();
-        $category2->setName('castle');
-        $category2->setNameFr('Châteaux');
+        $categories = [
+            'house' => 'Maison',
+            'castle' => 'Châteaux',
+            'nature' => 'Nature',
+            'redstone' => 'Redstone',
+            'boat' => 'Bateaux',
+            'medieval' => 'Médiéval',
+            'modern' => 'Moderne',
+        ];
 
-        $category3 = new Category();
-        $category3->setName('nature');
-        $category3->setNameFr('Nature');
+        foreach ($categories as $name => $nameFr) {
+            $category = $manager->getRepository(Category::class)->findOneBy(['name' => $name]);
 
-        $category4 = new Category();
-        $category4->setName('redstone');
-        $category4->setNameFr('Redstone');
+            if ($category === null) {
+                $category = new Category();
+                $category->setName($name);
+                $manager->persist($category);
+            }
 
-        $category5 = new Category();
-        $category5->setName('boat');
-        $category5->setNameFr('Bateaux');
-
-        $category6 = new Category();
-        $category6->setName('medieval');
-        $category6->setNameFr('Médiéval');
-
-        $category7 = new Category();
-        $category7->setName('modern');
-        $category7->setNameFr('Moderne');
-
-
-        $manager->persist($category1);
-        $manager->persist($category2);
-        $manager->persist($category3);
-        $manager->persist($category4);
-        $manager->persist($category5);
-        $manager->persist($category6);
-        $manager->persist($category7);
+            $category->setNameFr($nameFr);
+        }
 
         for ($i = 0; $i < 27; $i++) {
+            if ($manager->getRepository(Mcversion::class)->findOneBy(['number' => '1.'.$i]) !== null) {
+                continue;
+            }
+
             $version = new Mcversion() ;
             $version->setNumber('1.'.$i);
             $manager->persist($version);
