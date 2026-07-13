@@ -1,6 +1,4 @@
-# MCD - Plateforme de partage de builds Minecraft
-
-
+# MCD — Plateforme de partage de builds Minecraft
 
 ```mermaid
 erDiagram
@@ -43,8 +41,13 @@ erDiagram
     string name_fr
   }
 
-  BUILD_CATEGORY {
-    datetime created_at
+  TAG {
+    string name
+    string slug
+  }
+
+  MCVERSION {
+    string number
   }
 
   BUILD_IMAGE {
@@ -53,46 +56,10 @@ erDiagram
     number sort_order
   }
 
-  TAG {
-    string name
-    string slug
-  }
-
-  BUILD_TAG {
-    datetime created_at
-  }
-
   BUILD_MATERIAL {
     string name
     number quantity
     string color
-  }
-
-  COMMENT {
-    string content
-    enum visibility "PUBLIC|HIDDEN"
-  }
-
-  COMMENT_LIKE {
-    number id
-  }
-
-  BUILD_LIKE {
-    datetime created_at
-  }
-
-  BUILD_SAVE {
-    datetime created_at
-  }
-
-  BUILD_RATING {
-    number rating
-    datetime created_at
-    datetime updated_at
-  }
-
-  BUILD_DOWNLOAD {
-    datetime created_at
   }
 
   BUILD_ASSET {
@@ -103,21 +70,9 @@ erDiagram
     number downloads_count
   }
 
-  BUILD_VIEW {
-    string ip_hash
-    datetime viewed_at
-  }
-
-  USER_FOLLOW {
-    datetime created_at
-  }
-
-  MCVERSION {
-    string number
-  }
-
-  BUILD_VERSION {
-    number id
+  COMMENT {
+    string content
+    enum visibility "PUBLIC|HIDDEN"
   }
 
   NOTIFICATION {
@@ -141,25 +96,62 @@ erDiagram
     enum reason_code "spam|harassment|hate_speech|nudity|violence|illegal|impersonation|copyright|other"
   }
 
+  BUILD_CATEGORY {
+    datetime created_at
+  }
+
+  BUILD_TAG {
+    datetime created_at
+  }
+
+  BUILD_LIKE {
+    datetime created_at
+  }
+
+  BUILD_SAVE {
+    datetime created_at
+  }
+
+  BUILD_RATING {
+    number rating
+    datetime created_at
+    datetime updated_at
+  }
+
+  BUILD_DOWNLOAD {
+    datetime created_at
+  }
+
+  BUILD_VIEW {
+    string ip_hash
+    datetime viewed_at
+  }
+
+  FOLLOW {
+    datetime created_at
+  }
+
   ROLE ||--o{ USER : attribue
 
   USER ||--o{ BUILD : cree
   USER o|--o{ BUILD : supprime
-  USER ||--o{ COMMENT : redige
 
   BUILD ||--o{ BUILD_IMAGE : illustre
   BUILD ||--o{ BUILD_MATERIAL : necessite
   BUILD ||--o{ BUILD_ASSET : propose
-  BUILD ||--o{ COMMENT : contient
-  BUILD ||--o{ BUILD_VERSION : prend_en_charge
-
-  MCVERSION ||--o{ BUILD_VERSION : version_de
 
   BUILD ||--o{ BUILD_CATEGORY : categorise
   CATEGORY ||--o{ BUILD_CATEGORY : contient
 
   BUILD ||--o{ BUILD_TAG : tague
   TAG ||--o{ BUILD_TAG : utilise
+
+  BUILD }o--o{ MCVERSION : prend_en_charge
+
+  USER ||--o{ COMMENT : redige
+  BUILD ||--o{ COMMENT : contient
+
+  USER }o--o{ COMMENT : aime
 
   USER ||--o{ BUILD_LIKE : aime
   BUILD ||--o{ BUILD_LIKE : est_aime
@@ -176,14 +168,11 @@ erDiagram
   BUILD ||--o{ BUILD_VIEW : comptabilise
   USER o|--o{ BUILD_VIEW : consulte
 
-  USER ||--o{ COMMENT_LIKE : aime_commentaire
-  COMMENT ||--o{ COMMENT_LIKE : est_aime
-
-  USER ||--o{ USER_FOLLOW : suit
-  USER ||--o{ USER_FOLLOW : est_suivi
+  USER ||--o{ FOLLOW : suit
+  USER ||--o{ FOLLOW : est_suivi
 
   USER ||--o{ NOTIFICATION : recoit
-  USER ||--o{ NOTIFICATION : declenche
+  USER o|--o{ NOTIFICATION : declenche
   BUILD o|--o{ NOTIFICATION : concerne
   COMMENT o|--o{ NOTIFICATION : concerne
 
@@ -198,5 +187,4 @@ erDiagram
   BUILD o|--o{ MODERATION_ACTION : concerne
   COMMENT o|--o{ MODERATION_ACTION : concerne
   REPORT o|--o| MODERATION_ACTION : produit
-
 ```
