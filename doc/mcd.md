@@ -8,7 +8,7 @@ erDiagram
     string username
     string email
     string password
-    string avatar
+    string avatar_url
     string bio
     boolean is_active
     number reports_count
@@ -21,9 +21,11 @@ erDiagram
   BUILD {
     string title
     string description
-    string dimensions
+    number dimensions_x
+    number dimensions_y
+    number dimensions_z
     enum difficulty "easy|medium|hard|expert"
-    number time_estimated
+    number time_estimated_min
     enum game_mode "survival|creative"
     enum visibility "PUBLIC|HIDDEN"
     number views_count
@@ -41,6 +43,10 @@ erDiagram
     string name_fr
   }
 
+  BUILD_CATEGORY {
+    datetime created_at
+  }
+
   BUILD_IMAGE {
     string url
     string alt
@@ -52,6 +58,10 @@ erDiagram
     string slug
   }
 
+  BUILD_TAG {
+    datetime created_at
+  }
+
   BUILD_MATERIAL {
     string name
     number quantity
@@ -61,6 +71,28 @@ erDiagram
   COMMENT {
     string content
     enum visibility "PUBLIC|HIDDEN"
+  }
+
+  COMMENT_LIKE {
+    number id
+  }
+
+  BUILD_LIKE {
+    datetime created_at
+  }
+
+  BUILD_SAVE {
+    datetime created_at
+  }
+
+  BUILD_RATING {
+    number rating
+    datetime created_at
+    datetime updated_at
+  }
+
+  BUILD_DOWNLOAD {
+    datetime created_at
   }
 
   BUILD_ASSET {
@@ -76,8 +108,16 @@ erDiagram
     datetime viewed_at
   }
 
+  USER_FOLLOW {
+    datetime created_at
+  }
+
   MCVERSION {
     string number
+  }
+
+  BUILD_VERSION {
+    number id
   }
 
   NOTIFICATION {
@@ -111,25 +151,39 @@ erDiagram
   BUILD ||--o{ BUILD_MATERIAL : necessite
   BUILD ||--o{ BUILD_ASSET : propose
   BUILD ||--o{ COMMENT : contient
+  BUILD ||--o{ BUILD_VERSION : prend_en_charge
 
-  BUILD }o--o{ CATEGORY : appartient_a
-  BUILD }o--o{ TAG : possede
-  BUILD }o--o{ MCVERSION : prend_en_charge
+  MCVERSION ||--o{ BUILD_VERSION : version_de
 
-  USER }o--o{ BUILD : aime
-  USER }o--o{ BUILD : sauvegarde
-  USER }o--o{ BUILD : note
-  USER }o--o{ BUILD : telecharge
+  BUILD ||--o{ BUILD_CATEGORY : categorise
+  CATEGORY ||--o{ BUILD_CATEGORY : contient
+
+  BUILD ||--o{ BUILD_TAG : tague
+  TAG ||--o{ BUILD_TAG : utilise
+
+  USER ||--o{ BUILD_LIKE : aime
+  BUILD ||--o{ BUILD_LIKE : est_aime
+
+  USER ||--o{ BUILD_SAVE : sauvegarde
+  BUILD ||--o{ BUILD_SAVE : est_sauvegarde
+
+  USER ||--o{ BUILD_RATING : note
+  BUILD ||--o{ BUILD_RATING : est_note
+
+  USER ||--o{ BUILD_DOWNLOAD : telecharge
+  BUILD ||--o{ BUILD_DOWNLOAD : est_telecharge
 
   BUILD ||--o{ BUILD_VIEW : comptabilise
   USER o|--o{ BUILD_VIEW : consulte
 
-  USER }o--o{ COMMENT : aime_commentaire
+  USER ||--o{ COMMENT_LIKE : aime_commentaire
+  COMMENT ||--o{ COMMENT_LIKE : est_aime
 
-  USER }o--o{ USER : suit
+  USER ||--o{ USER_FOLLOW : suit
+  USER ||--o{ USER_FOLLOW : est_suivi
 
   USER ||--o{ NOTIFICATION : recoit
-  USER o|--o{ NOTIFICATION : declenche
+  USER ||--o{ NOTIFICATION : declenche
   BUILD o|--o{ NOTIFICATION : concerne
   COMMENT o|--o{ NOTIFICATION : concerne
 
