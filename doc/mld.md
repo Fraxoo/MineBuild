@@ -1,6 +1,6 @@
-# MlD - Plateforme de partage de builds Minecraft
+# MLD - Plateforme de partage de builds Minecraft
 
-Ce MlD reflète les entités Doctrine présentes dans `src/Entity`.
+Ce MLD reflète les entités Doctrine présentes dans `src/Entity`.
 
 ```mermaid
 erDiagram
@@ -9,12 +9,12 @@ erDiagram
     VARCHAR username UK
     VARCHAR password
     VARCHAR email UK
-    TEXT avatar_url
-    TEXT bio
+    TEXT avatar_url NULL
+    TEXT bio NULL
     INT role_id FK
     BOOLEAN is_active
     DATETIME created_at
-    DATETIME updated_at
+    DATETIME updated_at NULL
     INT reports_count
   }
 
@@ -22,17 +22,17 @@ erDiagram
     INT id PK
     VARCHAR code UK
     DATETIME created_at
-    DATETIME updated_at
+    DATETIME updated_at NULL
   }
 
   BUILD {
     INT id PK
     INT author_id FK
     VARCHAR title
-    TEXT description
-    INT dimensions_x
-    INT dimensions_y
-    INT dimensions_z
+    TEXT description NULL
+    INT dimensions_x NULL
+    INT dimensions_y NULL
+    INT dimensions_z NULL
     ENUM difficulty "easy|medium|hard|expert"
     INT time_estimated_min
     ENUM game_mode "survival|creative"
@@ -45,10 +45,10 @@ erDiagram
     DECIMAL rating_avg
     BOOLEAN modded
     DATETIME created_at
-    DATETIME updated_at
-    DATETIME deleted_at
-    TEXT deleted_reason
-    INT deleted_by_id FK
+    DATETIME updated_at NULL
+    DATETIME deleted_at NULL
+    TEXT deleted_reason NULL
+    INT deleted_by_id FK NULL
   }
 
   CATEGORY {
@@ -56,7 +56,7 @@ erDiagram
     VARCHAR name UK
     VARCHAR name_fr
     DATETIME created_at
-    DATETIME updated_at
+    DATETIME updated_at NULL
   }
 
   BUILD_CATEGORY {
@@ -69,7 +69,7 @@ erDiagram
     INT id PK
     INT build_id FK
     TEXT url
-    VARCHAR alt
+    VARCHAR alt NULL
     INT sort_order
     DATETIME created_at
   }
@@ -79,7 +79,7 @@ erDiagram
     VARCHAR name UK
     VARCHAR slug UK
     DATETIME created_at
-    DATETIME updated_at
+    DATETIME updated_at NULL
   }
 
   BUILD_TAG {
@@ -93,9 +93,9 @@ erDiagram
     INT build_id FK
     VARCHAR name
     INT quantity
-    VARCHAR color
+    VARCHAR color NULL
     DATETIME created_at
-    DATETIME updated_at
+    DATETIME updated_at NULL
   }
 
   COMMENT {
@@ -104,9 +104,9 @@ erDiagram
     INT author_id FK
     TEXT content
     DATETIME created_at
-    DATETIME updated_at
-    DATETIME deleted_at
-    ENUM visibility "PUBLIC|HIDDEN"
+    DATETIME updated_at NULL
+    DATETIME deleted_at NULL
+    ENUM visibility "PUBLIC|HIDDEN" NULL
   }
 
   COMMENT_LIKE {
@@ -145,8 +145,8 @@ erDiagram
   BUILD_VIEW {
     INT id PK
     INT build_id FK
-    INT user_id FK
-    VARCHAR ip_hash
+    INT user_id FK NULL
+    VARCHAR ip_hash NULL
     DATETIME viewed_at
   }
 
@@ -161,10 +161,10 @@ erDiagram
     INT recipient_id FK
     INT actor_id FK
     ENUM type "follow|like|comment|rating|moderation"
-    INT build_id FK
-    INT comment_id FK
+    INT build_id FK NULL
+    INT comment_id FK NULL
     TEXT message
-    DATETIME read_at
+    DATETIME read_at NULL
     DATETIME created_at
   }
 
@@ -172,26 +172,26 @@ erDiagram
     INT id PK
     INT reporter_id FK
     ENUM target_type "build|comment|user"
-    INT build_id FK
-    INT comment_id FK
-    INT user_id FK
+    INT build_id FK NULL
+    INT comment_id FK NULL
+    INT user_id FK NULL
     ENUM reason_code "spam|harassment|hate_speech|nudity|violence|illegal|impersonation|copyright|other"
     TEXT message
     ENUM status "Pending|Confirmed|Rejected"
-    INT handled_by_id FK
-    DATETIME handled_at
+    INT handled_by_id FK NULL
+    DATETIME handled_at NULL
     DATETIME created_at
-    DATETIME updated_at
+    DATETIME updated_at NULL
   }
 
   MODERATION_ACTION {
     INT id PK
     INT moderator_id FK
     ENUM target_type "build|comment|user"
-    INT build_id FK
-    INT target_user_id FK 
-    INT comment_id FK
-    INT report_id FK,UK
+    INT build_id FK NULL
+    INT target_user_id FK NULL
+    INT comment_id FK NULL
+    INT report_id FK,UK NULL
     ENUM action "Delete"
     TEXT reason
     ENUM reason_code "spam|harassment|hate_speech|nudity|violence|illegal|impersonation|copyright|other"
@@ -222,7 +222,7 @@ erDiagram
 
   ROLE ||--o{ USER : has
   USER ||--o{ BUILD : creates
-  USER ||--o{ BUILD : deletes
+  USER o|--o{ BUILD : deletes
   USER ||--o{ COMMENT : writes
 
   BUILD ||--o{ BUILD_IMAGE : has
@@ -262,18 +262,18 @@ erDiagram
 
   USER ||--o{ NOTIFICATION : receives
   USER ||--o{ NOTIFICATION : triggers
-  BUILD ||--o{ NOTIFICATION : related_build
-  COMMENT ||--o{ NOTIFICATION : related_comment
+  BUILD o|--o{ NOTIFICATION : related_build
+  COMMENT o|--o{ NOTIFICATION : related_comment
 
   USER ||--o{ REPORT : reports
-  USER ||--o{ REPORT : handles
-  USER ||--o{ REPORT : is_reported
-  BUILD ||--o{ REPORT : reported_build
-  COMMENT ||--o{ REPORT : reported_comment
+  USER o|--o{ REPORT : handles
+  USER o|--o{ REPORT : is_reported
+  BUILD o|--o{ REPORT : reported_build
+  COMMENT o|--o{ REPORT : reported_comment
 
   USER ||--o{ MODERATION_ACTION : moderates
-  BUILD ||--o{ MODERATION_ACTION : moderated_build
-  USER ||--o{ MODERATION_ACTION : receives_moderation_action
-  COMMENT ||--o{ MODERATION_ACTION : moderated_comment
+  BUILD o|--o{ MODERATION_ACTION : moderated_build
+  USER o|--o{ MODERATION_ACTION : receives_moderation_action
+  COMMENT o|--o{ MODERATION_ACTION : moderated_comment
   REPORT o|--o| MODERATION_ACTION : produces
 ```
