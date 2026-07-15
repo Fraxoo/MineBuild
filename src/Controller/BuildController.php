@@ -175,7 +175,7 @@ final class BuildController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_build_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_build_delete', methods: ['POST'])]
     public function delete(Request $request, Build $build, BuildService $buildService): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
