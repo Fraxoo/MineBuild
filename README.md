@@ -3,7 +3,7 @@
 Before getting started, make sure you have:
 
 1. Docker installed on your system
-2. Port `80` available
+2. Port `80` and `443` available
 
 ## Installation
 
