@@ -1,4 +1,4 @@
-<div{{ attributes }}
+<article{{ attributes }}
     class="{{ notif.readAt is null ? 'container-notif-non-read' : 'container' }} items-center justify-between flex-row! p-4!"
 >
     <div class="flex items-center gap-4">
@@ -41,4 +41,4 @@
     {% if notif.readAt is null %}
         <i class="fa-solid text-(--primary-color) text-xs! fa-circle"></i>
     {% endif %}
-</div>
+</article>

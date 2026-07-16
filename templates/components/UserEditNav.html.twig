@@ -1,6 +1,6 @@
 <twig:GoBack />
-    <h1 class="text-(--title-color) text-xl font-bold">Paramétre du compte </h1>
-    <div class="user-filter-container w-full! justify-between">
+    <h1 class="text-(--title-color) text-xl font-bold">Paramètres du compte</h1>
+    <nav class="user-filter-container w-full! justify-between" aria-label="Paramètres du compte">
         <a href="{{ path('app_user_edit', {id: user.id}) }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') === 'app_user_edit' ? 'user-selected-filter' : '' }}">
             <i class="ti ti-user"></i>
             <p>Profil</p>
@@ -13,4 +13,4 @@
             <i class="ti ti-shield"></i>
             <p>confidentialité</p>
         </a>
-    </div>
+    </nav>

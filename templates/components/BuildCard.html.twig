@@ -1,4 +1,5 @@
-<a {{attributes}} class="flex group rounded-lg h-fit border-2 border-transparent transition-colors overflow-hidden duration-200 hover:border-(--primary-color-muted) flex-col"
+<article {{attributes}}>
+<a class="flex group rounded-lg h-fit border-2 border-transparent transition-colors overflow-hidden duration-200 hover:border-(--primary-color-muted) flex-col"
             href="{{ path('app_build_show', {'id': build.id}) }}">
             <div class="relative">
                 <img class="object-cover h-50 w-full group-hover:scale-105 transition-transform duration-200  rounded-t-lg"
@@ -10,9 +11,9 @@
                 </div>
             </div>
             <div class="flex rounded-b-lg bg-(--container-color) flex-col p-4">
-                <h3
+                <h2
                     class="text-(--title-color) transition-colors duration-200 group-hover:text-(--primary-color) font-semibold">
-                    {{build.title}}</h3>
+                    {{build.title}}</h2>
                 <p class="text-(--secondary-color) text-sm line-clamp-2 min-h-10 text-wrap wrap-anywhere">{{ build.description|slice(0, 70) }}...</p>
                 <div class="flex justify-between items-center mt-2">
                     <div class="flex items-center gap-2 ">
@@ -34,3 +35,4 @@
                 </div>
             </div>
         </a>
+</article>

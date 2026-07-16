@@ -184,3 +184,34 @@ J’ai également utilisé Stimulus pour ajouter quelques interactions côté fr
   app_user_delete                POST       /user/{id}                                     
   app_user_get_follow_list       GET        /user/follow/{id}
   app_user_get_following_list    GET        /user/following/{id}
+
+## 16. Conventions HTML sémantiques
+
+La balise est choisie selon le rôle du contenu, jamais selon sa taille visuelle. La taille, la couleur et l'espacement restent gérés avec les classes CSS/Tailwind.
+
+### Hiérarchie des titres
+
+- `<h1>` : titre principal de la page. Chaque page doit en avoir un seul, par exemple le nom d'un build, « Paramètres du compte » ou « Panneau de modération ».
+- `<h2>` : grande section directement rattachée au titre de la page, par exemple « Détails », « Commentaires », « Matériaux requis » ou une section du formulaire de build.
+- `<h3>` : sous-section d'un `<h2>`, par exemple l'action « Supprimer mon compte » à l'intérieur de la « Zone de danger ».
+- Les niveaux ne doivent pas être sautés pour obtenir une taille particulière. Un texte décoratif ou un libellé d'interface utilise `<span>`, `<strong>` ou `<p>` selon son rôle, pas une balise de titre.
+
+### Structure des pages et composants
+
+- `<header>` : en-tête global, en-tête d'une page ou résumé introductif d'un profil.
+- `<main>` : contenu principal unique du document ; il est défini dans `base.html.twig`.
+- `<nav>` : navigation principale, pagination, onglets de profil, paramètres et modération.
+- `<section>` : groupe thématique identifiable, généralement nommé par un titre ou un `aria-label`.
+- `<article>` : contenu autonome ou répétable, notamment une carte de build, un commentaire, une notification ou un signalement.
+- `<aside>` : contenu complémentaire au contenu principal, comme les informations sur le créateur d'un build.
+- `<div>` : uniquement pour les regroupements nécessaires à la mise en page lorsqu'aucune balise sémantique plus précise ne correspond.
+
+### Contenus, listes et formulaires
+
+- `<p>` : véritable paragraphe de texte. Un simple mot dans un bouton ou un lien utilise plutôt `<span>`.
+- `<ul>` et `<li>` : collections sans ordre particulier, par exemple les matériaux et les tags.
+- `<dl>`, `<dt>` et `<dd>` : couples libellé/valeur, par exemple les détails et statistiques d'un build ou d'un profil.
+- `<a>` : navigation vers une autre URL. `<button>` : action dans la page, envoi de formulaire, ouverture d'une modale ou interaction Live Component.
+- `<label>` : nom de chaque champ de formulaire, relié au champ avec `for`/`id` ou avec `form_label()`.
+- Les fenêtres de confirmation utilisent `role="dialog"`, `aria-modal="true"`, un titre relié par `aria-labelledby` et un libellé accessible sur le bouton de fermeture.
+- Les icônes seules et les contrôles sans texte visible doivent posséder un `aria-label` explicite.

@@ -1,9 +1,9 @@
-<div class="modal modal-div fade" tabindex="-1" data-modal-form-target="modal">
+<div class="modal modal-div fade" tabindex="-1" data-modal-form-target="modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title-{{ type }}-{{ id }}">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content p-4 bg-(--container-color) text-(--title-color)">
             <div class="modal-header">
-                <h5 class="modal-title">Confirmer la suppression</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="ti ti-x"></i></button>
+				<h2 id="delete-modal-title-{{ type }}-{{ id }}" class="modal-title">Confirmer la suppression</h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"><i class="ti ti-x"></i></button>
             </div>
 
             <div class="modal-body">
@@ -16,10 +16,10 @@
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
                     <input type="hidden" name="_redirect_to" value="{{ app.request.requestUri }}">
                     <div>
-                        <p class="text-(--title-color)">Motif :</p>
+						<label for="delete-reason-code-{{ type }}-{{ id }}" class="text-(--title-color)">Motif :</label>
                         <div class="input-input">
                             <i class="ti ti-list"></i>
-                            <select name="reason_code" class=" select" required>
+							<select id="delete-reason-code-{{ type }}-{{ id }}" name="reason_code" class="select" required>
                                 <option value="">Choisir un motif</option>
                                 <option value="spam">{{ 'report.reason.spam'|trans }}</option>
                                 <option value="harassment">{{ 'report.reason.harassment'|trans }}</option>
@@ -34,10 +34,10 @@
                         </div>
                     </div>
                     <div>
-                        <p class="text-(--title-color)">Raison :</p>
+						<label for="delete-reason-{{ type }}-{{ id }}" class="text-(--title-color)">Raison :</label>
                         <div class="input-input">
                             <i class="ti ti-pencil"></i>
-                            <input minlength="3" required maxlength="120" type="text" name="reason" id="" class="input">
+							<input id="delete-reason-{{ type }}-{{ id }}" minlength="3" required maxlength="120" type="text" name="reason" class="input">
                         </div>
                     </div>
                     <div class="flex items-center gap-4">

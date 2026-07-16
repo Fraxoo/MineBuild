@@ -12,7 +12,7 @@
 
 <section class="build-card">
     <header class="build-card__header">
-        <h3 class="build-card__title">Capture du build *</h3>
+        <h2 class="build-card__title">Capture du build *</h2>
         <p class="build-card__subtitle">Ajoutez une ou plusieurs images (PNG, JPG, max 10MB)</p>
     </header>
     <div class="build-card__body">
@@ -53,12 +53,12 @@
 
 <section class="build-card">
     <header class="build-card__header">
-        <h3 class="build-card__title">Informations de base</h3>
+        <h2 class="build-card__title">Informations de base</h2>
     </header>
 
     <div class="build-card__body build-form__stack">
         <div class="build-field">
-            <p class="build-label">Titre *</p>
+            {{ form_label(form.title, 'Titre *', {'label_attr': {'class': 'build-label'}}) }}
             {{ form_widget(form.title) }}
             <div class="error-message">
 
@@ -67,7 +67,7 @@
         </div>
 
         <div class="build-field">
-            <p class="build-label">Description</p>
+            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'build-label'}}) }}
             {{ form_widget(form.description) }}
             <div class="error-message">
                 {{ form_errors(form.description) }}
@@ -77,14 +77,14 @@
 
         <div class="build-grid-2">
             <div class="build-field">
-                <p class="build-label">Catégorie *</p>
+                {{ form_label(form.category, 'Catégorie *', {'label_attr': {'class': 'build-label'}}) }}
                 {{ form_widget(form.category) }}
                 <div class="error-message">
                     {{ form_errors(form.category) }}
                 </div>
             </div>
             <div class="build-field">
-                <p class="build-label">Version *</p>
+                {{ form_label(form.Mcversion, 'Version *', {'label_attr': {'class': 'build-label'}}) }}
                 {{ form_widget(form.Mcversion) }}
                 <div class="error-message">
                     {{ form_errors(form.Mcversion) }}
@@ -94,14 +94,14 @@
 
         <div class="build-grid-2">
             <div class="build-field">
-                <p class="build-label">Difficulté *</p>
+                {{ form_label(form.difficulty, 'Difficulté *', {'label_attr': {'class': 'build-label'}}) }}
                 {{ form_widget(form.difficulty) }}
                 <div class="error-message">
                     {{ form_errors(form.difficulty) }}
                 </div>
             </div>
             <div class="build-field">
-                <p class="build-label">Mode de jeu *</p>
+                {{ form_label(form.game_mode, 'Mode de jeu *', {'label_attr': {'class': 'build-label'}}) }}
                 {{ form_widget(form.game_mode) }}
                 <div class="error-message">
                     {{ form_errors(form.game_mode) }}
@@ -111,55 +111,55 @@
 
         <div class="build-grid-2">
             <div class="build-field">
-                <p class="build-label">Temps estimé *</p>
+                {{ form_label(form.time_estimated_min, 'Temps estimé *', {'label_attr': {'class': 'build-label'}}) }}
                 {{ form_widget(form.time_estimated_min) }}
                 <div class="error-message">
                     {{ form_errors(form.time_estimated_min) }}
                 </div>
             </div>
             <div class="build-field">
-                <p class="build-label">Utilisation de mods</p>
+                <span class="build-label">Utilisation de mods</span>
                 <div class="flex items-center pt-3 gap-2">
                     {{ form_widget(form.modded) }}
                     <div class="error-message">
                         {{ form_errors(form.modded) }}
                     </div>
-                    <p class="text-(--secondary-color)">Ce build utilise des mods</p>
+                    {{ form_label(form.modded, 'Ce build utilise des mods', {'label_attr': {'class': 'text-(--secondary-color)'}}) }}
                 </div>
             </div>
         </div>
-        <div class="build-field">
-            <p class="build-label">Taille du build</p>
+        <fieldset class="build-field">
+            <legend class="build-label">Taille du build</legend>
             <div class="build-grid-3">
                 <div class="build-field">
-                    <p class="build-hint">Longueur</p>
+                    {{ form_label(form.dimensions_x, 'Longueur', {'label_attr': {'class': 'build-hint'}}) }}
                     {{ form_widget(form.dimensions_x) }}
                     <div class="error-message">
                         {{ form_errors(form.dimensions_x) }}
                     </div>
                 </div>
                 <div class="build-field">
-                    <p class="build-hint">Largeur</p>
+                    {{ form_label(form.dimensions_z, 'Largeur', {'label_attr': {'class': 'build-hint'}}) }}
                     {{ form_widget(form.dimensions_z) }}
                     <div class="error-message">
                         {{ form_errors(form.dimensions_z) }}
                     </div>
                 </div>
                 <div class="build-field">
-                    <p class="build-hint">Hauteur</p>
+                    {{ form_label(form.dimensions_y, 'Hauteur', {'label_attr': {'class': 'build-hint'}}) }}
                     {{ form_widget(form.dimensions_y) }}
                     <div class="error-message">
                         {{ form_errors(form.dimensions_y) }}
                     </div>
                 </div>
             </div>
-        </div>
+        </fieldset>
     </div>
 </section>
 
 <section class="build-card">
     <header class="build-card__header">
-        <h3 class="build-card__title">Tags</h3>
+        <h2 class="build-card__title">Tags</h2>
         <p class="build-card__subtitle">Ajoutez jusqu’à 10 tags pour aider les autres à trouver votre build</p>
     </header>
     <div class="build-card__body">
@@ -168,7 +168,8 @@
             {{ form_widget(form.tags, { attr: { 'data-tags-input-target': 'hidden' } }) }}
 
             <div class="build-tags__row">
-                <input type="text" class="build-tags__input" placeholder="Ajoutez un tag..."
+                <label for="build-tags-input" class="sr-only">Ajouter un tag</label>
+                <input id="build-tags-input" type="text" class="build-tags__input" placeholder="Ajoutez un tag..."
                     data-tags-input-target="input" />
                 <button type="button" class="container-button build-tags__add" data-action="click->tags-input#add"
                     aria-label="Ajouter un tag">
@@ -183,7 +184,7 @@
 
 <section class="build-card">
     <header class="build-card__header">
-        <h3 class="build-card__title">Matériaux requis</h3>
+        <h2 class="build-card__title">Matériaux requis</h2>
         <p class="build-card__subtitle">Liste des matériaux nécessaires (optionnel)</p>
     </header>
     <div class="build-card__body">
@@ -228,7 +229,7 @@
 
 <section class="build-card">
     <header class="build-card__header">
-        <h3 class="build-card__title">Téléchargement du monde (optionnel)</h3>
+        <h2 class="build-card__title">Téléchargement du monde (optionnel)</h2>
         <p class="build-card__subtitle">Ajoutez un monde ou un schematic pour que les autres puissent le télécharger</p>
     </header>
     <div class="build-card__body">

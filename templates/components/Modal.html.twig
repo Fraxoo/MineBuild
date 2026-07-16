@@ -1,9 +1,9 @@
-<div class="modal modal-div fade" tabindex="-1" data-modal-form-target="modal">
+<div class="modal modal-div fade" tabindex="-1" data-modal-form-target="modal" role="dialog" aria-modal="true" aria-labelledby="report-modal-title-{{ report.id }}">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content p-4 bg-(--container-color) text-(--title-color)">
             <div class="modal-header">
-                <h5 class="modal-title">Confirmer la suppression</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="ti ti-x"></i></button>
+				<h2 id="report-modal-title-{{ report.id }}" class="modal-title">Confirmer la suppression</h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"><i class="ti ti-x"></i></button>
             </div>
 
             <div class="modal-body">
@@ -15,10 +15,10 @@
                     action="{{ path('app_report_delete', {'id': report.id}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ report.id) }}">
                     <div>
-                        <p class="text-(--title-color)">Raison :</p>
+						<label for="report-delete-reason-{{ report.id }}" class="text-(--title-color)">Raison :</label>
                         <div class="input-input">
                             <i class="ti ti-pencil"></i>
-                            <input minlength="3" maxlength="120" type="text" name="reason" id="" class="input">
+							<input id="report-delete-reason-{{ report.id }}" minlength="3" maxlength="120" type="text" name="reason" class="input">
                         </div>
                     </div>
                     <div class="flex items-center gap-4">

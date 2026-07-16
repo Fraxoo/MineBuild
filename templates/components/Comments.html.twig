@@ -1,4 +1,4 @@
-<div {{ attributes }} class="flex gap-4 w-full">
+<article {{ attributes }} class="flex gap-4 w-full">
     <img class="w-12 h-12 rounded-full"
         src="{{ comment.author.avatarUrl ? asset('uploads/avatars/' ~ comment.author.avatarUrl) : asset('images/default-avatar.jpg') }}"
         alt="Avatar de {{ comment.author.username }}">
@@ -9,7 +9,6 @@
                 <a href="{{ path('app_user_show', {'id': comment.author.id}) }}"
                     class="font-bold hover:underline text-(--title-color)">{{
                     comment.author.username }}</a>
-                </a>
                 {% if comment.author == build.author %}
                 <i class="ti text-(--primary-color) ti-crown"></i>
                 {% endif %}
@@ -66,4 +65,4 @@
         </div>
         {% endif %}
     </div>
-</div>
+</article>

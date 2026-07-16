@@ -1,4 +1,4 @@
-<div{{ attributes }} class="container max-w-none! md:p-8! p-4!">
+<aside{{ attributes }} class="container max-w-none! md:p-8! p-4!" aria-label="À propos du créateur">
     <div class="flex gap-2 items-center">
         <img class="w-18 h-18 rounded-full flex-wrap border-4 border-(--border-color-secondary) object-cover"
             data-avatar-preview-target="image"
@@ -8,7 +8,7 @@
             <a href="{{ path('app_user_show', {'id': build.author.id}) }}" class="text-(--title-color) hover:underline font-bold">{{ build.author.username }}</a>
             <p class="text-(--secondary-color)">{{build.author.followerRelations|length}} Followers</p>
         </div>
-    </div>
+	</div>
     {% if build.author.bio %}
     <p class="text-(--secondary-color)">{{ build.author.bio }}</p>
     {% endif %}
@@ -32,7 +32,7 @@
         </a>
         {% endif %}
 
-        <a class="container-button w-full md:flex-1  " href="{{ path('app_user_show' , { 'id' : build.author.id })}}"><p class="">Profile</p></a>
+		<a class="container-button w-full md:flex-1" href="{{ path('app_user_show' , { 'id' : build.author.id })}}"><span>Profil</span></a>
 
-    </div>
-    </div>
+	</div>
+</aside>

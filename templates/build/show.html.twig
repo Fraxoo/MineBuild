@@ -8,7 +8,7 @@
     <twig:GoBack />
     <div class="flex gap-4 flex-wrap flex-3">
         <div class="flex overflow-auto flex-col w-full md:w-fit gap-4 md:flex-2">
-            <div class="relative w-full h-full  overflow-hidden rounded-xl" data-carousel>
+            <section class="relative w-full h-full overflow-hidden rounded-xl" data-carousel aria-label="Galerie d’images du build">
                 <div class="flex h-full transition-transform duration-300 ease-in-out" data-carousel-track>
 
                     {% for image in build.images %}
@@ -32,11 +32,11 @@
                     <i class="fa-solid fa-angle-right"></i>
                 </button>
                 {% endif %}
-            </div>
-            <div class="flex w-full flex-col">
-                <h3 class="text-3xl font-bold uppercase text-(--title-color)">{{ build.title }}</h3>
+            </section>
+            <header class="flex w-full flex-col">
+                <h1 class="text-3xl font-bold uppercase text-(--title-color)">{{ build.title }}</h1>
                 <p class="text-(--secondary-color) break-all text-xl">{{ build.description }}</p>
-            </div>
+            </header>
 
             <twig:BuildActions :build="build" :isLikedByUser="isLikedByUser" :isSavedByUser="isSavedByUser" />
 
@@ -45,7 +45,7 @@
                 <div class="flex items-center md:hidden justify-between gap-4 p-4">
                     <div class="text-(--title-color) flex items-center gap-2 font-bold text-xl">
                         <i class="ti ti-message-circle"></i>
-                        <h3 class="break-everywhere">Commentaires ({{ build.comments|length }})</h3>
+                        <span class="break-everywhere">Commentaires ({{ build.comments|length }})</span>
                     </div>
                     <button type="button" class="md:hidden inline-flex leading-none h-fit text-white text-4xl"
                         data-mobile-filters-target="button" data-action="mobile-filters#toggle"
@@ -54,11 +54,11 @@
                     </button>
                 </div>
 
-                <div id="mobile-build-comments-{{ build.id }}" id="comment" class="hidden md:flex flex-col gap-4 space-y-4 md:space-y-0 p-4 md:p-0"
+                <section id="mobile-build-comments-{{ build.id }}" class="hidden md:flex flex-col gap-4 space-y-4 md:space-y-0 p-4 md:p-0"
                     data-mobile-filters-target="panel">
                     <div class="text-(--title-color) hidden md:flex items-center gap-2 font-bold text-xl">
                         <i class="ti ti-message-circle"></i>
-                        <h3 class="break-everywhere">Commentaires ({{ build.comments|length }})</h3>
+                        <h2 class="break-everywhere">Commentaires ({{ build.comments|length }})</h2>
                     </div>
                     {% if app.user %}
                     <div class="flex  gap-4 w-full">
@@ -71,6 +71,7 @@
                         }
                         }) }}
 
+						{{ form_label(form.content, 'Commentaire', {'label_attr': {'class': 'sr-only'}}) }}
                         {{ form_widget(form.content, {
                         attr: {
                         class: 'w-full border border-(--border-color) bg-(--container-color-secondary) px-4 py-2 rounded
@@ -98,7 +99,7 @@
                     {% for comment in build.comments %}
                     <twig:Comments :comment="comment" :build="build" />
                     {% endfor %}
-                </div>
+                </section>
             </div>
 
         </div>
@@ -112,78 +113,80 @@
 
             <twig:BuildUserAction :build="build" :isFollowedByUser="isFollowedByUser"  />
 
-            <div class="container max-w-none! md:p-8! p-4!">
-                <h3 class="title">Détails</h3>
+            <section class="container max-w-none! md:p-8! p-4!">
+                <h2 class="title">Détails</h2>
+                <dl class="flex flex-col gap-2">
                 <div class="build-info-gap">
-                    <div class="build-info-gap-title">
+                    <dt class="build-info-gap-title">
                         <i class="ti ti-device-gamepad-2"></i>
-                        <p>Version</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
+                        <span>Version</span>
+                    </dt>
+                    <dd class="flex flex-wrap gap-2">
                         {% for buildVersion in build.buildVersions %}
-                            <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
+                            <span class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
                                 {{ buildVersion.version.number }}
-                            </p>
+                            </span>
                         {% else %}
-                            <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
+                            <span class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
                                 Non renseignée
-                            </p>
+                            </span>
                         {% endfor %}
-                    </div>
+                    </dd>
                 </div>
                 <div class="build-info-gap">
-                    <div class="build-info-gap-title">
+                    <dt class="build-info-gap-title">
                         <i class="ti ti-bolt"></i>
-                        <p>Difficulté</p>
-                    </div>
-                    <p
+                        <span>Difficulté</span>
+                    </dt>
+                    <dd
                         class=" font-bold {{ build.difficulty.value === 'easy' ? 'bg-green-600/10 text-green-200!' : build.difficulty.value === 'medium' ? 'bg-blue-600/10 text-blue-600!' : build.difficulty.value === 'hard' ? 'bg-orange-900/10 text-orange-400!' : 'bg-red-600/10 text-red-200!' }} px-2 py-1  rounded text-[0.875rem]">
-                        {{ build.difficulty.value }}</p>
+                        {{ build.difficulty.value }}</dd>
                 </div>
                 <div class="build-info-gap">
-                    <div class="build-info-gap-title">
+                    <dt class="build-info-gap-title">
                         <i class="ti ti-ruler-2"></i>
-                        <p>Taille</p>
-                    </div>
-                    <p class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
-                        L : {{build.dimensionsX ? build.dimensionsX : "-"}} H : {{build.dimensionsY ? build.dimensionsY : "-"}} L : {{build.dimensionsZ ? build.dimensionsZ : "-"}}</p>
+                        <span>Taille</span>
+                    </dt>
+                    <dd class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">
+                        L : {{build.dimensionsX ? build.dimensionsX : "-"}} H : {{build.dimensionsY ? build.dimensionsY : "-"}} L : {{build.dimensionsZ ? build.dimensionsZ : "-"}}</dd>
                 </div>
                 <div class="build-info-gap">
-                    <div class="build-info-gap-title">
+                    <dt class="build-info-gap-title">
                         <i class="ti ti-calendar-event"></i>
-                        <p>Publié le </p>
-                    </div>
-                    <p class=" px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">{{ build.createdAt|date('d/m/Y')
-                        }}</p>
+                        <span>Publié le</span>
+                    </dt>
+                    <dd class="px-2 py-1 text-(--title-color)! rounded text-[0.875rem]">{{ build.createdAt|date('d/m/Y')
+                        }}</dd>
                 </div>
-            </div>
+                </dl>
+            </section>
 
             {% if build.materials|length > 0 %}
-            <div class="container max-w-none! md:p-8! p-4!">
-                <h3 class="title">Matériaux Requis</h3>
-                <div class="flex flex-col gap-2">
+            <section class="container max-w-none! md:p-8! p-4!">
+                <h2 class="title">Matériaux requis</h2>
+                <ul class="flex flex-col gap-2">
                     {% for material in build.materials %}
-                    <div class="flex justify-between px-4 py-2 rounded w-full bg-(--container-color-secondary)">
-                        <p class="text-(--title-color)">{{ material.name }}</p>
-                        <p class="text-(--primary-color)">x {{ material.quantity }}</p>
-                    </div>
+                    <li class="flex justify-between px-4 py-2 rounded w-full bg-(--container-color-secondary)">
+                        <span class="text-(--title-color)">{{ material.name }}</span>
+                        <span class="text-(--primary-color)">x {{ material.quantity }}</span>
+                    </li>
                     {% endfor %}
-                </div>
-            </div>
+                </ul>
+            </section>
             {% endif %}
 
             {% if build.buildTags|length > 0 %}
-            <div class="container max-w-none! md:p-8! p-4!">
-                <h3 class="title">Tags</h3>
-                <div class="flex flex-wrap gap-2">
+            <section class="container max-w-none! md:p-8! p-4!">
+                <h2 class="title">Tags</h2>
+                <ul class="flex flex-wrap gap-2">
                     {% for tag in build.buildTags %}
-                    <span
+                    <li
                         class="bg-(--container-color-secondary) px-2 py-1 text-(--title-color) rounded text-[0.875rem]">
                         {{ tag.tag.name }}
-                    </span>
+                    </li>
                     {% endfor %}
-                </div>
-            </div>
+                </ul>
+            </section>
             {% endif %}
         </div>
     </div>

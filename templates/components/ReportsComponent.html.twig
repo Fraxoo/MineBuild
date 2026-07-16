@@ -1,5 +1,5 @@
-<div{{attributes}} class="flex flex-col gap-4">
+<section{{attributes}} class="flex flex-col gap-4" aria-label="Signalements en attente">
 	{% for report in reports %}
 		<twig:ReportCard :report="report"/>
 	{% endfor %}
-</div>
+</section>

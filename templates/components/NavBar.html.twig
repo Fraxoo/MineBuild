@@ -14,7 +14,7 @@
 			<i class="ti text-white text-2xl! ti-x"></i>
 		</button>
 	</div>
-	<div
+	<nav aria-label="Navigation principale mobile"
 		class="flex-1 min-h-0 bg-(--background-color-secondary) overflow-y-auto   justify-between p-4 border-r border-(--border-color) flex flex-col gap-4">
 		<div class="flex flex-col gap-4">
 			<a class="primary-button " href="{{path('app_build_new')}}">
@@ -32,7 +32,7 @@
 				</a>
 			</div>
 			<div class="nav-block">
-				<h3 class="nav-title">Catégories</h3>
+				<span class="nav-title">Catégories</span>
 			<a class="nav-button {{ app.current_route === "app_home" and app.request.query.get('category') == null and app.request.query.get('sort') == null
 				? "nav-selected" : " " }}" href="{{ path('app_home')}}">
 				<i class="ti ti-blocks"></i>
@@ -75,7 +75,7 @@
 				</a>
 			</div>
 			<div class="nav-block">
-				<h3 class="nav-title">Aide et autres</h3>
+				<span class="nav-title">Aide et autres</span>
 				<a class="nav-button {{ app.current_route === "app_cgu" ? "nav-selected" : "" }}"
 					href="{{ path('app_cgu')}}">
 					<i class="ti ti-file-text"></i>
@@ -91,7 +91,7 @@
 			</a>
 		</div>
 		{% endif %}
-	</div>
+	</nav>
 
 
 </aside>
@@ -101,7 +101,7 @@
 
 
 
-<div
+<nav aria-label="Navigation principale"
 	class="flex-1 h-100% bg-(--background-color-secondary) justify-between p-4 border-r border-(--border-color) hidden md:flex flex-col gap-4">
 	<div class="flex flex-col gap-4">
 		<a class="primary-button " href="{{path('app_build_new')}}">
@@ -119,7 +119,7 @@
 			</a>
 		</div>
 		<div class="nav-block">
-			<h3 class="nav-title">Catégories</h3>
+			<span class="nav-title">Catégories</span>
 			<a class="nav-button {{ app.current_route === "app_home" and app.request.query.get('category') == null and app.request.query.get('sort') == null
 				? "nav-selected" : " " }}" href="{{ path('app_home')}}">
 				<i class="ti ti-blocks"></i>
@@ -162,7 +162,7 @@
 			</a>
 		</div>
 		<div class="nav-block">
-			<h3 class="nav-title">Aide et autres</h3>
+			<span class="nav-title">Aide et autres</span>
 			<a class="nav-button {{ app.current_route === "app_cgu" ? "nav-selected" : "" }}"
 				href="{{ path('app_cgu')}}">
 				<i class="ti ti-file-text"></i>
@@ -178,4 +178,4 @@
 		</a>
 	</div>
 	{% endif %}
-</div>
+</nav>

@@ -1,4 +1,4 @@
-<div{{attributes}} class="flex flex-col gap-4 p-4 bg-(--container-color) rounded">
+<article{{attributes}} class="flex flex-col gap-4 p-4 bg-(--container-color) rounded">
     {# {{ dump(report) }} #}
 
     <div class="flex flex-wrap items-center text-xs gap-3">
@@ -19,9 +19,9 @@
     </div>
 
     {% if report.targetType.value === "comment" %}
-    <i class="dashboard-info rounded">{{report.comment.content}}</i>
+	<blockquote class="dashboard-info rounded">{{report.comment.content}}</blockquote>
     {% elseif report.targetType.value === "build" %}
-    <i class="dashboard-info">{{report.build.title}}</i>
+	<p class="dashboard-info">{{report.build.title}}</p>
     {% endif %}
 
     <div class="flex flex-wrap items-center text-sm gap-4">
@@ -35,7 +35,7 @@
         </div>
         <p class="text-(--secondary-color)">Signalement fait par <a href="{{ path('app_report_users_builds' , { id: report.reporter.id})}}" class="hover:underline text-(--title-color)">{{
                 report.reporter.username}}</a></p>
-    </div>
+	</div>
 
     <p class="text-(--secondary-color)">{{report.message}}</p>
 
@@ -57,4 +57,4 @@
     </div>
 
 
-    </div>
+</article>

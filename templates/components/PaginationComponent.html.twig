@@ -1,25 +1,26 @@
 <div {{ attributes }} class="flex flex-col gap-4">
 
 	{% if totalPages > 1 %}
-	<nav class="flex items-center justify-center gap-2 mt-8">
+	<nav class="flex items-center justify-center gap-2 mt-8" aria-label="Pagination">
 
 		{% if currentPage > 1 %}
 		<a href="{{ path(app.current_route, app.current_route_parameters|merge(app.request.query.all)|merge({ page: currentPage - 1 })) }}"
-			class="inline-flex items-center justify-center w-10 h-10 shrink-0 bg-(--container-color) border border-(--border-color) rounded">
+			class="inline-flex items-center justify-center w-10 h-10 shrink-0 bg-(--container-color) border border-(--border-color) rounded" aria-label="Page précédente">
 			<i class="ti ti-chevron-left text-white text-[1rem] leading-none"></i>
 		</a>
 		{% endif %}
 
 		{% for page in 1..totalPages %}
 		<a href="{{ path(app.current_route, app.current_route_parameters|merge(app.request.query.all)|merge({ page: page })) }}"
-			class="inline-flex items-center justify-center w-10 h-10 shrink-0 border border-(--primary-color-muted) rounded leading-none {{ page == currentPage ? 'bg-(--primary-color) text-black' : 'bg-(--container-color) text-white' }}">
+			class="inline-flex items-center justify-center w-10 h-10 shrink-0 border border-(--primary-color-muted) rounded leading-none {{ page == currentPage ? 'bg-(--primary-color) text-black' : 'bg-(--container-color) text-white' }}"
+			{% if page == currentPage %}aria-current="page"{% endif %} aria-label="Page {{ page }}">
 			{{ page }}
 		</a>
 		{% endfor %}
 
 		{% if currentPage < totalPages %} <a
 			href="{{ path(app.current_route, app.current_route_parameters|merge(app.request.query.all)|merge({ page: currentPage + 1 })) }}"
-			class="inline-flex items-center justify-center w-10 h-10 shrink-0 bg-(--container-color) border border-(--border-color) rounded">
+			class="inline-flex items-center justify-center w-10 h-10 shrink-0 bg-(--container-color) border border-(--border-color) rounded" aria-label="Page suivante">
 			<i class="ti ti-chevron-right text-white text-[1rem] leading-none"></i>
 			</a>
 			{% endif %}

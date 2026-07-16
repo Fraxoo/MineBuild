@@ -1,4 +1,4 @@
-<div {{attributes}} class="flex flex-col flex-wrap gap-4">
+<section {{attributes}} class="flex flex-col flex-wrap gap-4" aria-label="Actions et statistiques du build">
 	<div class="flex flex-col flex-wrap gap-4  justify-between  rounded p-4 bg-(--container-color)">
 		<div class="flex md:justify-start justify-between w-full md:w-fit flex-wrap items-center gap-4">
 			<div class="build-stats">
@@ -6,9 +6,7 @@
 				<p>{{build.viewsCount}} <span class="md:inline-block hidden">Vues</span></p>
 			</div>
 			<div class="build-stats">
-				<button class="h-fit">
-					<i class="ti ti-thumb-up"></i>
-				</button>
+				<i class="ti ti-thumb-up"></i>
 				<p>{{ build.likesCount}} <span class="md:inline-block hidden">J'aime</span></p>
 			</div>
 			<div class="build-stats">
@@ -28,14 +26,14 @@
 					class="ti ti-thumb-up transition-colors duration-200 {{ isLikedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				J'aime
 			</button>
-			<button class="container-button" type="button" class="secondary-button flex items-center gap-2"
+			<button class="container-button" type="button"
 				data-share-button data-share-title="{{ build.title }}"
 				data-share-url="{{ absolute_url(path('app_build_show', { id: build.id })) }}">
 				<i class="ti ti-share"></i>
 				<span>Partager</span>
 			</button>
 
-			<button class="container-button" {{live_action('save')}}>
+			<button type="button" class="container-button" {{live_action('save')}}>
 				<i class="ti ti-heart {{ isSavedByUser ? 'text-(--primary-color)' : 'null' }}"></i>
 				<p>Favoris</p>
 			</button>
@@ -56,7 +54,7 @@
 				<i class="ti ti-thumb-up"></i>
 				J'aime
 			</a>
-			<button class="container-button" type="button" class="secondary-button flex items-center gap-2"
+			<button class="container-button" type="button"
 				data-share-button data-share-title="{{ build.title }}"
 				data-share-url="{{ absolute_url(path('app_build_show', { id: build.id })) }}">
 				<i class="ti ti-share"></i>
@@ -78,12 +76,12 @@
 	<a href="{{ path('app_build_download', { id: build.id }) }}"
 		class="flex items-center gap-2 justify-center bg-(--primary-color) py-3 px-4 text-center rounded font-semibold">
 		<i class="ti ti-download"></i>
-		<h3>Télecharger ce build</h3>
+		<span>Télécharger ce build</span>
 		</a>
 		{% endif %}
 
-		<div class="container max-w-none! md:p-8! p-4!">
-			<h3 class="title">Notez ce build</h3>
+		<section class="container max-w-none! md:p-8! p-4!">
+			<h2 class="title">Notez ce build</h2>
 			{% if app.user %}
 			<div class="flex gap-2">
 				{% for i in 1..5 %}
@@ -97,5 +95,5 @@
 			<p class="text-(--secondary-color)"><a class="hover:underline font-semibold text-(--primary-color)"
 					href="{{ path('app_login') }}">Connectez-vous</a> pour noter ce build.</p>
 			{% endif %}
-		</div>
-</div>
+		</section>
+</section>
