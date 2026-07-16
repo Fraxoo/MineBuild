@@ -1,4 +1,4 @@
-<div{{attributes}} class="flex items-center border-b border-(--border-color) gap-4 justify-between p-4">
+<header{{attributes}} class="flex items-center border-b border-(--border-color) gap-4 justify-between p-4">
 
 	<div class="md:flex hidden">
 		<twig:WebsiteTitle />
@@ -9,17 +9,18 @@
 		<i class="ti flex md:hidden text-white text-4xl! ti-menu-2"></i>
 	</button>
 
-	<form class="input-input bg-(--search)!  md:w-1/3" action="{{ path('app_home', { page: 1 }) }}" method="get">
+	<form class="input-input bg-(--search)! md:w-1/3" action="{{ path('app_home', { page: 1 }) }}" method="get" role="search">
 
-		<button class="cursor-pointer">
+		<button class="cursor-pointer" aria-label="Lancer la recherche">
 			<i class="fa-solid fa-magnifying-glass"></i>
 		</button>
-		<input name="search" class="w-full outline-none! focus:outline-none! focus:ring-0!"
+		<label for="site-search" class="sr-only">Rechercher des builds ou des auteurs</label>
+		<input id="site-search" name="search" class="w-full outline-none! focus:outline-none! focus:ring-0!"
 			placeholder="Rechercher des builds, auteur..." value="{{ app.request.query.get('search')}}" type="search">
 	</form>
 	<div class="flex items-center text-(--title-color) text-xl gap-2">
 	{% if app.user %}
-	<a class="relative" href="{{ path("app_notification_index")}}">
+	<a class="relative" href="{{ path("app_notification_index")}}" aria-label="Voir les notifications">
 		<i class="ti text-2xl! ti-bell"></i>
 		{% if hasUnreadNotif %}
 		<i class="fa-solid left-2/3 absolute text-(--primary-color) text-[0.7rem]! fa-circle"></i>
@@ -28,7 +29,7 @@
 	</a>
 	{% endif %}
 		<div class="dropdown bg-(--background-color) ">
-			<div tabindex="0" role="button" class=" cursor-pointer border-0 shadow-none bg-(--background-color)! m-1">
+			<button type="button" class="cursor-pointer border-0 shadow-none bg-(--background-color)! m-1" aria-label="Ouvrir le menu du compte">
 				{% if app.user %}
 				<img class="w-10 h-10 min-w-10 min-h-10 shrink-0 rounded-full border-4 border-(--border-color-secondary) object-cover"
 					data-avatar-preview-target="image"
@@ -38,7 +39,7 @@
 				{% else %}
 				<i class="text-2xl! ti ti-user"></i>
 				{% endif %}
-			</div>
+			</button>
 			<div class="dropdown-content">
 				{% if app.user %}
 				<a href="{{ path('app_user_show', { id: app.user.id }) }}"
@@ -47,7 +48,7 @@
 						data-avatar-preview-target="image"
 						src="{{ app.user.avatarUrl ? asset('uploads/avatars/' ~ app.user.avatarUrl) : asset('images/default-avatar.jpg') }}"
 						alt="Avatar de {{ app.user.username }}">
-					<h3>{{app.user.username}}</h3>
+					<strong>{{app.user.username}}</strong>
 				</a>
 				<a class="dropdown-link" href="{{ path('app_user_show', { id: app.user.id }) }}">
 					<i class="ti ti-user"></i>
@@ -79,4 +80,4 @@
 
 		</div>
 	</div>
-	</div>
+</header>

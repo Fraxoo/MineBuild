@@ -4,10 +4,11 @@
 
 {% block body %}
 <div data-controller="mobile-filters" class="flex flex-col gap-4">
+	<h1 class="sr-only">Découvrez les builds Minecraft de la communauté</h1>
 
     <div class="flex flex-col rounded border bg-(--container-color) border-(--border-color)">
         <div class="flex items-center md:hidden justify-between gap-4 p-4">
-            <p class="text-white">Filtres :</p>
+            <span class="text-white">Filtres :</span>
             <button type="button" class="md:hidden inline-flex leading-none h-fit text-white text-4xl"
                 data-mobile-filters-target="button" data-action="mobile-filters#toggle" aria-expanded="false"
                 aria-controls="mobile-filters">
@@ -20,11 +21,12 @@
                 <div class="flex flex-wrap md:flex-row flex-col md:items-center gap-4">
                     <input type="hidden" name="search" value="{{ filters.search }}">
                     <input type="hidden" name="sort" value="{{ filters.sort }}">
-                    <p class="text-(--secondary-color)">Filtres :</p>
+                    <span class="text-(--secondary-color)">Filtres :</span>
 
                     <div class="flex flex-col md:flex-row gap-4">
 
-                        <select onchange="this.form.submit()" class="filter-select" name="version">
+                        <label for="filter-version" class="sr-only">Version de Minecraft</label>
+                        <select id="filter-version" onchange="this.form.submit()" class="filter-select" name="version">
                             <option value="">Toutes les versions</option>
 
                             {% for version in versions %}
@@ -34,7 +36,8 @@
                             {% endfor %}
                         </select>
 
-                        <select onchange="this.form.submit()" class="filter-select" name="category">
+                        <label for="filter-category" class="sr-only">Catégorie</label>
+                        <select id="filter-category" onchange="this.form.submit()" class="filter-select" name="category">
                             <option value="">Toutes les catégories</option>
 
                             {% for categorie in categories %}
@@ -44,7 +47,8 @@
                             {% endfor %}
                         </select>
 
-                        <select onchange="this.form.submit()" class="filter-select" name="difficulty">
+                        <label for="filter-difficulty" class="sr-only">Difficulté</label>
+                        <select id="filter-difficulty" onchange="this.form.submit()" class="filter-select" name="difficulty">
                             <option value="">Toutes les difficultés</option>
                             <option {{ filters.difficulty=='easy' ? 'selected' : '' }} value="easy">Facile</option>
                             <option {{ filters.difficulty=='medium' ? 'selected' : '' }} value="medium">Moyen</option>
@@ -54,9 +58,9 @@
                 </div>
 
                 <div class="flex md:items-center md:flex-row flex-col gap-2">
-                    <p class="text-(--secondary-color)">Filtrer par :</p>
+                    <label for="filter-sort" class="text-(--secondary-color)">Trier par :</label>
 
-                    <select onchange="this.form.submit()" class="filter-select" name="sort">
+                    <select id="filter-sort" onchange="this.form.submit()" class="filter-select" name="sort">
                         <option {{ filters.sort=='DESC' ? 'selected' : '' }} value="DESC">Nouveauté</option>
                         <option {{ filters.sort=='POPULAR' ? 'selected' : '' }} value="POPULAR">Popularité</option>
                         <option {{ filters.sort=='ASC' ? 'selected' : '' }} value="ASC">Ancienneté</option>
@@ -66,14 +70,17 @@
         </div>
     </div>
     {% if items %}
-    <div class=" flex flex-col md:grid md:grid-cols-4 gap-4">
+    <section aria-labelledby="build-results-title">
+	<h2 id="build-results-title" class="sr-only">Résultats</h2>
+	<div class="flex flex-col md:grid md:grid-cols-4 gap-4">
         {% for item in items %}
         <twig:BuildCard :build="item" />
         {% endfor %}
-    </div>
+	</div>
+	</section>
     {% else %}
     <div class="flex justify-center w-full text-(--title-color)">
-        <p class="font-bold">Aucun Résultat</p>
+        <p class="font-bold">Aucun résultat</p>
     </div>
     {% endif %}
     <twig:PaginationComponent :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />

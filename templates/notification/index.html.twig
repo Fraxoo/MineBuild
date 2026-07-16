@@ -11,9 +11,11 @@
             <h1 class="text-(--title-color) ">Notification</h1>
         </div>
         <p class="text-(--secondary-color) text-xl">Vous avez {{ unreadItems }} notification{{ unreadItems > 1 ? 's' : '' }} non-lue{{ unreadItems > 1 ? 's' : '' }}</p>
-        {% for notif in items %}
-        <twig:NotificationCard :notif="notif" />
-        {% endfor %}
+		<section class="flex flex-col gap-4" aria-label="Liste des notifications">
+			{% for notif in items %}
+			<twig:NotificationCard :notif="notif" />
+			{% endfor %}
+		</section>
         <twig:PaginationComponent :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
     </div>
 </div>

@@ -1,4 +1,5 @@
 {% set followUser = followType == 'followers' ? item.follower : item.following %}
+<article>
 <a href="{{ path('app_user_show', {id: followUser.id}) }}" class="flex gap-4 flex-wrap rounded-lg items-center border-2 border-(--border-color)  p-4 bg-(--container-color) duration-200 transition-colors  hover:border-(--primary-color-muted)">
     <img class="w-28 h-28 rounded-full border-4 border-(--border-color-secondary) object-cover"
         data-avatar-preview-target="image"
@@ -18,3 +19,4 @@
         </div>
     </div>
 </a>
+</article>

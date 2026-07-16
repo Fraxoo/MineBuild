@@ -16,7 +16,7 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
         <div class="flex  flex-col items-center gap-8">
             <twig:WebsiteTitle />
             <div class="flex flex-col items-center gap-4">
-                <p class="text-xl text-(--title-color) font-bold">Créer un compte</p>
+				<h1 class="text-xl text-(--title-color) font-bold">Créer un compte</h1>
                 <p class="text-(--secondary-color) text-center">Rejoignez la communauté et commencez à partager vos
                     créations !</p>
             </div>
@@ -26,7 +26,7 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
         }) }}
 
         <div class="input-div">
-            <p class="input-title">Username</p>
+			{{ form_label(registrationForm.username, "Nom d'utilisateur", {'label_attr': {'class': 'input-title'}}) }}
             <div class="input-input {{ usernameHasError ? 'input-input--error' : '' }}">
                 <i class="ti ti-user"></i>
                 {{ form_widget(registrationForm.username , {
@@ -38,7 +38,7 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
             </div>
         </div>
         <div class="input-div">
-            <p class="input-title">Email</p>
+			{{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'input-title'}}) }}
             <div class="input-input {{ emailHasError ? 'input-input--error' : '' }}">
                 <i class="ti ti-mail"></i>
                 {{ form_widget(registrationForm.email , {
@@ -50,7 +50,7 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
             </div>
         </div>
         <div class="input-div">
-            <p class="input-title">Mot de passe</p>
+			{{ form_label(registrationForm.plainPassword.first, 'Mot de passe', {'label_attr': {'class': 'input-title'}}) }}
             <div class="input-input {{ passwordHasError ? 'input-input--error' : '' }}">
                 <i class="ti ti-lock"></i>
                 {{ form_widget(registrationForm.plainPassword.first , {
@@ -64,7 +64,7 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
             </div>
         </div>
         <div class="input-div">
-            <p class="input-title">Confirmer le mot de passe</p>
+			{{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe', {'label_attr': {'class': 'input-title'}}) }}
             <div class="input-input {{ passwordHasError ? 'input-input--error' : '' }}">
                 <i class="ti ti-lock"></i>
                 {{ form_widget(registrationForm.plainPassword.second , {
@@ -81,7 +81,8 @@ or (registrationForm.plainPassword.second.vars.errors|length > 0)
         </div>
         <div class="flex check items-center gap-2 text-(--title-color)">
             {{ form_widget(registrationForm.agreeTerms) }}
-            <p>J'accepte <a href="{{ path('app_cgu')}}" class="text-(--primary-color) hover:underline" href="">les conditions d'utilisation</a></p>
+			<label for="{{ registrationForm.agreeTerms.vars.id }}">J'accepte les</label>
+			<a href="{{ path('app_cgu')}}" class="text-(--primary-color) hover:underline">conditions d'utilisation</a>
         </div>
         <div class="error-message">
             {{ form_errors(registrationForm) }}

@@ -5,39 +5,41 @@
 
 {% block body %}
 <div class="flex flex-col gap-4">
+	<h1 class="sr-only">Profil de {{ user.username }}</h1>
 	<twig:GoBack />
 	<twig:UserInfo :user="user" :isFollowedByUser="isFollowedByUser" />
-	<div class="md grid-cols-1 hidden sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+	<section class="md grid-cols-1 hidden sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" aria-labelledby="profile-stats-title">
+		<h2 id="profile-stats-title" class="sr-only">Statistiques du profil</h2>
 		<div class="user-box">
 			<i class=" bg-[#28372d]  text-[#4ae583] ti ti-blocks"></i>
-			<div>
-				<p class="text-(--title-color) font-bold">{{ user.builds|length }}</p>
-				<p class="text-(--secondary-color)">Total builds</p>
-			</div>
+			<dl class="flex flex-col">
+				<dt class="text-(--secondary-color)">Total builds</dt>
+				<dd class="text-(--title-color) font-bold order-first">{{ user.builds|length }}</dd>
+			</dl>
 		</div>
 		<div class="user-box">
 			<i class="ti ti-users  bg-[#242d3a]  text-[#2a85fd]"></i>
-			<div>
-				<p class="text-(--title-color) font-bold">{{ totalViews }}</p>
-				<p class="text-(--secondary-color)">Total vues</p>
-			</div>
+			<dl class="flex flex-col">
+				<dt class="text-(--secondary-color)">Total vues</dt>
+				<dd class="text-(--title-color) font-bold order-first">{{ totalViews }}</dd>
+			</dl>
 		</div>
 		<div class="user-box">
 			<i class="bg-[#3a2426]  text-[#ff2b36] ti ti-heart"></i>
-			<div>
-				<p class="text-(--title-color) font-bold">{{ totalLikes }}</p>
-				<p class="text-(--secondary-color)">Total J'aimes</p>
-			</div>
+			<dl class="flex flex-col">
+				<dt class="text-(--secondary-color)">Total J’aime</dt>
+				<dd class="text-(--title-color) font-bold order-first">{{ totalLikes }}</dd>
+			</dl>
 		</div>
 		<div class="user-box">
 			<i class="ti ti-star  bg-[#203428]  text-[#00c84e]"></i>
-			<div>
-				<p class="text-(--title-color) font-bold">{{ totalSaves }}</p>
-				<p class="text-(--secondary-color)">Total Sauvegarde</p>
-			</div>
+			<dl class="flex flex-col">
+				<dt class="text-(--secondary-color)">Total sauvegardes</dt>
+				<dd class="text-(--title-color) font-bold order-first">{{ totalSaves }}</dd>
+			</dl>
 		</div>
-	</div>
-	<div class="user-filter-container">
+	</section>
+	<nav class="user-filter-container" aria-label="Contenu du profil">
 		<a href="{{ path('app_user_show', {id: user.id}) }}"
 			class="user-filter {{ app.request.attributes.get('_route') === 'app_user_show' ? 'user-selected-filter' : '' }}">
 			<i class="ti ti-blocks"></i>
@@ -64,8 +66,8 @@
 			{# <p>Following ({{ user.followingRelations|length }})</p> #}
 			<p>Suivi(e)s</p>
 		</a>
-	</div>
-	<div class=" flex flex-col md:grid md:grid-cols-4 gap-4">
+	</nav>
+	<section class="flex flex-col md:grid md:grid-cols-4 gap-4" aria-label="Contenu du profil">
 		{% if items|length > 0 %}
 
 		{% if isFollow %}
@@ -88,7 +90,7 @@
 		<p class="text-(--secondary-color)">Aucun contenu à afficher.</p>
 
 		{% endif %}
-	</div>
+	</section>
 	<twig:PaginationComponent :totalPages="totalPages" :totalItems="totalItems" :currentPage="currentPage" />
 </div>
 

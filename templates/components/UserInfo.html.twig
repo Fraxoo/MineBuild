@@ -1,4 +1,4 @@
-<div {{ attributes }}
+<header {{ attributes }}
     class="flex gap-4 flex-wrap items-center justify-between w-full bg-(--container-color) p-5 rounded">
     <div class="flex flex-wrap gap-4 items-center">
         <div class="flex gap-4 items-center">
@@ -7,7 +7,7 @@
                 src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.jpg') }}"
                 alt="Avatar de {{ user.username }}">
             <div class="flex flex-col gap-2">
-                <h2 class="font-bold text-2xl flex md:hidden text-(--title-color)">{{user.username}}</h2>
+				<strong class="font-bold text-2xl flex md:hidden text-(--title-color)">{{user.username}}</strong>
                 <div class="flex gap-4 md:hidden items-center">
                     <div class="flex flex-col gap-2 items-start">
                         <p class="text-(--title-color) font-bold">{{ user.followerRelations|length }}</p>
@@ -24,7 +24,7 @@
         <div {{stimulus_controller('modal-form')}}
             class="flex w-full md:w-fit flex-wrap flex-col gap-2 justify-between">
             <div class="flex md:items-center flex-col w-full md:w-fit md:flex-row flex-wrap gap-2">
-                <h2 class="font-bold text-2xl md:flex hidden text-(--title-color)">{{user.username}}</h2>
+				<strong class="font-bold text-2xl md:flex hidden text-(--title-color)">{{user.username}}</strong>
                 <div class="flex w-full md:w-fit gap-4">
 
                     {% if app.user and app.user.id == user.id %}
@@ -87,4 +87,4 @@
             <p class="text-(--secondary-color)">Suivi(e)s</p>
         </div>
     </div>
-</div>
+</header>

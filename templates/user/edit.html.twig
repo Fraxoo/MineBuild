@@ -9,7 +9,7 @@
     'attr' : {'class' : 'user-edit-container'}}
     ) }}
     <div class="flex flex-col gap-1">
-        <h3 class="text-(--title-color)">Informations personnelles</h3>
+		<h2 class="text-(--title-color)">Informations personnelles</h2>
         <p class="text-(--secondary-color)">Modifier vos informations personnelles visibles aux autres</p>
     </div>
     <div class="flex gap-2 items-center" data-controller="avatar-preview">
@@ -18,7 +18,7 @@
             src="{{ user.avatarUrl ? asset('uploads/avatars/' ~ user.avatarUrl) : asset('images/default-avatar.jpg') }}"
             alt="Avatar de {{ user.username }}">
         <div class="flex gap-2 flex-col">
-            <p class="input-title">Photo de profil</p>
+			<span class="input-title">Photo de profil</span>
             <p class="text-[0.75rem] text-(--secondary-color)">JPG,PNG ou WEBP Taille maximale : 2Mo</p>
             <div>
                 <label for="user_avatar_url"
@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="input-div">
-        <p class="input-title">Nom d'utilisateur</p>
+		{{ form_label(form.username, "Nom d'utilisateur", {'label_attr': {'class': 'input-title'}}) }}
         {{ form_widget(form.username , {
         'attr' : {'class' : 'input input-input'}}
         ) }}
@@ -50,7 +50,7 @@
         <p class="text-(--secondary-color) text-xs">Votre nom d'utilisateur unique. Il sera visible par tout les utilisateurs</p>
     </div>
     <div class="input-div">
-        <p class="input-title">Email</p>
+		{{ form_label(form.email, 'Email', {'label_attr': {'class': 'input-title'}}) }}
         {{ form_widget(form.email , {
         'attr' : {'class' : 'input input-input'}}
         ) }}
@@ -59,7 +59,7 @@
         ) }}
     </div>
     <div class="input-div">
-        <p class="input-title">Bio</p>
+		{{ form_label(form.bio, 'Bio', {'label_attr': {'class': 'input-title'}}) }}
         {{ form_widget(form.bio , {
         'attr' : {'class' : 'input input-input h-32'}}
         ) }}

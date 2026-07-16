@@ -1,4 +1,4 @@
-<div class="flex flex-wrap gap-4 items-center bg-(--container-color) p-4 md:p-8 rounded justify-between w-full">
+<header class="flex flex-wrap gap-4 items-center bg-(--container-color) p-4 md:p-8 rounded justify-between w-full">
     <div class="flex flex-wrap gap-4 items-center">
         <img class="w-28 h-28 rounded-full border-4 border-(--primary-color) object-cover"
             data-avatar-preview-target="image"
@@ -6,7 +6,7 @@
             alt="Avatar de {{ user.username }}">
         <div {{stimulus_controller('modal-form')}} class="flex flex-wrap flex-col gap-2 justify-between">
             <div class="flex items-center gap-2">
-                <h2 class="font-bold text-2xl text-(--title-color)">{{user.username}}</h2>
+				<h2 class="font-bold text-2xl text-(--title-color)">Profil signalé : {{user.username}}</h2>
                 <div class="flex items-center gap-1 text-red-500 font-bold">
                     <i class="fa-solid text-[1rem] fa-circle-exclamation"></i>
                     <p>{{ user.reportsCount }}
@@ -33,7 +33,7 @@
     <twig:DeleteModal :id="user.id" type="user" />
 
     {% endif %}
-</div>
+</header>
 
 <twig:ReportUserNav :user="user" />
 {#

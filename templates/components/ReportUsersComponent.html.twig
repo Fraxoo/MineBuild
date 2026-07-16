@@ -1,8 +1,9 @@
-<div{{ attributes }} class="flex flex-col gap-4 flex-wrap ">
+<section{{ attributes }} class="flex flex-col gap-4 flex-wrap" aria-label="Gestion des utilisateurs signalés">
     {% if app.request.attributes.get('_route') == 'app_report_users' %}
 
     {% for item in items %}
-    <a href="{{ path('app_report_users_builds', { id: item.id, page: 1 }) }}"
+	<article>
+	<a href="{{ path('app_report_users_builds', { id: item.id, page: 1 }) }}"
         class="flex flex-wrap gap-4 items-center bg-(--container-color) p-4 md:p-8 rounded  w-full">
         <img class="w-28 h-28 rounded-full border-4 border-(--primary-color) object-cover"
             data-avatar-preview-target="image"
@@ -30,7 +31,8 @@
                 </div>
             </div>
         </div>
-    </a>
+	</a>
+	</article>
     {% endfor %}
 
     {% else %}
@@ -42,9 +44,9 @@
     <twig:ReportUserCommentsComponent :comments="items" />
     {% elseif app.request.attributes.get('_route') == 'app_report_users_reports' %}
     {% if items is empty %}
-    <div class="bg-(--container-color) p-8 rounded text-center text-(--secondary-color)">
+	<div class="bg-(--container-color) p-8 rounded text-center text-(--secondary-color)">
         Aucun signalement en attente pour cet utilisateur.
-    </div>
+	</div>
     {% else %}
     <twig:ReportsComponent :reports="items" />
     {% endif %}
@@ -52,4 +54,4 @@
 
     {% endif %}
 
-    </div>
+</section>

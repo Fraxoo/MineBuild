@@ -1,4 +1,4 @@
-<div {{attributes}} class="user-filter-container w-full! justify-between">
+<nav {{attributes}} class="user-filter-container w-full! justify-between" aria-label="Contenus de l’utilisateur signalé">
 	<a href="{{ path('app_report_users_builds' , { 'id': user.id }) }}" class="user-filter flex-1 {{ app.request.attributes.get('_route') === 'app_report_users_builds' ? 'user-selected-filter' : '' }}">
 		<i class="ti ti-blocks"></i>
 		<p>Builds</p>
@@ -11,4 +11,4 @@
 		<i class="ti ti-flag"></i>
 		<p>Signalements</p>
 	</a>
-</div>
+</nav>
