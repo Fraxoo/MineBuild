@@ -15,7 +15,7 @@
                     class="text-(--title-color) transition-colors duration-200 group-hover:text-(--primary-color) font-semibold">
                     {{build.title}}</h2>
                 <p class="text-(--secondary-color) text-sm line-clamp-2 min-h-10 text-wrap wrap-anywhere">{{ build.description|slice(0, 70) }}...</p>
-                <div class="flex justify-between items-center mt-2">
+                <div class="flex flex-wrap gap-2 justify-between items-center mt-2">
                     <div class="flex items-center gap-2 ">
                         <img class="w-6 h-6 rounded-full  object-cover" data-avatar-preview-target="image"
                             src="{{ build.author.avatarUrl ? asset('uploads/avatars/' ~ build.author.avatarUrl) : asset('images/default-avatar.jpg') }}"
